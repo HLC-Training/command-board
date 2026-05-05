@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFS Training Delivery Command Board</title>
+<style>
+/* GE Vernova Design System — Dashboard Edition
+   Colors sourced from official Brand & Visual Identity Guidelines, V7.0, September 2025
+   Color names: Evergreen, Day, Urgency Green, Night */
+
+:root {
+  /* Primary palette */
+  --color-evergreen: #005E60;
+  --color-day: #FFFFFF;
+  --color-urgency-green: #C8FF08;
+  --color-night: #212121;
+
+  /* Evergreen tint palette */
+  --color-dark-evergreen: #004745;
+  --color-evergreen-tint1: #458A8A;
+  --color-evergreen-tint2: #96BDBD;
+  --color-evergreen-tint3: #C7DBDB;
+
+  /* Secondary palette — grays */
+  --color-gray1: #FAFAFA;
+  --color-gray2: #E3E3E3;
+  --color-gray3: #CCCCCC;
+  --color-gray4: #696969;
+  --color-gray5: #484848;
+
+  /* Tertiary palette — charts/graphs only */
+  --color-dark-sky: #2176FF;
+  --color-sky: #5FB7FF;
+  --color-dark-forest: #3E9E00;
+  --color-forest: #7BDD3C;
+  --color-dark-earth: #4A2419;
+  --color-earth: #774936;
+
+  /* Legacy compatibility aliases */
+  --color-dk1: #005E60;
+  --color-lt1: #FFFFFF;
+  --color-dk2: #212121;
+  --color-lt2: #C8FF08;
+  --color-accent1: #004745;
+  --color-accent2: #E3E3E3;
+  --color-accent3: #CCCCCC;
+  --color-accent4: #696969;
+  --color-accent5: #484848;
+  --color-accent6: #458A8A;
+  --color-hlink: #2176FF;
+  --color-fol-hlink: #3E9E00;
+
+  /* Typography */
+  --font-heading: "GE Vernova Sans Condensed Extrabold", "Inter", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+
+  /* Layout */
+  --radius-card: 18px;
+  --shadow-elevated: 0 12px 42px rgba(0, 0, 0, 0.14);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--color-gray1);
+  color: var(--color-night);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--color-dark-sky); text-decoration: none; }
+a:hover { color: var(--color-dark-forest); text-decoration: underline; }
+
+.dashboard {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+
+.dash-header {
+  background: var(--color-dark-evergreen);
+  color: var(--color-day);
+  border-radius: var(--radius-card);
+  padding: 36px 44px 28px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+  overflow: hidden;
+}
+.dash-header::after {
+  content: "";
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: rgba(200, 255, 8, 0.06);
+  pointer-events: none;
+}
+.dash-header h1 {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  margin: 0 0 4px;
+  color: var(--color-urgency-green);
+  letter-spacing: 0.3px;
+}
+.dash-header p {
+  margin: 0;
+  opacity: 0.82;
+  font-size: 16px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--color-evergreen);
+  margin: 32px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: transform 0.15s;
+}
+.kpi-card:hover { transform: translateY(-2px); }
+.kpi-card .kpi-value {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  color: var(--color-dark-evergreen);
+  margin: 0 0 2px;
+}
+.kpi-card .kpi-label {
+  color: var(--color-gray4);
+  font-size: 13px;
+  margin: 0;
+}
+.kpi-card .kpi-delta {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.delta-up   { background: #e6f9e6; color: #1a7a1a; }
+.delta-down { background: #fce8e8; color: #b02020; }
+.delta-flat { background: var(--color-gray2); color: var(--color-night); }
+
+.chart-panel {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: var(--radius-card);
+  padding: 28px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+.chart-panel h3 {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  color: var(--color-night);
+  margin: 0 0 16px;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) { .row-2 { grid-template-columns: 1fr; } }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.boxed {
+  background: var(--color-gray1);
+  border: 1px solid var(--color-gray3);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-top: 12px;
+}
+.stat {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+.stat__value {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  color: var(--color-dark-evergreen);
+  margin: 0 0 6px;
+}
+.stat__label {
+  margin: 0;
+  color: var(--color-gray4);
+  font-size: 15px;
+}
+
+.quote {
+  position: relative;
+  padding: 20px 22px 20px 26px;
+  border-left: 5px solid var(--color-evergreen-tint1);
+  background: var(--color-gray1);
+  color: var(--color-gray5);
+  font-size: 18px;
+  line-height: 1.6;
+}
+.quote__author {
+  margin-top: 12px;
+  font-weight: 600;
+  color: var(--color-night);
+}
+
+.callout {
+  border-left: 6px solid var(--color-dark-evergreen);
+  padding: 12px 14px;
+  background: var(--color-evergreen-tint3);
+  border-radius: 10px;
+  color: var(--color-night);
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+.timeline__item {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  position: relative;
+}
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  top: 14px; left: 10px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-dark-evergreen);
+}
+.timeline__title {
+  margin: 0 0 6px 12px;
+  font-family: var(--font-heading);
+  color: var(--color-night);
+}
+.timeline__text {
+  margin: 0 0 0 12px;
+  color: var(--color-gray5);
+  font-size: 15px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--color-gray2);
+  color: var(--color-gray5);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: var(--color-urgency-green);
+  color: var(--color-dark-evergreen);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.divider {
+  height: 6px;
+  width: 72px;
+  border-radius: 6px;
+  background: var(--color-evergreen-tint1);
+  margin: 10px 0 22px;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--color-gray3);
+  background: var(--color-day);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-gray5);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.tab-btn:hover { background: var(--color-gray2); }
+.tab-btn.active {
+  background: var(--color-dark-evergreen);
+  color: var(--color-day);
+  border-color: var(--color-dark-evergreen);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+.program-card {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.program-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+}
+.program-card .pc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.program-card .pc-name {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  color: var(--color-night);
+  margin: 0;
+}
+.program-card .pc-bu {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--color-gray2);
+  color: var(--color-gray5);
+  white-space: nowrap;
+}
+.program-card .pc-lead {
+  font-size: 13px;
+  color: var(--color-gray4);
+  margin: 0 0 8px;
+}
+.program-card .pc-value {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--color-evergreen);
+  margin: 0 0 4px;
+}
+.program-card .pc-value-label {
+  font-size: 12px;
+  color: var(--color-gray4);
+  margin: 0 0 10px;
+}
+.program-card .pc-milestone {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
+.ms-on-track { background: #e6f9e6; color: #1a7a1a; }
+.ms-delayed   { background: #fff3cd; color: #856404; }
+.ms-at-risk   { background: #fce8e8; color: #b02020; }
+.ms-complete  { background: #d4edda; color: #155724; }
+
+.program-detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+.program-detail-overlay.active { display: flex; }
+.program-detail-panel {
+  background: var(--color-day);
+  border-radius: var(--radius-card);
+  max-width: 780px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 36px 40px;
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+}
+.program-detail-panel .close-btn {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: var(--color-gray4);
+  line-height: 1;
+}
+.program-detail-panel .close-btn:hover { color: var(--color-night); }
+.program-detail-panel h2 {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  color: var(--color-evergreen);
+  margin: 0 0 6px;
+}
+.program-detail-panel .pd-meta {
+  color: var(--color-gray4);
+  font-size: 14px;
+  margin: 0 0 18px;
+}
+.program-detail-panel .pd-body {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-night);
+}
+.program-detail-panel .pd-body p { margin: 0 0 12px; }
+.program-detail-panel .pd-body ul { margin: 0 0 12px 18px; padding: 0; }
+.program-detail-panel .pd-body li + li { margin-top: 4px; }
+
+.funnel-container { display: flex; flex-direction: column; gap: 6px; }
+.funnel-bar {
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  color: var(--color-day);
+  font-weight: 700;
+  font-size: 14px;
+  transition: opacity 0.15s;
+  margin: 0 auto;
+}
+.funnel-bar:hover { opacity: 0.88; }
+.funnel-bar .fb-count {
+  margin-left: auto;
+  font-family: var(--font-heading);
+  font-size: 20px;
+}
+
+.risk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.risk-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--color-gray3);
+  color: var(--color-gray4);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.risk-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-gray1);
+  vertical-align: top;
+}
+.risk-table tr:hover td { background: var(--color-gray1); }
+.sev-high { color: #b02020; font-weight: 700; }
+.sev-med  { color: #856404; font-weight: 700; }
+.sev-low  { color: #1a7a1a; font-weight: 700; }
+
+.adoption-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.adoption-card {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.adoption-card h4 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  color: var(--color-night);
+  margin: 0 0 14px;
+}
+.adopt-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-gray1);
+}
+.adopt-metric:last-child { border-bottom: none; }
+.adopt-metric .am-label { color: var(--color-gray4); font-size: 13px; }
+.adopt-metric .am-val {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  color: var(--color-dark-evergreen);
+}
+
+.chart-svg { width: 100%; overflow: visible; }
+.chart-gridline { stroke: var(--color-gray2); stroke-width: 1; }
+.chart-axis-label { font-size: 11px; fill: var(--color-gray4); font-family: var(--font-body); }
+.chart-bar-target { fill: var(--color-gray3); }
+.chart-bar-actual { fill: var(--color-dark-evergreen); }
+.chart-line-target { fill: none; stroke: var(--color-gray3); stroke-width: 2.5; stroke-dasharray: 6 4; }
+.chart-line-actual { fill: none; stroke: var(--color-dark-evergreen); stroke-width: 2.5; }
+.chart-dot-target { fill: var(--color-gray3); }
+.chart-dot-actual { fill: var(--color-dark-evergreen); }
+.chart-label { font-size: 11px; fill: var(--color-night); font-family: var(--font-body); font-weight: 600; }
+
+.chart-tooltip {
+  position: absolute;
+  background: var(--color-night);
+  color: var(--color-day);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 500;
+  display: none;
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--color-gray4);
+  margin-bottom: 8px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.fin-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.fin-bar-label {
+  width: 180px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--color-night);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.fin-bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--color-gray2);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.fin-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--color-dark-evergreen);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  color: var(--color-day);
+  font-size: 12px;
+  font-weight: 700;
+  transition: width 0.5s ease;
+}
+.fin-bar-fill.alt { background: var(--color-evergreen-tint1); }
+
+.image-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 62%;
+  border-radius: 12px;
+  background: var(--color-gray2);
+  overflow: hidden;
+  border: 1px solid var(--color-gray3);
+}
+.image-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   COMMAND BOARD — PRESENTATION OVERRIDES
+   ============================================================ */
+
+/* Reset for full-screen kiosk mode */
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, 'Segoe UI', Arial, sans-serif;
+  background: #003d3e;
+}
+
+/* Slide wrapper */
+#slide-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 48px);
+  overflow: hidden;
+}
+
+/* Individual slides */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 48px);
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.45s ease-in-out, transform 0.45s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+.slide.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: all;
+}
+
+/* ---- TITLE BAR ---- */
+.cb-title-bar {
+  flex: 0 0 8%;
+  background: #005e60;
+  border-bottom: 3px solid #c8ff08;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  min-height: 0;
+}
+.cb-title-bar .cb-title-text {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: clamp(13px, 1.6vw, 22px);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+.cb-title-bar .cb-week-badge {
+  background: #c8ff08;
+  color: #003d3e;
+  font-weight: 700;
+  font-size: clamp(10px, 1.1vw, 14px);
+  padding: 5px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ---- METRIC STRIP (Slide 1) ---- */
+.cb-metric-strip {
+  flex: 0 0 22%;
+  background: #004a4c;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  min-height: 0;
+}
+.cb-metric-card {
+  background: #003d3e;
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  height: 80%;
+}
+.cb-metric-card.wide { flex: 1.5; }
+.cb-metric-num {
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.cb-metric-num.lime { color: #c8ff08; }
+.cb-metric-num.white { color: #ffffff; }
+.cb-metric-num.muted { color: rgba(255,255,255,0.35); }
+.cb-metric-label {
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #59c3c9;
+}
+.cb-metric-sub {
+  font-size: clamp(8px, 0.85vw, 11px);
+  color: rgba(255,255,255,0.65);
+  margin-top: 2px;
+  text-align: center;
+}
+.cb-metric-chip {
+  background: rgba(89,195,201,0.18);
+  color: #59c3c9;
+  font-size: clamp(8px, 0.85vw, 11px);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+.cb-metric-name {
+  font-size: clamp(10px, 1.1vw, 14px);
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+}
+
+/* ---- MAIN BODY ---- */
+.cb-body {
+  flex: 1 1 0;
+  background: #f0f4f5;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ---- LEFT COLUMN ---- */
+.cb-left-col {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  overflow: hidden;
+}
+.cb-right-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Section pill headers */
+.cb-section-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: clamp(9px, 0.9vw, 12px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cb-section-pill.evergreen { background: #005e60; color: #c8ff08; }
+.cb-section-pill.sky { background: #59c3c9; color: #003d3e; }
+.cb-section-pill.forest { background: #75ca64; color: #003d3e; }
+
+/* PLL Row Cards */
+.cb-pll-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow: hidden;
+}
+.cb-pll-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.cb-pll-card.muted { opacity: 0.5; }
+
+.cb-pll-identity {
+  flex: 0 0 26%;
+  min-width: 0;
+  overflow: hidden;
+}
+.cb-pll-name {
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 700;
+  color: #212121;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cb-pll-tech {
+  font-size: clamp(8px, 0.8vw, 11px);
+  color: #696969;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cb-pll-chips {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.cb-count-chip {
+  background: #1a2e2e;
+  border-radius: 7px;
+  padding: 3px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 44px;
+}
+.cb-count-num {
+  font-size: clamp(11px, 1.2vw, 16px);
+  font-weight: 900;
+  color: #c8ff08;
+  line-height: 1;
+}
+.cb-count-lbl {
+  font-size: clamp(7px, 0.7vw, 9px);
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cb-bar-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.cb-bar-track {
+  flex: 1;
+  height: 14px;
+  background: #e0eaeb;
+  border-radius: 7px;
+  overflow: hidden;
+  position: relative;
+}
+.cb-bar-fill {
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.6s ease;
+}
+.cb-bar-fill.forest { background: #75ca64; }
+.cb-bar-fill.lime { background: #c8ff08; }
+.cb-bar-fill.amber { background: #f5a623; }
+.cb-bar-fill.red { background: #e63946; }
+.cb-bar-fill.sky { background: #59c3c9; }
+
+.cb-bar-label {
+  font-size: clamp(9px, 0.9vw, 12px);
+  font-weight: 700;
+  color: #212121;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cb-over-badge {
+  background: #c8ff08;
+  color: #003d3e;
+  font-size: clamp(7px, 0.75vw, 10px);
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+/* ---- RIGHT COLUMN — Outlook ---- */
+.cb-outlook-summary {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.cb-outlook-card {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-align: center;
+}
+.cb-outlook-num {
+  font-size: clamp(18px, 2.2vw, 32px);
+  font-weight: 900;
+  color: #59c3c9;
+  line-height: 1;
+}
+.cb-outlook-lbl {
+  font-size: clamp(8px, 0.85vw, 11px);
+  color: #696969;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Compact outlook table */
+.cb-outlook-table {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.cb-ot-head {
+  background: #003d3e;
+  display: grid;
+  grid-template-columns: 1fr 1fr 60px 70px;
+  padding: 6px 10px;
+  flex-shrink: 0;
+}
+.cb-ot-head span {
+  font-size: clamp(8px, 0.8vw, 11px);
+  color: rgba(255,255,255,0.75);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.cb-ot-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cb-ot-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 60px 70px;
+  padding: 5px 10px;
+  align-items: center;
+  flex: 1;
+  border-bottom: 1px solid #f0f4f5;
+}
+.cb-ot-row:last-child { border-bottom: none; }
+.cb-ot-row:nth-child(even) { background: #f7fafa; }
+.cb-ot-cell {
+  font-size: clamp(9px, 0.95vw, 13px);
+  color: #212121;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cb-ot-cell.num {
+  text-align: center;
+  font-weight: 700;
+  color: #005e60;
+}
+.cb-ot-cell.num.sky { color: #59c3c9; }
+
+/* ============================================================
+   SLIDE 2 — PERFORMANCE & IMPROVEMENT
+   ============================================================ */
+
+/* Master Status Bar */
+.cb-status-bar {
+  flex: 0 0 15%;
+  background: #004a4c;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  min-height: 0;
+}
+.cb-status-card {
+  background: #003d3e;
+  border-radius: 10px;
+  flex: 1;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 12px;
+}
+.cb-rag-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cb-rag-dot.green {
+  background: #75ca64;
+  box-shadow: 0 0 12px rgba(117,202,100,0.6);
+}
+.cb-rag-dot.red {
+  background: #e63946;
+  box-shadow: 0 0 12px rgba(230,57,70,0.6);
+}
+.cb-rag-dot.amber {
+  background: #f5a623;
+  box-shadow: 0 0 12px rgba(245,166,35,0.6);
+}
+.cb-status-info {}
+.cb-status-label {
+  font-size: clamp(10px, 1.1vw, 14px);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+.cb-status-sub {
+  font-size: clamp(8px, 0.85vw, 11px);
+  color: rgba(255,255,255,0.6);
+}
+
+/* 2x2 Grid Body */
+.cb-grid-body {
+  flex: 1;
+  background: #f0f4f5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  padding: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+.cb-zone {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Bowler KPIs */
+.cb-kpi-card {
+  background: #f7fafa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+.cb-kpi-bar {
+  width: 5px;
+  border-radius: 3px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.cb-kpi-bar.green { background: #75ca64; }
+.cb-kpi-bar.red { background: #e63946; }
+.cb-kpi-bar.amber { background: #f5a623; }
+.cb-kpi-name {
+  flex: 1;
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 700;
+  color: #212121;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cb-kpi-vals {
+  text-align: right;
+  flex-shrink: 0;
+}
+.cb-kpi-actual {
+  font-size: clamp(14px, 1.6vw, 22px);
+  font-weight: 900;
+  color: #004745;
+  line-height: 1;
+}
+.cb-kpi-plan {
+  font-size: clamp(8px, 0.8vw, 11px);
+  color: #696969;
+}
+.cb-kpi-chip {
+  font-size: clamp(8px, 0.8vw, 10px);
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cb-kpi-chip.green { background: #e6f9e6; color: #1a7a1a; }
+.cb-kpi-chip.red { background: #fce8e8; color: #b02020; }
+.cb-kpi-chip.amber { background: #fff3cd; color: #856404; }
+.cb-note {
+  font-size: clamp(8px, 0.8vw, 11px);
+  color: #696969;
+  font-style: italic;
+  flex-shrink: 0;
+}
+
+/* Action Plan */
+.cb-ap-badges {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.cb-ap-badge {
+  flex: 1;
+  border-radius: 8px;
+  padding: 5px 8px;
+  text-align: center;
+}
+.cb-ap-badge.ev { background: #005e60; color: #c8ff08; }
+.cb-ap-badge.sky { background: #59c3c9; color: #003d3e; }
+.cb-ap-badge.forest { background: #75ca64; color: #003d3e; }
+.cb-ap-badge-num {
+  font-size: clamp(14px, 1.6vw, 22px);
+  font-weight: 900;
+  line-height: 1;
+}
+.cb-ap-badge-lbl {
+  font-size: clamp(7px, 0.75vw, 10px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.cb-ap-cols {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+.cb-ap-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow: hidden;
+}
+.cb-ap-col-head {
+  font-size: clamp(8px, 0.85vw, 11px);
+  font-weight: 700;
+  color: #696969;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.cb-ap-item {
+  font-size: clamp(8px, 0.85vw, 11px);
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+.cb-ap-item.done { background: #e6f9e6; color: #1a7a1a; }
+.cb-ap-item.upcoming { background: #e0f4f5; color: #005e60; }
+
+/* Safety */
+.cb-safety-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 0;
+}
+.cb-safety-circle {
+  width: clamp(50px, 6vw, 80px);
+  height: clamp(50px, 6vw, 80px);
+  border-radius: 50%;
+  background: #75ca64;
+  box-shadow: 0 0 20px rgba(117,202,100,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(22px, 2.8vw, 38px);
+  color: #ffffff;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.cb-safety-all-clear {
+  font-size: clamp(14px, 1.6vw, 22px);
+  font-weight: 900;
+  color: #004745;
+}
+.cb-safety-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.cb-safety-chip {
+  background: #e6f9e6;
+  color: #1a7a1a;
+  font-size: clamp(8px, 0.85vw, 11px);
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* CapEx */
+.cb-capex-bar-wrap {
+  flex-shrink: 0;
+}
+.cb-capex-bar-label {
+  font-size: clamp(9px, 0.95vw, 13px);
+  font-weight: 700;
+  color: #212121;
+  margin-bottom: 4px;
+}
+.cb-capex-track {
+  width: 100%;
+  height: 22px;
+  background: #e0eaeb;
+  border-radius: 11px;
+  overflow: hidden;
+}
+.cb-capex-fill {
+  height: 100%;
+  background: #005e60;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  color: #c8ff08;
+  font-size: clamp(9px, 0.95vw, 12px);
+  font-weight: 900;
+}
+.cb-capex-sub {
+  font-size: clamp(8px, 0.8vw, 11px);
+  color: #696969;
+  margin-top: 3px;
+}
+.cb-capex-projects {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 0;
+  overflow: hidden;
+}
+.cb-capex-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+  padding: 2px 0;
+  border-bottom: 1px solid #f0f4f5;
+}
+.cb-capex-row:last-child { border-bottom: none; }
+.cb-capex-proj-name {
+  flex: 1;
+  font-size: clamp(9px, 0.95vw, 12px);
+  color: #212121;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cb-capex-status {
+  font-size: clamp(7px, 0.75vw, 10px);
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cb-capex-status.green { background: #e6f9e6; color: #1a7a1a; }
+.cb-capex-status.amber { background: #fff3cd; color: #856404; }
+.cb-capex-status.teal { background: #e0f4f5; color: #005e60; }
+.cb-capex-cost {
+  font-size: clamp(9px, 0.95vw, 12px);
+  font-weight: 700;
+  color: #004745;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   NAVIGATION BAR
+   ============================================================ */
+#nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 48px;
+  background: #005e60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 9999;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
+}
+.nav-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  border: none;
+  padding: 0;
+}
+.nav-dot.active {
+  background: #c8ff08;
+  transform: scale(1.2);
+}
+.nav-center-text {
+  color: rgba(255,255,255,0.85);
+  font-size: clamp(9px, 0.9vw, 12px);
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.nav-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.nav-btn {
+  background: rgba(0,71,69,0.7);
+  color: #c8ff08;
+  border: 1px solid rgba(200,255,8,0.4);
+  border-radius: 999px;
+  height: 32px;
+  padding: 0 16px;
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.nav-btn:hover { background: rgba(0,71,69,1); }
+</style>
+</head>
+<body>
+
+<!-- SLIDE CONTAINER -->
+<div id="slide-container">
+
+  <!-- ========================================================
+       SLIDE 1: DELIVERY OPERATIONS
+       ======================================================== -->
+  <div class="slide active" id="slide-0">
+
+    <!-- Title Bar -->
+    <div class="cb-title-bar">
+      <span class="cb-title-text">OFS Training Delivery &mdash; Delivery Operations</span>
+      <span class="cb-week-badge">Week of May 4&ndash;8, 2026</span>
+    </div>
+
+    <!-- Metric Strip -->
+    <div class="cb-metric-strip">
+      <!-- Global -->
+      <div class="cb-metric-card wide">
+        <div class="cb-metric-num lime">119</div>
+        <div class="cb-metric-name">Global Students</div>
+        <div class="cb-metric-chip">10 Classes</div>
+      </div>
+      <!-- HLC -->
+      <div class="cb-metric-card">
+        <div class="cb-metric-num white">104</div>
+        <div class="cb-metric-label">HLC</div>
+        <div class="cb-metric-sub">Houston, TX</div>
+      </div>
+      <!-- BLC -->
+      <div class="cb-metric-card">
+        <div class="cb-metric-num white">5</div>
+        <div class="cb-metric-label">BLC</div>
+        <div class="cb-metric-sub">Birr, Switzerland</div>
+      </div>
+      <!-- KLC -->
+      <div class="cb-metric-card">
+        <div class="cb-metric-num muted">0</div>
+        <div class="cb-metric-label">KLC</div>
+        <div class="cb-metric-sub">Kuwait</div>
+      </div>
+      <!-- Other -->
+      <div class="cb-metric-card">
+        <div class="cb-metric-num white">10</div>
+        <div class="cb-metric-label">Other</div>
+        <div class="cb-metric-sub">Dist. Learning</div>
+      </div>
+    </div>
+
+    <!-- Main Body -->
+    <div class="cb-body">
+
+      <!-- LEFT COLUMN -->
+      <div class="cb-left-col">
+        <span class="cb-section-pill evergreen">Classes in Progress &mdash; Week of May 4&ndash;8</span>
+        <div class="cb-pll-list">
+
+          <!-- Row 1: Sherif Khalifa -->
+          <div class="cb-pll-card">
+            <div class="cb-pll-identity">
+              <div class="cb-pll-name">Sherif Khalifa</div>
+              <div class="cb-pll-tech">Gas Turbine</div>
+            </div>
+            <div class="cb-pll-chips">
+              <div class="cb-count-chip"><span class="cb-count-num">4</span><span class="cb-count-lbl">Classes</span></div>
+              <div class="cb-count-chip"><span class="cb-count-num">58</span><span class="cb-count-lbl">Students</span></div>
+            </div>
+            <div class="cb-bar-area">
+              <div class="cb-bar-track"><div class="cb-bar-fill forest" style="width:88%"></div></div>
+              <span class="cb-bar-label">58/66</span>
+            </div>
+          </div>
+
+          <!-- Row 2: Pablo Schibli -->
+          <div class="cb-pll-card">
+            <div class="cb-pll-identity">
+              <div class="cb-pll-name">Pablo Schibli</div>
+              <div class="cb-pll-tech">Steam Turbine</div>
+            </div>
+            <div class="cb-pll-chips">
+              <div class="cb-count-chip"><span class="cb-count-num">2</span><span class="cb-count-lbl">Classes</span></div>
+              <div class="cb-count-chip"><span class="cb-count-num">34</span><span class="cb-count-lbl">Students</span></div>
+            </div>
+            <div class="cb-bar-area">
+              <div class="cb-bar-track"><div class="cb-bar-fill lime" style="width:100%"></div></div>
+              <span class="cb-bar-label">34/32</span>
+              <span class="cb-over-badge">OVER</span>
+            </div>
+          </div>
+
+          <!-- Row 3: Michele Alcantar -->
+          <div class="cb-pll-card">
+            <div class="cb-pll-identity">
+              <div class="cb-pll-name">Michele Alcantar</div>
+              <div class="cb-pll-tech">Generator + Excitation</div>
+            </div>
+            <div class="cb-pll-chips">
+              <div class="cb-count-chip"><span class="cb-count-num">2</span><span class="cb-count-lbl">Classes</span></div>
+              <div class="cb-count-chip"><span class="cb-count-num">21</span><span class="cb-count-lbl">Students</span></div>
+            </div>
+            <div class="cb-bar-area">
+              <div class="cb-bar-track"><div class="cb-bar-fill amber" style="width:75%"></div></div>
+              <span class="cb-bar-label">21/28</span>
+            </div>
+          </div>
+
+          <!-- Row 4: Mohammed Nizami -->
+          <div class="cb-pll-card">
+            <div class="cb-pll-identity">
+              <div class="cb-pll-name">Mohammed Nizami</div>
+              <div class="cb-pll-tech">Controls</div>
+            </div>
+            <div class="cb-pll-chips">
+              <div class="cb-count-chip"><span class="cb-count-num">1</span><span class="cb-count-lbl">Class</span></div>
+              <div class="cb-count-chip"><span class="cb-count-num">6</span><span class="cb-count-lbl">Students</span></div>
+            </div>
+            <div class="cb-bar-area">
+              <div class="cb-bar-track"><div class="cb-bar-fill red" style="width:35%"></div></div>
+              <span class="cb-bar-label">6/17</span>
+            </div>
+          </div>
+
+          <!-- Row 5: Harry Hanson -->
+          <div class="cb-pll-card">
+            <div class="cb-pll-identity">
+              <div class="cb-pll-name">Harry Hanson</div>
+              <div class="cb-pll-tech">Inspection &amp; Life Ext</div>
+            </div>
+            <div class="cb-pll-chips">
+              <div class="cb-count-chip"><span class="cb-count-num">1</span><span class="cb-count-lbl">Class</span></div>
+              <div class="cb-count-chip"><span class="cb-count-num">0</span><span class="cb-count-lbl">Students</span></div>
+            </div>
+            <div class="cb-bar-area">
+              <div class="cb-bar-track"><div class="cb-bar-fill red" style="width:2%"></div></div>
+              <span class="cb-bar-label">0/10</span>
+            </div>
+          </div>
+
+          <!-- Row 6: Greg Walker (muted) -->
+          <div class="cb-pll-card muted">
+            <div class="cb-pll-identity">
+              <div class="cb-pll-name">Greg Walker</div>
+              <div class="cb-pll-tech">Aeroderivative</div>
+            </div>
+            <div class="cb-pll-chips">
+              <div class="cb-count-chip"><span class="cb-count-num" style="color:rgba(255,255,255,0.4)">0</span><span class="cb-count-lbl">Classes</span></div>
+              <div class="cb-count-chip"><span class="cb-count-num" style="color:rgba(255,255,255,0.4)">0</span><span class="cb-count-lbl">Students</span></div>
+            </div>
+            <div class="cb-bar-area">
+              <div class="cb-bar-track"></div>
+              <span class="cb-bar-label" style="color:#aaa">&mdash;</span>
+            </div>
+          </div>
+
+          <!-- Row 7: Linda (muted) -->
+          <div class="cb-pll-card muted">
+            <div class="cb-pll-identity">
+              <div class="cb-pll-name">Linda</div>
+              <div class="cb-pll-tech">CTE / Workforce Dev</div>
+            </div>
+            <div class="cb-pll-chips">
+              <div class="cb-count-chip"><span class="cb-count-num" style="color:rgba(255,255,255,0.4)">0</span><span class="cb-count-lbl">Classes</span></div>
+              <div class="cb-count-chip"><span class="cb-count-num" style="color:rgba(255,255,255,0.4)">0</span><span class="cb-count-lbl">Students</span></div>
+            </div>
+            <div class="cb-bar-area">
+              <div class="cb-bar-track"></div>
+              <span class="cb-bar-label" style="color:#aaa">&mdash;</span>
+            </div>
+          </div>
+
+        </div><!-- /pll-list -->
+      </div><!-- /left-col -->
+
+      <!-- RIGHT COLUMN -->
+      <div class="cb-right-col">
+        <span class="cb-section-pill sky">30-Day Outlook &mdash; May 9 to Jun 8</span>
+
+        <!-- Summary cards -->
+        <div class="cb-outlook-summary">
+          <div class="cb-outlook-card">
+            <div class="cb-outlook-num">35</div>
+            <div class="cb-outlook-lbl">Classes Starting</div>
+          </div>
+          <div class="cb-outlook-card">
+            <div class="cb-outlook-num">180</div>
+            <div class="cb-outlook-lbl">Students Enrolled</div>
+          </div>
+        </div>
+
+        <!-- Compact table -->
+        <div class="cb-outlook-table">
+          <div class="cb-ot-head">
+            <span>PLL</span>
+            <span>Technology</span>
+            <span style="text-align:center">Classes</span>
+            <span style="text-align:center">Students</span>
+          </div>
+          <div class="cb-ot-body">
+            <div class="cb-ot-row">
+              <div class="cb-ot-cell">Sherif Khalifa</div>
+              <div class="cb-ot-cell">Gas Turbine</div>
+              <div class="cb-ot-cell num">10</div>
+              <div class="cb-ot-cell num sky">83</div>
+            </div>
+            <div class="cb-ot-row">
+              <div class="cb-ot-cell">Mohammed Nizami</div>
+              <div class="cb-ot-cell">Controls</div>
+              <div class="cb-ot-cell num">5</div>
+              <div class="cb-ot-cell num sky">32</div>
+            </div>
+            <div class="cb-ot-row">
+              <div class="cb-ot-cell">Pablo Schibli</div>
+              <div class="cb-ot-cell">Steam Turbine</div>
+              <div class="cb-ot-cell num">4</div>
+              <div class="cb-ot-cell num sky">28</div>
+            </div>
+            <div class="cb-ot-row">
+              <div class="cb-ot-cell">Michele Alcantar</div>
+              <div class="cb-ot-cell">Generator</div>
+              <div class="cb-ot-cell num">3</div>
+              <div class="cb-ot-cell num sky">16</div>
+            </div>
+            <div class="cb-ot-row">
+              <div class="cb-ot-cell">Greg Walker</div>
+              <div class="cb-ot-cell">Aeroderivative</div>
+              <div class="cb-ot-cell num">3</div>
+              <div class="cb-ot-cell num sky">7</div>
+            </div>
+            <div class="cb-ot-row">
+              <div class="cb-ot-cell">Harry Hanson</div>
+              <div class="cb-ot-cell">Inspection</div>
+              <div class="cb-ot-cell num">2</div>
+              <div class="cb-ot-cell num sky">1</div>
+            </div>
+            <div class="cb-ot-row">
+              <div class="cb-ot-cell">Other / Linda</div>
+              <div class="cb-ot-cell">Non-Tech + Other</div>
+              <div class="cb-ot-cell num">8</div>
+              <div class="cb-ot-cell num sky">13</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /right-col -->
+    </div><!-- /body -->
+  </div><!-- /slide-0 -->
+
+
+  <!-- ========================================================
+       SLIDE 2: PERFORMANCE & IMPROVEMENT
+       ======================================================== -->
+  <div class="slide" id="slide-1">
+
+    <!-- Title Bar -->
+    <div class="cb-title-bar">
+      <span class="cb-title-text">OFS Training Delivery &mdash; Performance &amp; Improvement</span>
+      <span class="cb-week-badge">Week of May 4&ndash;8, 2026</span>
+    </div>
+
+    <!-- Master Status Bar -->
+    <div class="cb-status-bar">
+      <div class="cb-status-card">
+        <div class="cb-rag-dot green"></div>
+        <div class="cb-status-info">
+          <div class="cb-status-label">SAFETY</div>
+          <div class="cb-status-sub">No Incidents</div>
+        </div>
+      </div>
+      <div class="cb-status-card">
+        <div class="cb-rag-dot red"></div>
+        <div class="cb-status-info">
+          <div class="cb-status-label">BOWLER KPIs</div>
+          <div class="cb-status-sub">2 of 3 at Risk</div>
+        </div>
+      </div>
+      <div class="cb-status-card">
+        <div class="cb-rag-dot green"></div>
+        <div class="cb-status-info">
+          <div class="cb-status-label">ACTION PLAN</div>
+          <div class="cb-status-sub">0 Overdue / 0 At Risk</div>
+        </div>
+      </div>
+      <div class="cb-status-card">
+        <div class="cb-rag-dot green"></div>
+        <div class="cb-status-info">
+          <div class="cb-status-label">CAPEX 2026</div>
+          <div class="cb-status-sub">92% Committed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2x2 Grid Body -->
+    <div class="cb-grid-body">
+
+      <!-- TOP-LEFT: Bowler KPIs -->
+      <div class="cb-zone">
+        <span class="cb-section-pill evergreen">Bowler KPIs &mdash; 2026 YTD</span>
+        <div class="cb-kpi-card">
+          <div class="cb-kpi-bar green"></div>
+          <div class="cb-kpi-name">Post-Training Skill Improvement</div>
+          <div class="cb-kpi-vals">
+            <div class="cb-kpi-actual">83%</div>
+            <div class="cb-kpi-plan">Plan: 70%</div>
+          </div>
+          <div class="cb-kpi-chip green">On Track</div>
+        </div>
+        <div class="cb-kpi-card">
+          <div class="cb-kpi-bar red"></div>
+          <div class="cb-kpi-name">Timecard OTD</div>
+          <div class="cb-kpi-vals">
+            <div class="cb-kpi-actual">72%</div>
+            <div class="cb-kpi-plan">Plan: 92%</div>
+          </div>
+          <div class="cb-kpi-chip red">Below Target</div>
+        </div>
+        <div class="cb-kpi-card">
+          <div class="cb-kpi-bar red"></div>
+          <div class="cb-kpi-name">Instructor Util &gt;75% for 3mo</div>
+          <div class="cb-kpi-vals">
+            <div class="cb-kpi-actual">29%</div>
+            <div class="cb-kpi-plan">Plan: &lt;15%</div>
+          </div>
+          <div class="cb-kpi-chip red">Over Threshold</div>
+        </div>
+        <div class="cb-note">Bowler updated monthly &mdash; Owner: Jim Rosen</div>
+      </div>
+
+      <!-- TOP-RIGHT: Action Plan Health -->
+      <div class="cb-zone">
+        <span class="cb-section-pill sky">Action Plan Health</span>
+        <div class="cb-ap-badges">
+          <div class="cb-ap-badge ev">
+            <div class="cb-ap-badge-num">59</div>
+            <div class="cb-ap-badge-lbl">In Progress</div>
+          </div>
+          <div class="cb-ap-badge sky">
+            <div class="cb-ap-badge-num">56</div>
+            <div class="cb-ap-badge-lbl">On Deck</div>
+          </div>
+          <div class="cb-ap-badge forest">
+            <div class="cb-ap-badge-num">23</div>
+            <div class="cb-ap-badge-lbl">Complete 60d</div>
+          </div>
+        </div>
+        <div class="cb-ap-cols">
+          <div class="cb-ap-col">
+            <div class="cb-ap-col-head">&#10003; Recently Completed</div>
+            <div class="cb-ap-item done">Xyleme LCMS Readiness Procedure</div>
+            <div class="cb-ap-item done">WFR Outreach Toolkit</div>
+            <div class="cb-ap-item done">e4 Point Course Materials</div>
+            <div class="cb-ap-item done">Craft Tools Definition</div>
+            <div class="cb-ap-item done">Digital Photos Tool Selected</div>
+          </div>
+          <div class="cb-ap-col">
+            <div class="cb-ap-col-head">&#9654; Coming Up &mdash; On Deck</div>
+            <div class="cb-ap-item upcoming">Digital Class Photos Pilot &mdash; Jun 1</div>
+            <div class="cb-ap-item upcoming">e4 Point Pilot Session &mdash; Jun 1</div>
+            <div class="cb-ap-item upcoming">Aero Seminar Execution &mdash; Jun 1</div>
+            <div class="cb-ap-item upcoming">HA Controls Load to Systems &mdash; Jun 1</div>
+            <div class="cb-ap-item upcoming">ST Controls Content Load &mdash; Jun 1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM-LEFT: Safety Status -->
+      <div class="cb-zone">
+        <span class="cb-section-pill evergreen">Safety Status</span>
+        <div class="cb-safety-center">
+          <div class="cb-safety-circle">&#10003;</div>
+          <div class="cb-safety-all-clear">All Clear</div>
+          <div class="cb-safety-chips">
+            <span class="cb-safety-chip">I&amp;I: 0</span>
+            <span class="cb-safety-chip">I&amp;I Rate: 0</span>
+            <span class="cb-safety-chip">Severe Incidents: 0</span>
+          </div>
+          <div class="cb-safety-chips">
+            <span class="cb-safety-chip">Live Save Compliance: 92%</span>
+            <span class="cb-safety-chip">Read Across Rate: 90%</span>
+          </div>
+          <div class="cb-note" style="text-align:center">Confirm against DM Board before publishing</div>
+        </div>
+      </div>
+
+      <!-- BOTTOM-RIGHT: 2026 CapEx -->
+      <div class="cb-zone">
+        <span class="cb-section-pill sky">2026 CAPEX</span>
+        <div class="cb-capex-bar-wrap">
+          <div class="cb-capex-bar-label">$4.00M of $5.49M Spent (73%)</div>
+          <div class="cb-capex-track">
+            <div class="cb-capex-fill" style="width:73%">73%</div>
+          </div>
+          <div class="cb-capex-sub">$1.04M projected remaining &mdash; 92% committed total</div>
+        </div>
+        <div class="cb-capex-projects">
+          <div class="cb-capex-row">
+            <div class="cb-capex-proj-name">HA Tooling</div>
+            <div class="cb-capex-status green">POs Placed</div>
+            <div class="cb-capex-cost">$700K</div>
+          </div>
+          <div class="cb-capex-row">
+            <div class="cb-capex-proj-name">Building 2 New Roof</div>
+            <div class="cb-capex-status amber">With Sourcing</div>
+            <div class="cb-capex-cost">$575K</div>
+          </div>
+          <div class="cb-capex-row">
+            <div class="cb-capex-proj-name">New Switchgear Bldg 2</div>
+            <div class="cb-capex-status green">PO Opened</div>
+            <div class="cb-capex-cost">$350K</div>
+          </div>
+          <div class="cb-capex-row">
+            <div class="cb-capex-proj-name">FFB Hardware Carts</div>
+            <div class="cb-capex-status green">PO Opened</div>
+            <div class="cb-capex-cost">$300K</div>
+          </div>
+          <div class="cb-capex-row">
+            <div class="cb-capex-proj-name">New AC Units Bldg 1</div>
+            <div class="cb-capex-status teal">Complete</div>
+            <div class="cb-capex-cost">$250K</div>
+          </div>
+          <div class="cb-capex-row">
+            <div class="cb-capex-proj-name">ALA Outage Kit</div>
+            <div class="cb-capex-status green">AR Created</div>
+            <div class="cb-capex-cost">$212K</div>
+          </div>
+        </div>
+        <div class="cb-note">CapEx updated quarterly</div>
+      </div>
+
+    </div><!-- /grid-body -->
+  </div><!-- /slide-1 -->
+
+</div><!-- /slide-container -->
+
+
+<!-- NAVIGATION BAR -->
+<div id="nav-bar">
+  <div class="nav-dots">
+    <button class="nav-dot active" id="dot-0" onclick="showSlide(0)" aria-label="Slide 1"></button>
+    <button class="nav-dot" id="dot-1" onclick="showSlide(1)" aria-label="Slide 2"></button>
+  </div>
+  <div class="nav-center-text">OFS Training Delivery Command Board &nbsp;&bull;&nbsp; Week of May 4&ndash;8, 2026</div>
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="prevSlide()">&#9664; PREV</button>
+    <button class="nav-btn" onclick="nextSlide()">NEXT &#9654;</button>
+  </div>
+</div>
+
+
+<script>
+  var currentSlide = 0;
+  var totalSlides = 2;
+  var touchStartX = 0;
+  var touchEndX = 0;
+
+  function showSlide(n) {
+    // Clamp
+    if (n < 0) n = 0;
+    if (n >= totalSlides) n = totalSlides - 1;
+
+    // Update slides
+    for (var i = 0; i < totalSlides; i++) {
+      var el = document.getElementById('slide-' + i);
+      var dot = document.getElementById('dot-' + i);
+      if (i === n) {
+        el.classList.add('active');
+        dot.classList.add('active');
+      } else {
+        el.classList.remove('active');
+        dot.classList.remove('active');
+      }
+    }
+    currentSlide = n;
+  }
+
+  function nextSlide() {
+    var next = (currentSlide + 1) % totalSlides;
+    showSlide(next);
+  }
+
+  function prevSlide() {
+    var prev = (currentSlide - 1 + totalSlides) % totalSlides;
+    showSlide(prev);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevSlide();
+    }
+  });
+
+  // Touch / swipe navigation
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    var deltaX = touchStartX - touchEndX;
+    if (deltaX > 50) {
+      nextSlide();
+    } else if (deltaX < -50) {
+      prevSlide();
+    }
+  }, { passive: true });
+
+  // Init
+  showSlide(0);
+</script>
+
+</body>
+</html>
