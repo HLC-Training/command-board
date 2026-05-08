@@ -3,282 +3,1944 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OFS Training Delivery Command Board</title>
+<title>OFS Training Delivery — Command Board</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100vw;height:100vh;overflow:hidden;font-family:system-ui,"Segoe UI",Arial,sans-serif;background:#003d3e;-webkit-font-smoothing:antialiased;}
-#sc{position:fixed;inset:0;width:100vw;height:100vh;}
-.slide{position:absolute;inset:0;width:100vw;height:100vh;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:scale(0.985);pointer-events:none;transition:opacity 0.5s ease,transform 0.5s ease;}
-.slide.active{opacity:1;transform:scale(1);pointer-events:all;}
-#pt{position:fixed;bottom:0;left:0;width:100vw;height:5px;background:rgba(0,0,0,0.2);z-index:9999;}
-#pf{height:100%;width:0%;background:#c8ff08;border-radius:0 3px 3px 0;}
-#sn{position:fixed;bottom:8px;right:12px;z-index:9999;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:0.5px;pointer-events:none;}
-.tb{flex:0 0 8%;min-height:50px;background:#005e60;border-bottom:3px solid #c8ff08;display:flex;align-items:center;justify-content:space-between;padding:0 22px;}
-.tb-t{color:#fff;font-weight:800;font-size:clamp(13px,1.55vw,22px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tb-b{background:#c8ff08;color:#003d3e;font-size:clamp(10px,1.05vw,14px);font-weight:800;padding:5px 16px;border-radius:999px;white-space:nowrap;margin-left:12px;flex-shrink:0;}
-.pill{display:inline-flex;align-items:center;padding:4px 14px;border-radius:999px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;white-space:nowrap;flex-shrink:0;}
-.pill-ev{background:#005e60;color:#c8ff08;}.pill-sky{background:#59c3c9;color:#003d3e;}
-.note{font-size:clamp(8px,0.78vw,10px);color:#999;font-style:italic;flex-shrink:0;}
-.ms{flex:0 0 22%;background:#004a4c;display:flex;align-items:center;padding:0 14px;gap:10px;}
-.mc{background:#003d3e;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;height:78%;padding:6px 10px;gap:1px;}
-.mc.wide{flex:1.45;}
-.mcn{font-size:clamp(26px,3.3vw,52px);font-weight:900;line-height:1;}
-.mcn.lime{color:#c8ff08;}.mcn.white{color:#fff;}.mcn.muted{color:rgba(255,255,255,0.3);}
-.mcl{font-size:clamp(9px,0.95vw,13px);font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#59c3c9;}
-.mcs{font-size:clamp(7px,0.78vw,11px);color:rgba(255,255,255,0.55);text-align:center;}
-.mcc{background:rgba(89,195,201,0.18);border:1px solid rgba(89,195,201,0.3);color:#59c3c9;font-size:clamp(7px,0.78vw,11px);font-weight:700;padding:2px 9px;border-radius:999px;margin-top:3px;}
-.body1{flex:1 1 0;background:#f0f4f5;display:flex;gap:10px;padding:10px;overflow:hidden;min-height:0;}
-.lcol{flex:0 0 55%;display:flex;flex-direction:column;gap:5px;overflow:hidden;min-height:0;}
-.rcol{flex:1;display:flex;flex-direction:column;gap:5px;overflow:hidden;min-height:0;}
-.pll-list{flex:1;display:flex;flex-direction:column;gap:4px;overflow:hidden;min-height:0;}
-.pll-card{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.09);display:flex;align-items:center;padding:0 10px;gap:8px;flex:1;min-height:0;overflow:hidden;}
-.pll-card.muted{opacity:0.45;}
-.pll-id{flex:0 0 25%;overflow:hidden;}
-.pll-name{font-size:clamp(9px,0.98vw,13px);font-weight:800;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pll-tech{font-size:clamp(8px,0.78vw,11px);color:#6a8a8b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.chips{display:flex;gap:5px;flex-shrink:0;}
-.chip{background:#1a2e2e;border-radius:7px;padding:3px 8px;display:flex;flex-direction:column;align-items:center;min-width:42px;}
-.chip-n{font-size:clamp(11px,1.15vw,16px);font-weight:900;color:#c8ff08;line-height:1;}
-.chip-l{font-size:clamp(7px,0.68vw,9px);color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.4px;}
-.barea{flex:1;display:flex;align-items:center;gap:6px;min-width:0;}
-.btrack{flex:1;height:13px;background:#ddeaeb;border-radius:7px;overflow:hidden;}
-.bfill{height:100%;border-radius:7px;}
-.bfill.forest{background:#75ca64;}.bfill.lime{background:#c8ff08;}.bfill.amber{background:#f5a623;}.bfill.red{background:#e63946;}
-.blbl{font-size:clamp(9px,0.88vw,12px);font-weight:700;color:#212121;white-space:nowrap;flex-shrink:0;}
-.over{background:#c8ff08;color:#003d3e;font-size:clamp(7px,0.72vw,10px);font-weight:900;padding:2px 6px;border-radius:5px;flex-shrink:0;}
-.oc-row{display:flex;gap:8px;flex-shrink:0;}
-.oc{flex:1;background:#fff;border-radius:8px;padding:8px 10px;box-shadow:0 2px 7px rgba(0,0,0,0.08);text-align:center;}
-.oc-n{font-size:clamp(18px,2.1vw,32px);font-weight:900;color:#59c3c9;line-height:1;}
-.oc-l{font-size:clamp(8px,0.82vw,11px);color:#6a8a8b;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
-.tw{flex:1;background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;min-height:0;}
-.th{display:grid;grid-template-columns:1fr 1fr 56px 66px;background:#003d3e;padding:6px 10px;flex-shrink:0;}
-.th span{font-size:clamp(7px,0.78vw,10px);color:rgba(255,255,255,0.7);font-weight:800;text-transform:uppercase;letter-spacing:0.6px;}
-.tb2{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.tr{display:grid;grid-template-columns:1fr 1fr 56px 66px;padding:0 10px;align-items:center;flex:1;border-bottom:1px solid #eef2f3;}
-.tr:last-child{border-bottom:none;}.tr:nth-child(even){background:#f7fafa;}
-.td{font-size:clamp(9px,0.92vw,13px);color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;}
-.td.tech{color:#5a7a7b;font-weight:500;}.td.num{text-align:center;font-weight:900;font-size:clamp(10px,1.05vw,14px);color:#59c3c9;}
-.sb{flex:0 0 16%;background:#004a4c;display:flex;align-items:center;padding:0 14px;gap:10px;}
-.sbc{background:#003d3e;border-radius:10px;flex:1;height:78%;display:flex;align-items:center;padding:0 14px;gap:12px;}
-.rag{width:clamp(24px,2.8vw,42px);height:clamp(24px,2.8vw,42px);border-radius:50%;flex-shrink:0;}
-.rag.green{background:#75ca64;box-shadow:0 0 14px rgba(117,202,100,0.65);}
-.rag.red{background:#e63946;box-shadow:0 0 14px rgba(230,57,70,0.65);}
-.sc-lbl{font-size:clamp(10px,1.08vw,15px);font-weight:800;color:#fff;line-height:1.2;}
-.sc-sub{font-size:clamp(8px,0.82vw,11px);color:rgba(255,255,255,0.58);}
-.grid2{flex:1 1 0;background:#f0f4f5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:10px;overflow:hidden;min-height:0;}
-.zone{background:#fff;border-radius:10px;box-shadow:0 2px 7px rgba(0,0,0,0.08);padding:9px 11px;display:flex;flex-direction:column;gap:5px;overflow:hidden;min-height:0;}
-.kc{background:#f6fafa;border-radius:8px;display:flex;align-items:center;padding:6px 9px;gap:8px;flex:1;min-height:0;}
-.kb{width:5px;border-radius:3px;align-self:stretch;flex-shrink:0;}
-.kb.green{background:#75ca64;}.kb.red{background:#e63946;}
-.kn{flex:1;font-size:clamp(9px,0.95vw,13px);font-weight:700;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.kv{text-align:right;flex-shrink:0;margin-right:6px;}
-.ka{font-size:clamp(14px,1.55vw,22px);font-weight:900;color:#004745;line-height:1;}
-.kp{font-size:clamp(8px,0.78vw,11px);color:#888;}
-.kch{font-size:clamp(8px,0.78vw,10px);font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;}
-.kch.green{background:#e6f9e6;color:#1a7a1a;}.kch.red{background:#fce8e8;color:#b02020;}
-.apb-row{display:flex;gap:6px;flex-shrink:0;}
-.apb{flex:1;border-radius:8px;padding:5px 8px;text-align:center;}
-.apb.ev{background:#005e60;color:#c8ff08;}.apb.sky{background:#59c3c9;color:#003d3e;}.apb.forest{background:#75ca64;color:#003d3e;}
-.apb-n{font-size:clamp(14px,1.55vw,22px);font-weight:900;line-height:1;}
-.apb-l{font-size:clamp(7px,0.72vw,10px);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
-.ap-cols{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:hidden;min-height:0;}
-.ap-col{display:flex;flex-direction:column;gap:3px;overflow:hidden;min-height:0;}
-.ap-hd{font-size:clamp(8px,0.82vw,11px);font-weight:800;color:#888;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;}
-.ap-i{font-size:clamp(8px,0.82vw,11px);font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
-.ap-i.done{background:#e6f9e6;color:#1a7a1a;}.ap-i.up{background:#e0f4f5;color:#005e60;}
-.saf{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:0;}
-.saf-circle{width:clamp(48px,5.5vw,78px);height:clamp(48px,5.5vw,78px);border-radius:50%;background:#75ca64;box-shadow:0 0 22px rgba(117,202,100,0.5);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,2.6vw,36px);color:#fff;font-weight:900;flex-shrink:0;}
-.saf-lbl{font-size:clamp(13px,1.5vw,21px);font-weight:900;color:#004745;}
-.saf-chips{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;}
-.saf-chip{background:#e6f9e6;color:#1a7a1a;font-size:clamp(8px,0.82vw,11px);font-weight:700;padding:3px 10px;border-radius:999px;}
-.cx-bl{font-size:clamp(9px,0.92vw,13px);font-weight:700;color:#212121;margin-bottom:4px;}
-.cx-track{width:100%;height:21px;background:#ddeaeb;border-radius:11px;overflow:hidden;flex-shrink:0;}
-.cx-fill{height:100%;background:#005e60;border-radius:11px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#c8ff08;font-size:clamp(9px,0.92vw,12px);font-weight:900;}
-.cx-sub{font-size:clamp(8px,0.78vw,11px);color:#888;margin-top:3px;flex-shrink:0;}
-.cx-rows{flex:1;display:flex;flex-direction:column;gap:2px;overflow:hidden;min-height:0;}
-.cx-row{display:flex;align-items:center;gap:6px;flex:1;min-height:0;border-bottom:1px solid #f0f4f5;padding:1px 0;}
-.cx-row:last-child{border-bottom:none;}
-.cx-proj{flex:1;font-size:clamp(9px,0.92vw,12px);font-weight:600;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cx-st{font-size:clamp(7px,0.72vw,10px);font-weight:700;padding:2px 7px;border-radius:5px;white-space:nowrap;flex-shrink:0;}
-.cx-st.green{background:#e6f9e6;color:#1a7a1a;}.cx-st.amber{background:#fff3cd;color:#856404;}.cx-st.teal{background:#e0f4f5;color:#005e60;}
-.cx-cost{font-size:clamp(9px,0.92vw,12px);font-weight:800;color:#004745;white-space:nowrap;flex-shrink:0;}
+/* GE Vernova Design System — Dashboard Edition
+   Colors sourced from official Brand & Visual Identity Guidelines, V7.0, September 2025
+   Color names: Evergreen, Day, Urgency Green, Night */
+
+:root {
+  /* Primary palette */
+  --color-evergreen: #005E60;
+  --color-day: #FFFFFF;
+  --color-urgency-green: #C8FF08;
+  --color-night: #212121;
+
+  /* Evergreen tint palette */
+  --color-dark-evergreen: #004745;
+  --color-evergreen-tint1: #458A8A;
+  --color-evergreen-tint2: #96BDBD;
+  --color-evergreen-tint3: #C7DBDB;
+
+  /* Secondary palette — grays */
+  --color-gray1: #FAFAFA;
+  --color-gray2: #E3E3E3;
+  --color-gray3: #CCCCCC;
+  --color-gray4: #696969;
+  --color-gray5: #484848;
+
+  /* Tertiary palette — charts/graphs only */
+  --color-dark-sky: #2176FF;
+  --color-sky: #5FB7FF;
+  --color-dark-forest: #3E9E00;
+  --color-forest: #7BDD3C;
+  --color-dark-earth: #4A2419;
+  --color-earth: #774936;
+
+  /* Legacy compatibility aliases */
+  --color-dk1: #005E60;
+  --color-lt1: #FFFFFF;
+  --color-dk2: #212121;
+  --color-lt2: #C8FF08;
+  --color-accent1: #004745;
+  --color-accent2: #E3E3E3;
+  --color-accent3: #CCCCCC;
+  --color-accent4: #696969;
+  --color-accent5: #484848;
+  --color-accent6: #458A8A;
+  --color-hlink: #2176FF;
+  --color-fol-hlink: #3E9E00;
+
+  /* Typography */
+  --font-heading: "GE Vernova Sans Condensed Extrabold", "Inter", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+
+  /* Layout */
+  --radius-card: 18px;
+  --shadow-elevated: 0 12px 42px rgba(0, 0, 0, 0.14);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--color-gray1);
+  color: var(--color-night);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--color-dark-sky); text-decoration: none; }
+a:hover { color: var(--color-dark-forest); text-decoration: underline; }
+
+.dashboard {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+
+.dash-header {
+  background: var(--color-dark-evergreen);
+  color: var(--color-day);
+  border-radius: var(--radius-card);
+  padding: 36px 44px 28px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+  overflow: hidden;
+}
+.dash-header::after {
+  content: "";
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: rgba(200, 255, 8, 0.06);
+  pointer-events: none;
+}
+.dash-header h1 {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  margin: 0 0 4px;
+  color: var(--color-urgency-green);
+  letter-spacing: 0.3px;
+}
+.dash-header p {
+  margin: 0;
+  opacity: 0.82;
+  font-size: 16px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--color-evergreen);
+  margin: 32px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: transform 0.15s;
+}
+.kpi-card:hover { transform: translateY(-2px); }
+.kpi-card .kpi-value {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  color: var(--color-dark-evergreen);
+  margin: 0 0 2px;
+}
+.kpi-card .kpi-label {
+  color: var(--color-gray4);
+  font-size: 13px;
+  margin: 0;
+}
+.kpi-card .kpi-delta {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.delta-up   { background: #e6f9e6; color: #1a7a1a; }
+.delta-down { background: #fce8e8; color: #b02020; }
+.delta-flat { background: var(--color-gray2); color: var(--color-night); }
+
+.chart-panel {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: var(--radius-card);
+  padding: 28px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+.chart-panel h3 {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  color: var(--color-night);
+  margin: 0 0 16px;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) { .row-2 { grid-template-columns: 1fr; } }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.boxed {
+  background: var(--color-gray1);
+  border: 1px solid var(--color-gray3);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-top: 12px;
+}
+.stat {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+.stat__value {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  color: var(--color-dark-evergreen);
+  margin: 0 0 6px;
+}
+.stat__label {
+  margin: 0;
+  color: var(--color-gray4);
+  font-size: 15px;
+}
+
+.quote {
+  position: relative;
+  padding: 20px 22px 20px 26px;
+  border-left: 5px solid var(--color-evergreen-tint1);
+  background: var(--color-gray1);
+  color: var(--color-gray5);
+  font-size: 18px;
+  line-height: 1.6;
+}
+.quote__author {
+  margin-top: 12px;
+  font-weight: 600;
+  color: var(--color-night);
+}
+
+.callout {
+  border-left: 6px solid var(--color-dark-evergreen);
+  padding: 12px 14px;
+  background: var(--color-evergreen-tint3);
+  border-radius: 10px;
+  color: var(--color-night);
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+.timeline__item {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  position: relative;
+}
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  top: 14px; left: 10px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-dark-evergreen);
+}
+.timeline__title {
+  margin: 0 0 6px 12px;
+  font-family: var(--font-heading);
+  color: var(--color-night);
+}
+.timeline__text {
+  margin: 0 0 0 12px;
+  color: var(--color-gray5);
+  font-size: 15px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--color-gray2);
+  color: var(--color-gray5);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: var(--color-urgency-green);
+  color: var(--color-dark-evergreen);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.divider {
+  height: 6px;
+  width: 72px;
+  border-radius: 6px;
+  background: var(--color-evergreen-tint1);
+  margin: 10px 0 22px;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--color-gray3);
+  background: var(--color-day);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-gray5);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.tab-btn:hover { background: var(--color-gray2); }
+.tab-btn.active {
+  background: var(--color-dark-evergreen);
+  color: var(--color-day);
+  border-color: var(--color-dark-evergreen);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+.program-card {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.program-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+}
+.program-card .pc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.program-card .pc-name {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  color: var(--color-night);
+  margin: 0;
+}
+.program-card .pc-bu {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--color-gray2);
+  color: var(--color-gray5);
+  white-space: nowrap;
+}
+.program-card .pc-lead {
+  font-size: 13px;
+  color: var(--color-gray4);
+  margin: 0 0 8px;
+}
+.program-card .pc-value {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--color-evergreen);
+  margin: 0 0 4px;
+}
+.program-card .pc-value-label {
+  font-size: 12px;
+  color: var(--color-gray4);
+  margin: 0 0 10px;
+}
+.program-card .pc-milestone {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
+.ms-on-track { background: #e6f9e6; color: #1a7a1a; }
+.ms-delayed   { background: #fff3cd; color: #856404; }
+.ms-at-risk   { background: #fce8e8; color: #b02020; }
+.ms-complete  { background: #d4edda; color: #155724; }
+
+.program-detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+.program-detail-overlay.active { display: flex; }
+.program-detail-panel {
+  background: var(--color-day);
+  border-radius: var(--radius-card);
+  max-width: 780px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 36px 40px;
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+}
+.program-detail-panel .close-btn {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: var(--color-gray4);
+  line-height: 1;
+}
+.program-detail-panel .close-btn:hover { color: var(--color-night); }
+.program-detail-panel h2 {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  color: var(--color-evergreen);
+  margin: 0 0 6px;
+}
+.program-detail-panel .pd-meta {
+  color: var(--color-gray4);
+  font-size: 14px;
+  margin: 0 0 18px;
+}
+.program-detail-panel .pd-body {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-night);
+}
+.program-detail-panel .pd-body p { margin: 0 0 12px; }
+.program-detail-panel .pd-body ul { margin: 0 0 12px 18px; padding: 0; }
+.program-detail-panel .pd-body li + li { margin-top: 4px; }
+
+.funnel-container { display: flex; flex-direction: column; gap: 6px; }
+.funnel-bar {
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  color: var(--color-day);
+  font-weight: 700;
+  font-size: 14px;
+  transition: opacity 0.15s;
+  margin: 0 auto;
+}
+.funnel-bar:hover { opacity: 0.88; }
+.funnel-bar .fb-count {
+  margin-left: auto;
+  font-family: var(--font-heading);
+  font-size: 20px;
+}
+
+.risk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.risk-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--color-gray3);
+  color: var(--color-gray4);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.risk-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-gray1);
+  vertical-align: top;
+}
+.risk-table tr:hover td { background: var(--color-gray1); }
+.sev-high { color: #b02020; font-weight: 700; }
+.sev-med  { color: #856404; font-weight: 700; }
+.sev-low  { color: #1a7a1a; font-weight: 700; }
+
+.adoption-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.adoption-card {
+  background: var(--color-day);
+  border: 1px solid var(--color-gray3);
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.adoption-card h4 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  color: var(--color-night);
+  margin: 0 0 14px;
+}
+.adopt-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-gray1);
+}
+.adopt-metric:last-child { border-bottom: none; }
+.adopt-metric .am-label { color: var(--color-gray4); font-size: 13px; }
+.adopt-metric .am-val {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  color: var(--color-dark-evergreen);
+}
+
+.chart-svg { width: 100%; overflow: visible; }
+.chart-gridline { stroke: var(--color-gray2); stroke-width: 1; }
+.chart-axis-label { font-size: 11px; fill: var(--color-gray4); font-family: var(--font-body); }
+.chart-bar-target { fill: var(--color-gray3); }
+.chart-bar-actual { fill: var(--color-dark-evergreen); }
+.chart-line-target { fill: none; stroke: var(--color-gray3); stroke-width: 2.5; stroke-dasharray: 6 4; }
+.chart-line-actual { fill: none; stroke: var(--color-dark-evergreen); stroke-width: 2.5; }
+.chart-dot-target { fill: var(--color-gray3); }
+.chart-dot-actual { fill: var(--color-dark-evergreen); }
+.chart-label { font-size: 11px; fill: var(--color-night); font-family: var(--font-body); font-weight: 600; }
+
+.chart-tooltip {
+  position: absolute;
+  background: var(--color-night);
+  color: var(--color-day);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 500;
+  display: none;
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--color-gray4);
+  margin-bottom: 8px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.fin-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.fin-bar-label {
+  width: 180px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--color-night);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.fin-bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--color-gray2);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.fin-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--color-dark-evergreen);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  color: var(--color-day);
+  font-size: 12px;
+  font-weight: 700;
+  transition: width 0.5s ease;
+}
+.fin-bar-fill.alt { background: var(--color-evergreen-tint1); }
+
+.image-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 62%;
+  border-radius: 12px;
+  background: var(--color-gray2);
+  overflow: hidden;
+  border: 1px solid var(--color-gray3);
+}
+.image-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   COMMAND BOARD — Dashboard-Specific Overrides
+   ============================================ */
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  width:100vw;height:100vh;overflow:hidden;
+  background:#003d3e;
+  font-family:'Segoe UI',Arial,sans-serif;
+}
+
+#sc{width:100vw;height:100vh;position:relative;}
+
+.slide{
+  position:absolute;top:0;left:0;
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  opacity:0;
+  pointer-events:none;
+  transform:scale(0.985);
+  transition:opacity 0.5s ease,transform 0.5s ease;
+}
+.slide.active{
+  opacity:1;
+  pointer-events:auto;
+  transform:scale(1.0);
+}
+
+#pt{
+  position:fixed;bottom:0;left:0;
+  width:100%;height:5px;
+  background:rgba(255,255,255,0.1);
+  z-index:9999;
+}
+#pf{
+  height:100%;width:0%;
+  background:#c8ff08;
+  transition:none;
+}
+#sn{
+  position:fixed;bottom:8px;right:14px;
+  font-size:11px;
+  color:rgba(255,255,255,0.4);
+  z-index:9999;
+  font-family:'Segoe UI',Arial,sans-serif;
+}
+
+/* Title Bar */
+.title-bar{
+  flex:0 0 8%;
+  min-height:50px;
+  background:#005e60;
+  border-bottom:3px solid #c8ff08;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  gap:10px;
+}
+.title-bar-left{
+  color:#fff;
+  font-weight:800;
+  font-size:clamp(13px,1.55vw,22px);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.title-bar-pill{
+  background:#c8ff08;
+  color:#003d3e;
+  font-weight:800;
+  border-radius:999px;
+  padding:5px 16px;
+  font-size:clamp(10px,1.1vw,14px);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
+/* Metric Strip */
+.metric-strip{
+  flex:0 0 22%;
+  background:#004a4c;
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  padding:0 14px;
+  align-items:center;
+}
+.mc{
+  background:#003d3e;
+  border-radius:10px;
+  height:78%;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  box-shadow:0 2px 7px rgba(0,0,0,0.18);
+  padding:4px 6px;
+}
+.mc.mc-wide{flex:1.45;}
+.mc-num{
+  font-size:clamp(26px,3.3vw,52px);
+  font-weight:900;
+  line-height:1;
+  color:#c8ff08;
+}
+.mc-num-white{color:#fff;}
+.mc-num-muted{color:rgba(255,255,255,0.3);}
+.mc-lbl{
+  color:#59c3c9;
+  font-size:clamp(8px,0.82vw,11px);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+}
+.mc-sub{
+  color:rgba(255,255,255,0.5);
+  font-size:clamp(7px,0.7vw,10px);
+}
+.mc-chip{
+  background:rgba(89,195,201,0.18);
+  color:#59c3c9;
+  border-radius:999px;
+  padding:2px 8px;
+  font-size:clamp(7px,0.68vw,9px);
+  font-weight:700;
+  margin-top:2px;
+}
+
+/* Main Body */
+.main-body{
+  flex:1;
+  background:#f0f4f5;
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  padding:10px;
+  overflow:hidden;
+  min-height:0;
+}
+
+/* Pill headers */
+.pill-ev{
+  background:#005e60;
+  color:#c8ff08;
+  border-radius:999px;
+  padding:4px 14px;
+  font-size:clamp(8px,0.88vw,11px);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.9px;
+  display:inline-block;
+  margin-bottom:6px;
+  flex-shrink:0;
+}
+.pill-sky{
+  background:#59c3c9;
+  color:#003d3e;
+  border-radius:999px;
+  padding:4px 14px;
+  font-size:clamp(8px,0.88vw,11px);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.9px;
+  display:inline-block;
+  margin-bottom:6px;
+  flex-shrink:0;
+}
+
+/* Left column — PLL rows */
+.left-col{
+  flex:0 0 55%;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+}
+.pll-list{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+.pll-row{
+  background:#fff;
+  border-radius:8px;
+  box-shadow:0 2px 7px rgba(0,0,0,0.08);
+  display:flex;
+  flex-direction:row;
+  padding:0 10px;
+  gap:8px;
+  align-items:center;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+.pll-row.muted{opacity:0.45;}
+.pll-identity{
+  flex:0 0 25%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  overflow:hidden;
+}
+.pll-name{
+  font-size:clamp(9px,0.98vw,13px);
+  font-weight:800;
+  color:#212121;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pll-tech{
+  font-size:clamp(8px,0.78vw,11px);
+  color:#6a8a8b;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pll-chips{
+  display:flex;
+  flex-direction:row;
+  gap:5px;
+  flex-shrink:0;
+}
+.chip-block{
+  background:#1a2e2e;
+  border-radius:7px;
+  min-width:42px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:3px 7px;
+}
+.chip-n{
+  font-size:clamp(11px,1.15vw,16px);
+  font-weight:900;
+  color:#c8ff08;
+  line-height:1.1;
+}
+.chip-n-muted{color:rgba(255,255,255,0.35);}
+.chip-l{
+  font-size:clamp(7px,0.68vw,9px);
+  color:rgba(255,255,255,0.55);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.pll-bar-area{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+  min-width:0;
+}
+.bar-track{
+  width:100%;
+  height:13px;
+  background:#ddeaeb;
+  border-radius:7px;
+  overflow:hidden;
+  position:relative;
+}
+.bar-fill{
+  height:100%;
+  border-radius:7px;
+  transition:width 0.4s ease;
+}
+.bar-fill-green{background:#75ca64;}
+.bar-fill-lime{background:#c8ff08;}
+.bar-fill-amber{background:#f5a623;}
+.bar-fill-red{background:#e63946;}
+.bar-meta{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.bar-label{
+  font-size:clamp(7px,0.72vw,10px);
+  color:#6a8a8b;
+  font-weight:600;
+}
+.over-badge{
+  background:#c8ff08;
+  color:#003d3e;
+  font-size:clamp(6px,0.62vw,8px);
+  font-weight:800;
+  text-transform:uppercase;
+  border-radius:999px;
+  padding:1px 6px;
+  letter-spacing:0.5px;
+}
+.bar-dash{
+  font-size:clamp(9px,0.9vw,13px);
+  color:#aac5c6;
+  font-weight:700;
+}
+
+/* Right column — Outlook */
+.right-col{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+}
+.oc-row{
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  margin-bottom:8px;
+  flex-shrink:0;
+}
+.oc-card{
+  background:#fff;
+  border-radius:8px;
+  box-shadow:0 2px 7px rgba(0,0,0,0.08);
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+}
+.oc-num{
+  font-size:clamp(18px,2.1vw,32px);
+  font-weight:900;
+  color:#59c3c9;
+  line-height:1.1;
+}
+.oc-lbl{
+  font-size:clamp(7px,0.72vw,10px);
+  color:#6a8a8b;
+  text-transform:uppercase;
+  letter-spacing:0.7px;
+  font-weight:700;
+}
+
+/* Outlook table */
+.outlook-table-wrap{
+  flex:1;
+  background:#fff;
+  border-radius:8px;
+  box-shadow:0 2px 7px rgba(0,0,0,0.08);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.ot-header{
+  display:grid;
+  grid-template-columns:1fr 1fr 56px 66px;
+  background:#003d3e;
+  padding:5px 10px;
+  flex-shrink:0;
+}
+.ot-header span{
+  color:#fff;
+  font-size:clamp(7px,0.72vw,10px);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.6px;
+}
+.ot-body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.ot-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 56px 66px;
+  padding:0 10px;
+  flex:1;
+  align-items:center;
+  border-bottom:1px solid #f0f4f5;
+}
+.ot-row:nth-child(even){background:#f7fafa;}
+.ot-cell{
+  font-size:clamp(8px,0.82vw,11px);
+  color:#212121;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.ot-cell-num{
+  font-size:clamp(9px,0.92vw,13px);
+  font-weight:900;
+  color:#59c3c9;
+  text-align:center;
+}
+
+/* ============================================
+   SLIDE 2 — PERFORMANCE & IMPROVEMENT
+   ============================================ */
+
+/* Status Bar */
+.status-bar{
+  flex:0 0 16%;
+  background:#004a4c;
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  padding:0 14px;
+  align-items:center;
+}
+.sbc{
+  background:#003d3e;
+  border-radius:10px;
+  height:78%;
+  flex:1;
+  display:flex;
+  flex-direction:row;
+  padding:0 14px;
+  gap:12px;
+  align-items:center;
+  box-shadow:0 2px 7px rgba(0,0,0,0.18);
+}
+.rag-dot{
+  width:clamp(24px,2.8vw,42px);
+  height:clamp(24px,2.8vw,42px);
+  border-radius:50%;
+  flex-shrink:0;
+}
+.rag-green{
+  background:#75ca64;
+  box-shadow:0 0 10px 3px rgba(117,202,100,0.65);
+}
+.rag-red{
+  background:#e63946;
+  box-shadow:0 0 10px 3px rgba(230,57,70,0.65);
+}
+.rag-amber{
+  background:#f5a623;
+  box-shadow:0 0 10px 3px rgba(245,166,35,0.65);
+}
+.sc-text{display:flex;flex-direction:column;gap:2px;}
+.sc-lbl{
+  font-size:clamp(10px,1.08vw,15px);
+  font-weight:800;
+  color:#fff;
+}
+.sc-sub{
+  font-size:clamp(8px,0.82vw,11px);
+  color:rgba(255,255,255,0.58);
+}
+
+/* 2x2 Grid Body */
+.grid-body{
+  flex:1;
+  background:#f0f4f5;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:10px;
+  padding:10px;
+  overflow:hidden;
+  min-height:0;
+}
+.zone{
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 2px 7px rgba(0,0,0,0.08);
+  display:flex;
+  flex-direction:column;
+  padding:8px 10px;
+  overflow:hidden;
+  min-height:0;
+}
+
+/* Bowler KPIs */
+.kpi-list{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+.kc{
+  background:#f6fafa;
+  border-radius:8px;
+  display:flex;
+  flex-direction:row;
+  flex:1;
+  padding:6px 9px;
+  gap:8px;
+  align-items:center;
+  min-height:0;
+  overflow:hidden;
+}
+.kc-bar{
+  width:5px;
+  border-radius:3px;
+  align-self:stretch;
+  flex-shrink:0;
+}
+.kc-name{
+  flex:1;
+  font-size:clamp(8px,0.85vw,12px);
+  font-weight:700;
+  color:#212121;
+  line-height:1.3;
+  overflow:hidden;
+}
+.kc-vals{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  flex-shrink:0;
+}
+.ka{
+  font-size:clamp(13px,1.5vw,22px);
+  font-weight:900;
+  color:#004745;
+  line-height:1;
+}
+.kp{
+  font-size:clamp(7px,0.7vw,9px);
+  color:#6a8a8b;
+}
+.kc-chip{
+  font-size:clamp(7px,0.7vw,9px);
+  font-weight:700;
+  border-radius:6px;
+  padding:3px 7px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.chip-green{background:#e6f9e6;color:#1a7a1a;}
+.chip-red{background:#fce8e8;color:#b02020;}
+.chip-amber{background:#fff3cd;color:#856404;}
+.chip-teal{background:#e0f4f5;color:#005e60;}
+.bowler-note{
+  font-size:clamp(7px,0.7vw,9px);
+  color:#6a8a8b;
+  font-style:italic;
+  text-align:right;
+  margin-top:3px;
+  flex-shrink:0;
+}
+
+/* Action Plan */
+.ap-badges{
+  display:flex;
+  flex-direction:row;
+  gap:8px;
+  margin-bottom:8px;
+  flex-shrink:0;
+}
+.ap-badge{
+  flex:1;
+  border-radius:8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:5px 6px;
+}
+.ap-badge-num{
+  font-size:clamp(14px,1.7vw,26px);
+  font-weight:900;
+  line-height:1;
+}
+.ap-badge-lbl{
+  font-size:clamp(7px,0.68vw,9px);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  margin-top:1px;
+}
+.ap-cols{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+.ap-col{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  overflow:hidden;
+}
+.ap-col-hdr{
+  font-size:clamp(7px,0.72vw,10px);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.7px;
+  margin-bottom:2px;
+  flex-shrink:0;
+}
+.ap-col-hdr-green{color:#1a7a1a;}
+.ap-col-hdr-sky{color:#005e60;}
+.ap-chip{
+  border-radius:999px;
+  padding:3px 8px;
+  font-size:clamp(7px,0.7vw,9px);
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  flex-shrink:0;
+}
+.ap-chip-green{background:#e6f9e6;color:#1a7a1a;}
+.ap-chip-sky{background:#e0f4f5;color:#005e60;}
+
+/* Safety */
+.safety-zone{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  flex:1;
+  overflow:hidden;
+}
+.safety-circle{
+  width:clamp(48px,5.5vw,78px);
+  height:clamp(48px,5.5vw,78px);
+  border-radius:50%;
+  background:#75ca64;
+  box-shadow:0 0 18px 6px rgba(117,202,100,0.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:clamp(20px,2.6vw,36px);
+  color:#fff;
+  font-weight:900;
+  flex-shrink:0;
+}
+.safety-label{
+  font-size:clamp(13px,1.5vw,21px);
+  font-weight:900;
+  color:#004745;
+}
+.safety-chips{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:5px;
+}
+.safety-chip{
+  background:#e6f9e6;
+  color:#1a7a1a;
+  font-weight:700;
+  border-radius:999px;
+  padding:3px 10px;
+  font-size:clamp(7px,0.72vw,10px);
+}
+.safety-note{
+  font-size:clamp(6px,0.65vw,9px);
+  color:#6a8a8b;
+  text-align:center;
+  font-style:italic;
+}
+
+/* CapEx */
+.capex-budget-label{
+  font-size:clamp(8px,0.85vw,12px);
+  font-weight:700;
+  color:#212121;
+  margin-bottom:4px;
+  flex-shrink:0;
+}
+.capex-track{
+  width:100%;
+  height:21px;
+  background:#ddeaeb;
+  border-radius:11px;
+  overflow:hidden;
+  flex-shrink:0;
+  margin-bottom:3px;
+}
+.capex-fill{
+  height:100%;
+  border-radius:11px;
+  background:#005e60;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding-right:8px;
+}
+.capex-fill-pct{
+  color:#c8ff08;
+  font-size:clamp(9px,0.9vw,12px);
+  font-weight:900;
+}
+.capex-sub{
+  font-size:clamp(7px,0.7vw,9px);
+  color:#6a8a8b;
+  margin-bottom:6px;
+  flex-shrink:0;
+}
+.capex-rows{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  flex:1;
+  overflow:hidden;
+  min-height:0;
+}
+.capex-row{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  gap:6px;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+.capex-proj{
+  flex:1;
+  font-size:clamp(8px,0.82vw,11px);
+  color:#212121;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.capex-amt{
+  font-size:clamp(8px,0.82vw,11px);
+  font-weight:700;
+  color:#004745;
+  flex-shrink:0;
+  min-width:38px;
+  text-align:right;
+}
+.capex-chip{
+  font-size:clamp(6px,0.65vw,9px);
+  font-weight:700;
+  border-radius:6px;
+  padding:2px 7px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.capex-note{
+  font-size:clamp(6px,0.65vw,9px);
+  color:#6a8a8b;
+  font-style:italic;
+  text-align:right;
+  margin-top:3px;
+  flex-shrink:0;
+}
 </style>
 </head>
 <body>
+
+<script>
+// Baked-in data
+var DATA = {
+  week: "May 11\u201315, 2026",
+  global_students: 166,
+  global_classes: 12,
+  hlc_students: 149,
+  blc_students: 5,
+  klc_students: 12,
+  other_students: 0,
+  outlook_classes: 26,
+  outlook_students: 217,
+  bowler_skill: "83%",
+  bowler_timecard: "72%",
+  bowler_util: "29%",
+  ap_in_progress: 59,
+  ap_on_deck: 56,
+  ap_complete_60d: 23,
+  capex_spent_pct: 73,
+  capex_committed_pct: 92
+};
+</script>
+
 <div id="sc">
 
-  <!-- SLIDE 1: DELIVERY OPERATIONS -->
+  <!-- ==================== SLIDE 1 ==================== -->
   <div class="slide active" id="slide-0">
-    <div class="tb">
-      <span class="tb-t">OFS Training Delivery &mdash; Delivery Operations</span>
-      <span class="tb-b">Week of May 4&ndash;8, 2026</span>
+
+    <!-- Title Bar -->
+    <div class="title-bar">
+      <span class="title-bar-left">OFS Training Delivery &mdash; Delivery Operations</span>
+      <span class="title-bar-pill">Week of May 11&ndash;15, 2026</span>
     </div>
-    <div class="ms">
-      <div class="mc wide"><div class="mcn lime">119</div><div class="mcl">Global Students</div><div class="mcc">10 Active Classes</div></div>
-      <div class="mc"><div class="mcn white">104</div><div class="mcl">HLC</div><div class="mcs">Houston, TX</div></div>
-      <div class="mc"><div class="mcn white">5</div><div class="mcl">BLC</div><div class="mcs">Birr, Switzerland</div></div>
-      <div class="mc"><div class="mcn muted">0</div><div class="mcl">KLC</div><div class="mcs">Kuwait</div></div>
-      <div class="mc"><div class="mcn white">10</div><div class="mcl">Other</div><div class="mcs">Dist. Learning</div></div>
+
+    <!-- Metric Strip -->
+    <div class="metric-strip">
+      <!-- Global -->
+      <div class="mc mc-wide">
+        <div class="mc-num">166</div>
+        <div class="mc-lbl">Global Students</div>
+        <div class="mc-chip">12 Active Classes</div>
+      </div>
+      <!-- HLC -->
+      <div class="mc">
+        <div class="mc-num mc-num-white">149</div>
+        <div class="mc-lbl" style="color:#c8ff08;">HLC</div>
+        <div class="mc-sub">Houston, TX</div>
+      </div>
+      <!-- BLC -->
+      <div class="mc">
+        <div class="mc-num mc-num-white">5</div>
+        <div class="mc-lbl" style="color:#c8ff08;">BLC</div>
+        <div class="mc-sub">Birr, Switzerland</div>
+      </div>
+      <!-- KLC -->
+      <div class="mc">
+        <div class="mc-num mc-num-white">12</div>
+        <div class="mc-lbl" style="color:#c8ff08;">KLC</div>
+        <div class="mc-sub">Kuwait</div>
+      </div>
+      <!-- Other -->
+      <div class="mc">
+        <div class="mc-num mc-num-muted">0</div>
+        <div class="mc-lbl" style="color:rgba(89,195,201,0.45);">Other</div>
+        <div class="mc-sub">Dist. Learning</div>
+      </div>
     </div>
-    <div class="body1">
-      <div class="lcol">
-        <span class="pill pill-ev">Classes in Progress &mdash; Week of May 4&ndash;8</span>
+
+    <!-- Main Body -->
+    <div class="main-body">
+
+      <!-- Left Column -->
+      <div class="left-col">
+        <div class="pill-ev">Classes in Progress &mdash; Week of May 11&ndash;15, 2026</div>
         <div class="pll-list">
 
-          <!-- Sherif Khalifa: 1 class, 18/24 students = 75% amber -->
-          <div class="pll-card"><div class="pll-id"><div class="pll-name">Sherif Khalifa</div><div class="pll-tech">Gas Turbine</div></div><div class="chips"><div class="chip"><span class="chip-n">1</span><span class="chip-l">Class</span></div><div class="chip"><span class="chip-n">18</span><span class="chip-l">Students</span></div></div><div class="barea"><div class="btrack"><div class="bfill amber" style="width:75%"></div></div><span class="blbl">18/24</span></div></div>
+          <!-- ROW 1: Sherif Khalifa | Gas Turbine — 26/24 OVER -->
+          <div class="pll-row">
+            <div class="pll-identity">
+              <div class="pll-name">Sherif Khalifa</div>
+              <div class="pll-tech">Gas Turbine</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block">
+                <div class="chip-n">1</div>
+                <div class="chip-l">Classes</div>
+              </div>
+              <div class="chip-block">
+                <div class="chip-n">26</div>
+                <div class="chip-l">Students</div>
+              </div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-track">
+                <div class="bar-fill bar-fill-lime" style="width:100%;"></div>
+              </div>
+              <div class="bar-meta">
+                <span class="bar-label">26/24</span>
+                <span class="over-badge">OVER</span>
+              </div>
+            </div>
+          </div>
 
-          <!-- Pablo Schibli: 2 classes, 34/32 = OVER lime -->
-          <div class="pll-card"><div class="pll-id"><div class="pll-name">Pablo Schibli</div><div class="pll-tech">Steam Turbine</div></div><div class="chips"><div class="chip"><span class="chip-n">2</span><span class="chip-l">Classes</span></div><div class="chip"><span class="chip-n">34</span><span class="chip-l">Students</span></div></div><div class="barea"><div class="btrack"><div class="bfill lime" style="width:100%"></div></div><span class="blbl">34/32</span><span class="over">OVER</span></div></div>
+          <!-- ROW 2: Pablo Schibli | Steam Turbine — muted -->
+          <div class="pll-row muted">
+            <div class="pll-identity">
+              <div class="pll-name">Pablo Schibli</div>
+              <div class="pll-tech">Steam Turbine</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Classes</div>
+              </div>
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Students</div>
+              </div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-dash">&mdash;</div>
+            </div>
+          </div>
 
-          <!-- Michele Alcantar: 2 classes, 21/28 = 75% amber -->
-          <div class="pll-card"><div class="pll-id"><div class="pll-name">Michele Alcantar</div><div class="pll-tech">Generator + Excitation</div></div><div class="chips"><div class="chip"><span class="chip-n">2</span><span class="chip-l">Classes</span></div><div class="chip"><span class="chip-n">21</span><span class="chip-l">Students</span></div></div><div class="barea"><div class="btrack"><div class="bfill amber" style="width:75%"></div></div><span class="blbl">21/28</span></div></div>
+          <!-- ROW 3: Michele Alcantar | Generator + Excitation — muted -->
+          <div class="pll-row muted">
+            <div class="pll-identity">
+              <div class="pll-name">Michele Alcantar</div>
+              <div class="pll-tech">Generator + Excitation</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Classes</div>
+              </div>
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Students</div>
+              </div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-dash">&mdash;</div>
+            </div>
+          </div>
 
-          <!-- Mohammed Nizami: 1 class, 6/17 = 35% red -->
-          <div class="pll-card"><div class="pll-id"><div class="pll-name">Mohammed Nizami</div><div class="pll-tech">Controls</div></div><div class="chips"><div class="chip"><span class="chip-n">1</span><span class="chip-l">Class</span></div><div class="chip"><span class="chip-n">6</span><span class="chip-l">Students</span></div></div><div class="barea"><div class="btrack"><div class="bfill red" style="width:35%"></div></div><span class="blbl">6/17</span></div></div>
+          <!-- ROW 4: Mohammed Nizami | Controls — muted -->
+          <div class="pll-row muted">
+            <div class="pll-identity">
+              <div class="pll-name">Mohammed Nizami</div>
+              <div class="pll-tech">Controls</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Classes</div>
+              </div>
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Students</div>
+              </div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-dash">&mdash;</div>
+            </div>
+          </div>
 
-          <!-- Harry Hanson: 4 classes, 40/52 = 77% amber (Craft + Repairs + ILES) -->
-          <div class="pll-card"><div class="pll-id"><div class="pll-name">Harry Hanson</div><div class="pll-tech">Craft / Repairs / ILES</div></div><div class="chips"><div class="chip"><span class="chip-n">4</span><span class="chip-l">Classes</span></div><div class="chip"><span class="chip-n">40</span><span class="chip-l">Students</span></div></div><div class="barea"><div class="btrack"><div class="bfill amber" style="width:77%"></div></div><span class="blbl">40/52</span></div></div>
+          <!-- ROW 5: Harry Hanson | Craft / Repairs / ILES — 140/167 84% -->
+          <div class="pll-row">
+            <div class="pll-identity">
+              <div class="pll-name">Harry Hanson</div>
+              <div class="pll-tech">Craft / Repairs / ILES</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block">
+                <div class="chip-n">11</div>
+                <div class="chip-l">Classes</div>
+              </div>
+              <div class="chip-block">
+                <div class="chip-n">140</div>
+                <div class="chip-l">Students</div>
+              </div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-track">
+                <div class="bar-fill bar-fill-green" style="width:84%;"></div>
+              </div>
+              <div class="bar-meta">
+                <span class="bar-label">140/167</span>
+              </div>
+            </div>
+          </div>
 
-          <!-- Greg Walker: 0 classes muted -->
-          <div class="pll-card muted"><div class="pll-id"><div class="pll-name">Greg Walker</div><div class="pll-tech">Aeroderivative</div></div><div class="chips"><div class="chip"><span class="chip-n" style="color:rgba(255,255,255,0.35)">0</span><span class="chip-l">Classes</span></div><div class="chip"><span class="chip-n" style="color:rgba(255,255,255,0.35)">0</span><span class="chip-l">Students</span></div></div><div class="barea"><div class="btrack"></div><span class="blbl" style="color:#bbb">&mdash;</span></div></div>
+          <!-- ROW 6: Greg Walker | Aeroderivative — muted -->
+          <div class="pll-row muted">
+            <div class="pll-identity">
+              <div class="pll-name">Greg Walker</div>
+              <div class="pll-tech">Aeroderivative</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Classes</div>
+              </div>
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Students</div>
+              </div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-dash">&mdash;</div>
+            </div>
+          </div>
 
-          <!-- Linda: 0 classes muted -->
-          <div class="pll-card muted"><div class="pll-id"><div class="pll-name">Linda</div><div class="pll-tech">CTE / Workforce Dev</div></div><div class="chips"><div class="chip"><span class="chip-n" style="color:rgba(255,255,255,0.35)">0</span><span class="chip-l">Classes</span></div><div class="chip"><span class="chip-n" style="color:rgba(255,255,255,0.35)">0</span><span class="chip-l">Students</span></div></div><div class="barea"><div class="btrack"></div><span class="blbl" style="color:#bbb">&mdash;</span></div></div>
+          <!-- ROW 7: Linda | CTE / Workforce Dev — muted -->
+          <div class="pll-row muted">
+            <div class="pll-identity">
+              <div class="pll-name">Linda</div>
+              <div class="pll-tech">CTE / Workforce Dev</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Classes</div>
+              </div>
+              <div class="chip-block">
+                <div class="chip-n chip-n-muted">0</div>
+                <div class="chip-l">Students</div>
+              </div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-dash">&mdash;</div>
+            </div>
+          </div>
 
-        </div>
-      </div>
-      <div class="rcol">
-        <span class="pill pill-sky">30-Day Outlook &mdash; May 9 to Jun 8</span>
+        </div><!-- /pll-list -->
+      </div><!-- /left-col -->
+
+      <!-- Right Column -->
+      <div class="right-col">
+        <div class="pill-sky">30-Day Outlook &mdash; May 16 to Jun 14</div>
+
+        <!-- Summary cards -->
         <div class="oc-row">
-          <div class="oc"><div class="oc-n">35</div><div class="oc-l">Classes Starting</div></div>
-          <div class="oc"><div class="oc-n">180</div><div class="oc-l">Students Enrolled</div></div>
-        </div>
-        <div class="tw">
-          <div class="th"><span>PLL</span><span>Technology</span><span style="text-align:center">Classes</span><span style="text-align:center">Students</span></div>
-          <div class="tb2">
-            <div class="tr"><div class="td">Sherif Khalifa</div><div class="td tech">Gas Turbine</div><div class="td num">10</div><div class="td num">83</div></div>
-            <div class="tr"><div class="td">Mohammed Nizami</div><div class="td tech">Controls</div><div class="td num">5</div><div class="td num">32</div></div>
-            <div class="tr"><div class="td">Pablo Schibli</div><div class="td tech">Steam Turbine</div><div class="td num">4</div><div class="td num">28</div></div>
-            <div class="tr"><div class="td">Michele Alcantar</div><div class="td tech">Generator</div><div class="td num">3</div><div class="td num">16</div></div>
-            <div class="tr"><div class="td">Greg Walker</div><div class="td tech">Aeroderivative</div><div class="td num">3</div><div class="td num">7</div></div>
-            <div class="tr"><div class="td">Harry Hanson</div><div class="td tech">Craft / Repairs</div><div class="td num">2</div><div class="td num">1</div></div>
-            <div class="tr"><div class="td">Other / Linda</div><div class="td tech">Non-Tech + Other</div><div class="td num">8</div><div class="td num">13</div></div>
+          <div class="oc-card">
+            <div class="oc-num">26</div>
+            <div class="oc-lbl">Classes Starting</div>
+          </div>
+          <div class="oc-card">
+            <div class="oc-num">217</div>
+            <div class="oc-lbl">Students Enrolled</div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- SLIDE 2: PERFORMANCE & IMPROVEMENT -->
+        <!-- Outlook table -->
+        <div class="outlook-table-wrap">
+          <div class="ot-header">
+            <span>PLL</span>
+            <span>Technology</span>
+            <span style="text-align:center;">Classes</span>
+            <span style="text-align:center;">Students</span>
+          </div>
+          <div class="ot-body">
+            <div class="ot-row">
+              <div class="ot-cell">Sherif Khalifa</div>
+              <div class="ot-cell">Gas Turbine</div>
+              <div class="ot-cell-num">0</div>
+              <div class="ot-cell-num">0</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Pablo Schibli</div>
+              <div class="ot-cell">Steam Turbine</div>
+              <div class="ot-cell-num">0</div>
+              <div class="ot-cell-num">0</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Michele Alcantar</div>
+              <div class="ot-cell">Generator + Excitation</div>
+              <div class="ot-cell-num">0</div>
+              <div class="ot-cell-num">0</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Mohammed Nizami</div>
+              <div class="ot-cell">Controls</div>
+              <div class="ot-cell-num">0</div>
+              <div class="ot-cell-num">0</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Harry Hanson</div>
+              <div class="ot-cell">Craft / Repairs / ILES</div>
+              <div class="ot-cell-num">26</div>
+              <div class="ot-cell-num">217</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Greg Walker</div>
+              <div class="ot-cell">Aeroderivative</div>
+              <div class="ot-cell-num">0</div>
+              <div class="ot-cell-num">0</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Linda</div>
+              <div class="ot-cell">CTE / Workforce Dev</div>
+              <div class="ot-cell-num">0</div>
+              <div class="ot-cell-num">0</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /right-col -->
+    </div><!-- /main-body -->
+  </div><!-- /slide-0 -->
+
+
+  <!-- ==================== SLIDE 2 ==================== -->
   <div class="slide" id="slide-1">
-    <div class="tb">
-      <span class="tb-t">OFS Training Delivery &mdash; Performance &amp; Improvement</span>
-      <span class="tb-b">Week of May 4&ndash;8, 2026</span>
+
+    <!-- Title Bar -->
+    <div class="title-bar">
+      <span class="title-bar-left">OFS Training Delivery &mdash; Performance &amp; Improvement</span>
+      <span class="title-bar-pill">Week of May 11&ndash;15, 2026</span>
     </div>
-    <div class="sb">
-      <div class="sbc"><div class="rag green"></div><div><div class="sc-lbl">SAFETY</div><div class="sc-sub">No Incidents</div></div></div>
-      <div class="sbc"><div class="rag red"></div><div><div class="sc-lbl">BOWLER KPIs</div><div class="sc-sub">2 of 3 at Risk</div></div></div>
-      <div class="sbc"><div class="rag green"></div><div><div class="sc-lbl">ACTION PLAN</div><div class="sc-sub">0 Overdue / 0 At Risk</div></div></div>
-      <div class="sbc"><div class="rag green"></div><div><div class="sc-lbl">CAPEX 2026</div><div class="sc-sub">92% Committed</div></div></div>
-    </div>
-    <div class="grid2">
-      <div class="zone">
-        <span class="pill pill-ev">Bowler KPIs &mdash; 2026 YTD</span>
-        <div class="kc"><div class="kb green"></div><div class="kn">Post-Training Skill Improvement</div><div class="kv"><div class="ka">83%</div><div class="kp">Plan: 70%</div></div><div class="kch green">On Track</div></div>
-        <div class="kc"><div class="kb red"></div><div class="kn">Timecard OTD</div><div class="kv"><div class="ka">72%</div><div class="kp">Plan: 92%</div></div><div class="kch red">Below Target</div></div>
-        <div class="kc"><div class="kb red"></div><div class="kn">Instructor Util &gt;75% for 3mo</div><div class="kv"><div class="ka">29%</div><div class="kp">Plan: &lt;15%</div></div><div class="kch red">Over Threshold</div></div>
-        <div class="note">Bowler updated monthly &mdash; Owner: Jim Rosen</div>
+
+    <!-- Master Status Bar -->
+    <div class="status-bar">
+      <!-- Safety -->
+      <div class="sbc">
+        <div class="rag-dot rag-green"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">SAFETY</div>
+          <div class="sc-sub">No Incidents</div>
+        </div>
       </div>
+      <!-- Bowler KPIs -->
+      <div class="sbc">
+        <div class="rag-dot rag-red"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">BOWLER KPIs</div>
+          <div class="sc-sub">2 of 3 At Risk</div>
+        </div>
+      </div>
+      <!-- Action Plan -->
+      <div class="sbc">
+        <div class="rag-dot rag-green"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">ACTION PLAN</div>
+          <div class="sc-sub">0 Overdue</div>
+        </div>
+      </div>
+      <!-- CapEx 2026 -->
+      <div class="sbc">
+        <div class="rag-dot rag-green"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">CAPEX 2026</div>
+          <div class="sc-sub">92% Committed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2x2 Grid Body -->
+    <div class="grid-body">
+
+      <!-- Zone Top-Left: Bowler KPIs -->
       <div class="zone">
-        <span class="pill pill-sky">Action Plan Health</span>
-        <div class="apb-row">
-          <div class="apb ev"><div class="apb-n">59</div><div class="apb-l">In Progress</div></div>
-          <div class="apb sky"><div class="apb-n">56</div><div class="apb-l">On Deck</div></div>
-          <div class="apb forest"><div class="apb-n">23</div><div class="apb-l">Complete 60d</div></div>
+        <div class="pill-ev">Bowler KPIs</div>
+        <div class="kpi-list">
+
+          <!-- KPI 1: Post-Training Skill Improvement — GREEN -->
+          <div class="kc">
+            <div class="kc-bar" style="background:#75ca64;"></div>
+            <div class="kc-name">Post-Training Skill Improvement</div>
+            <div class="kc-vals">
+              <div class="ka">83%</div>
+              <div class="kp">Plan: 70%</div>
+            </div>
+            <div class="kc-chip chip-green">On Track</div>
+          </div>
+
+          <!-- KPI 2: Timecard OTD — RED -->
+          <div class="kc">
+            <div class="kc-bar" style="background:#e63946;"></div>
+            <div class="kc-name">Timecard OTD</div>
+            <div class="kc-vals">
+              <div class="ka">72%</div>
+              <div class="kp">Plan: 92%</div>
+            </div>
+            <div class="kc-chip chip-red">Below Target</div>
+          </div>
+
+          <!-- KPI 3: Instructor Util >75% for 3mo — RED -->
+          <div class="kc">
+            <div class="kc-bar" style="background:#e63946;"></div>
+            <div class="kc-name">Instructor Util &gt;75% for 3mo</div>
+            <div class="kc-vals">
+              <div class="ka">29%</div>
+              <div class="kp">Target: &lt;15%</div>
+            </div>
+            <div class="kc-chip chip-red">Over Threshold</div>
+          </div>
+
+        </div>
+        <div class="bowler-note">Bowler updated monthly &mdash; Owner: Jim Rosen</div>
+      </div>
+
+      <!-- Zone Top-Right: Action Plan Health -->
+      <div class="zone">
+        <div class="pill-sky">Action Plan Health</div>
+        <div class="ap-badges">
+          <div class="ap-badge" style="background:#005e60;">
+            <div class="ap-badge-num" style="color:#c8ff08;">59</div>
+            <div class="ap-badge-lbl" style="color:rgba(255,255,255,0.75);">In Progress</div>
+          </div>
+          <div class="ap-badge" style="background:#59c3c9;">
+            <div class="ap-badge-num" style="color:#003d3e;">56</div>
+            <div class="ap-badge-lbl" style="color:#003d3e;">On Deck</div>
+          </div>
+          <div class="ap-badge" style="background:#75ca64;">
+            <div class="ap-badge-num" style="color:#003d3e;">23</div>
+            <div class="ap-badge-lbl" style="color:#003d3e;">Complete (60d)</div>
+          </div>
         </div>
         <div class="ap-cols">
           <div class="ap-col">
-            <div class="ap-hd">&#10003; Recently Completed</div>
-            <div class="ap-i done">Xyleme LCMS Readiness Proc.</div>
-            <div class="ap-i done">WFR Outreach Toolkit</div>
-            <div class="ap-i done">e4 Point Course Materials</div>
-            <div class="ap-i done">Craft Tools Definition</div>
-            <div class="ap-i done">Digital Photos Tool Selected</div>
+            <div class="ap-col-hdr ap-col-hdr-green">&#10003; Recently Completed</div>
+            <span class="ap-chip ap-chip-green">Xyleme LCMS Readiness Procedure</span>
+            <span class="ap-chip ap-chip-green">WFR Student/Parent Outreach Toolkit</span>
+            <span class="ap-chip ap-chip-green">e4 Point Course Materials Dev</span>
+            <span class="ap-chip ap-chip-green">Tools Definition - Craft</span>
+            <span class="ap-chip ap-chip-green">Digital Class Photos Tool Select</span>
           </div>
           <div class="ap-col">
-            <div class="ap-hd">&#9654; On Deck</div>
-            <div class="ap-i up">Digital Class Photos Pilot &mdash; Jun 1</div>
-            <div class="ap-i up">e4 Point Pilot Session &mdash; Jun 1</div>
-            <div class="ap-i up">Aero Seminar Execution &mdash; Jun 1</div>
-            <div class="ap-i up">HA Controls Load to Systems &mdash; Jun 1</div>
-            <div class="ap-i up">ST Controls Content Load &mdash; Jun 1</div>
+            <div class="ap-col-hdr ap-col-hdr-sky">&#9654; On Deck</div>
+            <span class="ap-chip ap-chip-sky">OE Fam Feedback Incorporate &mdash; Jun 1</span>
+            <span class="ap-chip ap-chip-sky">Updated Materials Pilot &mdash; Jun 1</span>
+            <span class="ap-chip ap-chip-sky">e4 Point Pilot Session &mdash; Jun 1</span>
+            <span class="ap-chip ap-chip-sky">Digital Photos Pilot &amp; Sustain &mdash; Jun 1</span>
+            <span class="ap-chip ap-chip-sky">HA Advanced Controls Load &mdash; Jun 1</span>
           </div>
         </div>
       </div>
-      <div class="zone">
-        <span class="pill pill-ev">Safety Status</span>
-        <div class="saf">
-          <div class="saf-circle">&#10003;</div>
-          <div class="saf-lbl">All Clear</div>
-          <div class="saf-chips"><span class="saf-chip">I&amp;I: 0</span><span class="saf-chip">I&amp;I Rate: 0</span><span class="saf-chip">Severe Incidents: 0</span></div>
-          <div class="saf-chips"><span class="saf-chip">Live Save Compliance: 92%</span><span class="saf-chip">Read Across Rate: 90%</span></div>
-          <div class="note" style="text-align:center;margin-top:4px;">Confirm against DM Board before publishing</div>
-        </div>
-      </div>
-      <div class="zone">
-        <span class="pill pill-sky">2026 CapEx</span>
-        <div class="cx-bl">$4.00M of $5.49M Spent (73%)</div>
-        <div class="cx-track"><div class="cx-fill" style="width:73%">73%</div></div>
-        <div class="cx-sub">$1.04M projected remaining &mdash; 92% committed total</div>
-        <div class="cx-rows">
-          <div class="cx-row"><div class="cx-proj">HA Tooling</div><div class="cx-st green">POs Placed</div><div class="cx-cost">$700K</div></div>
-          <div class="cx-row"><div class="cx-proj">Building 2 New Roof</div><div class="cx-st amber">With Sourcing</div><div class="cx-cost">$575K</div></div>
-          <div class="cx-row"><div class="cx-proj">New Switchgear Bldg 2</div><div class="cx-st green">PO Opened</div><div class="cx-cost">$350K</div></div>
-          <div class="cx-row"><div class="cx-proj">FFB Hardware Carts</div><div class="cx-st green">PO Opened</div><div class="cx-cost">$300K</div></div>
-          <div class="cx-row"><div class="cx-proj">New AC Units Bldg 1</div><div class="cx-st teal">Complete</div><div class="cx-cost">$250K</div></div>
-          <div class="cx-row"><div class="cx-proj">ALA Outage Kit</div><div class="cx-st green">AR Created</div><div class="cx-cost">$212K</div></div>
-        </div>
-        <div class="note">CapEx updated quarterly</div>
-      </div>
-    </div>
-  </div>
 
-</div>
+      <!-- Zone Bottom-Left: Safety Status -->
+      <div class="zone">
+        <div class="pill-ev">Safety Status</div>
+        <div class="safety-zone">
+          <div class="safety-circle">&#10003;</div>
+          <div class="safety-label">All Clear</div>
+          <div class="safety-chips">
+            <span class="safety-chip">I&amp;I: 0</span>
+            <span class="safety-chip">I&amp;I Rate: 0</span>
+            <span class="safety-chip">Severe Incidents: 0</span>
+          </div>
+          <div class="safety-chips">
+            <span class="safety-chip">Live Save: 92%</span>
+            <span class="safety-chip">Read Across: 90%</span>
+          </div>
+          <div class="safety-note">Confirm against DM Board before publishing</div>
+        </div>
+      </div>
+
+      <!-- Zone Bottom-Right: 2026 CapEx -->
+      <div class="zone">
+        <div class="pill-sky">2026 CapEx</div>
+        <div class="capex-budget-label">$4.00M of $5.49M Spent (73%)</div>
+        <div class="capex-track">
+          <div class="capex-fill" style="width:73%;">
+            <span class="capex-fill-pct">73%</span>
+          </div>
+        </div>
+        <div class="capex-sub">$1.04M projected remaining &mdash; 92% committed total</div>
+        <div class="capex-rows">
+
+          <div class="capex-row">
+            <div class="capex-proj">HA Tooling</div>
+            <div class="capex-amt">$700K</div>
+            <div class="capex-chip chip-green">Everything requested</div>
+          </div>
+
+          <div class="capex-row">
+            <div class="capex-proj">Building 2 New Roof</div>
+            <div class="capex-amt">$575K</div>
+            <div class="capex-chip chip-amber">with Sourcing</div>
+          </div>
+
+          <div class="capex-row">
+            <div class="capex-proj">New Switchgear bldg. 2</div>
+            <div class="capex-amt">$350K</div>
+            <div class="capex-chip chip-green">PO opened</div>
+          </div>
+
+          <div class="capex-row">
+            <div class="capex-proj">FFB hardware for additional carts</div>
+            <div class="capex-amt">$300K</div>
+            <div class="capex-chip chip-green">PO opened</div>
+          </div>
+
+          <div class="capex-row">
+            <div class="capex-proj">New AC units bldg. 1 phase A</div>
+            <div class="capex-amt">$250K</div>
+            <div class="capex-chip chip-teal">PO received</div>
+          </div>
+
+          <div class="capex-row">
+            <div class="capex-proj">ALA Outage Kit</div>
+            <div class="capex-amt">$211K</div>
+            <div class="capex-chip chip-green">AR Created</div>
+          </div>
+
+        </div>
+        <div class="capex-note">CapEx updated quarterly</div>
+      </div>
+
+    </div><!-- /grid-body -->
+  </div><!-- /slide-1 -->
+
+</div><!-- /sc -->
+
+<!-- Progress bar -->
 <div id="pt"><div id="pf"></div></div>
+<!-- Slide counter -->
 <div id="sn">1 / 2</div>
+
 <script>
 (function(){
-  var DUR=30000,cur=0,tot=2,timer=null,raf=null,t0=null;
-  function show(n){
-    cur=(n+tot)%tot;
-    for(var i=0;i<tot;i++){
-      var el=document.getElementById('slide-'+i);
-      if(i===cur){el.classList.add('active');}else{el.classList.remove('active');}
-    }
-    document.getElementById('sn').textContent=(cur+1)+' / '+tot;
-    startBar();
-  }
-  function startBar(){
-    if(raf){cancelAnimationFrame(raf);raf=null;}
-    t0=null;
-    var pf=document.getElementById('pf');
-    pf.style.width='0%';
-    function tick(ts){
-      if(!t0)t0=ts;
-      var pct=Math.min((ts-t0)/DUR*100,100);
-      pf.style.width=pct+'%';
-      if(pct<100){raf=requestAnimationFrame(tick);}
-    }
-    raf=requestAnimationFrame(tick);
-  }
-  function startTimer(){
-    if(timer)clearInterval(timer);
-    timer=setInterval(function(){show(cur+1);},DUR);
-  }
-  show(0);
-  startTimer();
+var DUR=30000,cur=0,tot=2,timer=null,raf=null,t0=null;
+function show(n){
+cur=(n+tot)%tot;
+for(var i=0;i<tot;i++){
+var el=document.getElementById('slide-'+i);
+if(i===cur){el.classList.add('active');}else{el.classList.remove('active');}
+}
+document.getElementById('sn').textContent=(cur+1)+' / '+tot;
+startBar();
+}
+function startBar(){
+if(raf){cancelAnimationFrame(raf);raf=null;}
+t0=null;
+var pf=document.getElementById('pf');
+pf.style.width='0%';
+function tick(ts){
+if(!t0)t0=ts;
+var pct=Math.min((ts-t0)/DUR*100,100);
+pf.style.width=pct+'%';
+if(pct<100){raf=requestAnimationFrame(tick);}
+}
+raf=requestAnimationFrame(tick);
+}
+function startTimer(){
+if(timer)clearInterval(timer);
+timer=setInterval(function(){show(cur+1);},DUR);
+}
+show(0);
+startTimer();
 })();
 </script>
+
 </body>
 </html>
