@@ -60,7 +60,7 @@
   --shadow-elevated: 0 12px 42px rgba(0, 0, 0, 0.14);
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   margin: 0;
@@ -634,1126 +634,1216 @@ a:hover { color: var(--color-dark-forest); text-decoration: underline; }
   object-fit: cover;
 }
 
-/* ============================================
-   COMMAND BOARD — Dashboard-Specific Overrides
-   ============================================ */
+/* ============================================================
+   COMMAND BOARD — CUSTOM STYLES
+   ============================================================ */
 
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{
-  width:100vw;height:100vh;overflow:hidden;
-  background:#003d3e;
-  font-family:'Segoe UI',Arial,sans-serif;
-}
-
-#sc{width:100vw;height:100vh;position:relative;}
-
-.slide{
-  position:absolute;top:0;left:0;
-  width:100%;height:100%;
-  display:flex;flex-direction:column;
-  opacity:0;
-  pointer-events:none;
-  transform:scale(0.985);
-  transition:opacity 0.5s ease,transform 0.5s ease;
-}
-.slide.active{
-  opacity:1;
-  pointer-events:auto;
-  transform:scale(1.0);
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #003d3e;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-#pt{
-  position:fixed;bottom:0;left:0;
-  width:100%;height:5px;
-  background:rgba(255,255,255,0.1);
-  z-index:9999;
-}
-#pf{
-  height:100%;width:0%;
-  background:#c8ff08;
-  transition:none;
-}
-#sn{
-  position:fixed;bottom:8px;right:14px;
-  font-size:11px;
-  color:rgba(255,255,255,0.4);
-  z-index:9999;
-  font-family:'Segoe UI',Arial,sans-serif;
+#sc {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }
 
-/* Title Bar */
-.title-bar{
-  flex:0 0 8%;
-  min-height:50px;
-  background:#005e60;
-  border-bottom:3px solid #c8ff08;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 16px;
-  gap:10px;
-}
-.title-bar-left{
-  color:#fff;
-  font-weight:800;
-  font-size:clamp(13px,1.55vw,22px);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.title-bar-pill{
-  background:#c8ff08;
-  color:#003d3e;
-  font-weight:800;
-  border-radius:999px;
-  padding:5px 16px;
-  font-size:clamp(10px,1.1vw,14px);
-  white-space:nowrap;
-  flex-shrink:0;
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.985);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-/* Metric Strip */
-.metric-strip{
-  flex:0 0 22%;
-  background:#004a4c;
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  padding:0 14px;
-  align-items:center;
-}
-.mc{
-  background:#003d3e;
-  border-radius:10px;
-  height:78%;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.18);
-  padding:4px 6px;
-}
-.mc.mc-wide{flex:1.45;}
-.mc-num{
-  font-size:clamp(26px,3.3vw,52px);
-  font-weight:900;
-  line-height:1;
-  color:#c8ff08;
-}
-.mc-num-white{color:#fff;}
-.mc-num-muted{color:rgba(255,255,255,0.3);}
-.mc-lbl{
-  color:#59c3c9;
-  font-size:clamp(8px,0.82vw,11px);
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.8px;
-}
-.mc-sub{
-  color:rgba(255,255,255,0.5);
-  font-size:clamp(7px,0.7vw,10px);
-}
-.mc-chip{
-  background:rgba(89,195,201,0.18);
-  color:#59c3c9;
-  border-radius:999px;
-  padding:2px 8px;
-  font-size:clamp(7px,0.68vw,9px);
-  font-weight:700;
-  margin-top:2px;
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1.0);
 }
 
-/* Main Body */
-.main-body{
-  flex:1;
-  background:#f0f4f5;
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  padding:10px;
-  overflow:hidden;
-  min-height:0;
+#pt {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%; height: 5px;
+  background: rgba(255,255,255,0.1);
+  z-index: 9999;
 }
 
-/* Pill headers */
-.pill-ev{
-  background:#005e60;
-  color:#c8ff08;
-  border-radius:999px;
-  padding:4px 14px;
-  font-size:clamp(8px,0.88vw,11px);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.9px;
-  display:inline-block;
-  margin-bottom:6px;
-  flex-shrink:0;
-}
-.pill-sky{
-  background:#59c3c9;
-  color:#003d3e;
-  border-radius:999px;
-  padding:4px 14px;
-  font-size:clamp(8px,0.88vw,11px);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.9px;
-  display:inline-block;
-  margin-bottom:6px;
-  flex-shrink:0;
+#pf {
+  height: 100%;
+  width: 0%;
+  background: #c8ff08;
 }
 
-/* Left column — PLL rows */
-.left-col{
-  flex:0 0 55%;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-  overflow:hidden;
-}
-.pll-list{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.pll-row{
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:row;
-  padding:0 10px;
-  gap:8px;
-  align-items:center;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.pll-row.muted{opacity:0.45;}
-.pll-identity{
-  flex:0 0 25%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  overflow:hidden;
-}
-.pll-name{
-  font-size:clamp(9px,0.98vw,13px);
-  font-weight:800;
-  color:#212121;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.pll-tech{
-  font-size:clamp(8px,0.78vw,11px);
-  color:#6a8a8b;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.pll-chips{
-  display:flex;
-  flex-direction:row;
-  gap:5px;
-  flex-shrink:0;
-}
-.chip-block{
-  background:#1a2e2e;
-  border-radius:7px;
-  min-width:42px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:3px 7px;
-}
-.chip-n{
-  font-size:clamp(11px,1.15vw,16px);
-  font-weight:900;
-  color:#c8ff08;
-  line-height:1.1;
-}
-.chip-n-muted{color:rgba(255,255,255,0.35);}
-.chip-l{
-  font-size:clamp(7px,0.68vw,9px);
-  color:rgba(255,255,255,0.55);
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-}
-.pll-bar-area{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:3px;
-  min-width:0;
-}
-.bar-track{
-  width:100%;
-  height:13px;
-  background:#ddeaeb;
-  border-radius:7px;
-  overflow:hidden;
-  position:relative;
-}
-.bar-fill{
-  height:100%;
-  border-radius:7px;
-  transition:width 0.4s ease;
-}
-.bar-fill-green{background:#75ca64;}
-.bar-fill-lime{background:#c8ff08;}
-.bar-fill-amber{background:#f5a623;}
-.bar-fill-red{background:#e63946;}
-.bar-meta{
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-.bar-label{
-  font-size:clamp(7px,0.72vw,10px);
-  color:#6a8a8b;
-  font-weight:600;
-}
-.over-badge{
-  background:#c8ff08;
-  color:#003d3e;
-  font-size:clamp(6px,0.62vw,8px);
-  font-weight:800;
-  text-transform:uppercase;
-  border-radius:999px;
-  padding:1px 6px;
-  letter-spacing:0.5px;
-}
-.bar-dash{
-  font-size:clamp(9px,0.9vw,13px);
-  color:#aac5c6;
-  font-weight:700;
+#sn {
+  position: fixed;
+  bottom: 8px; right: 14px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  z-index: 9999;
 }
 
-/* Right column — Outlook */
-.right-col{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-  overflow:hidden;
-}
-.oc-row{
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  margin-bottom:8px;
-  flex-shrink:0;
-}
-.oc-card{
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:6px 10px;
-}
-.oc-num{
-  font-size:clamp(18px,2.1vw,32px);
-  font-weight:900;
-  color:#59c3c9;
-  line-height:1.1;
-}
-.oc-lbl{
-  font-size:clamp(7px,0.72vw,10px);
-  color:#6a8a8b;
-  text-transform:uppercase;
-  letter-spacing:0.7px;
-  font-weight:700;
+/* ---- TITLE BAR ---- */
+.title-bar {
+  flex: 0 0 8%;
+  min-height: 50px;
+  background: #005e60;
+  border-bottom: 3px solid #c8ff08;
+  padding: 0 18px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Outlook table */
-.outlook-table-wrap{
-  flex:1;
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-}
-.ot-header{
-  display:grid;
-  grid-template-columns:1fr 1fr 56px 66px;
-  background:#003d3e;
-  padding:5px 10px;
-  flex-shrink:0;
-}
-.ot-header span{
-  color:#fff;
-  font-size:clamp(7px,0.72vw,10px);
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.6px;
-}
-.ot-body{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-.ot-row{
-  display:grid;
-  grid-template-columns:1fr 1fr 56px 66px;
-  padding:0 10px;
-  flex:1;
-  align-items:center;
-  border-bottom:1px solid #f0f4f5;
-}
-.ot-row:nth-child(even){background:#f7fafa;}
-.ot-cell{
-  font-size:clamp(8px,0.82vw,11px);
-  color:#212121;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.ot-cell-num{
-  font-size:clamp(9px,0.92vw,13px);
-  font-weight:900;
-  color:#59c3c9;
-  text-align:center;
+.title-bar-left {
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(13px, 1.55vw, 22px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ============================================
-   SLIDE 2 — PERFORMANCE & IMPROVEMENT
-   ============================================ */
-
-/* Status Bar */
-.status-bar{
-  flex:0 0 16%;
-  background:#004a4c;
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  padding:0 14px;
-  align-items:center;
-}
-.sbc{
-  background:#003d3e;
-  border-radius:10px;
-  height:78%;
-  flex:1;
-  display:flex;
-  flex-direction:row;
-  padding:0 14px;
-  gap:12px;
-  align-items:center;
-  box-shadow:0 2px 7px rgba(0,0,0,0.18);
-}
-.rag-dot{
-  width:clamp(24px,2.8vw,42px);
-  height:clamp(24px,2.8vw,42px);
-  border-radius:50%;
-  flex-shrink:0;
-}
-.rag-green{
-  background:#75ca64;
-  box-shadow:0 0 10px 3px rgba(117,202,100,0.65);
-}
-.rag-red{
-  background:#e63946;
-  box-shadow:0 0 10px 3px rgba(230,57,70,0.65);
-}
-.rag-amber{
-  background:#f5a623;
-  box-shadow:0 0 10px 3px rgba(245,166,35,0.65);
-}
-.sc-text{display:flex;flex-direction:column;gap:2px;}
-.sc-lbl{
-  font-size:clamp(10px,1.08vw,15px);
-  font-weight:800;
-  color:#fff;
-}
-.sc-sub{
-  font-size:clamp(8px,0.82vw,11px);
-  color:rgba(255,255,255,0.58);
+.title-bar-badge {
+  background: #c8ff08;
+  color: #003d3e;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 5px 16px;
+  font-size: clamp(10px, 1.1vw, 15px);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 12px;
 }
 
-/* 2x2 Grid Body */
-.grid-body{
-  flex:1;
-  background:#f0f4f5;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:1fr 1fr;
-  gap:10px;
-  padding:10px;
-  overflow:hidden;
-  min-height:0;
-}
-.zone{
-  background:#fff;
-  border-radius:10px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:column;
-  padding:8px 10px;
-  overflow:hidden;
-  min-height:0;
+/* ---- METRIC STRIP ---- */
+.metric-strip {
+  flex: 0 0 22%;
+  background: #004a4c;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
 }
 
-/* Bowler KPIs */
-.kpi-list{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.kc{
-  background:#f6fafa;
-  border-radius:8px;
-  display:flex;
-  flex-direction:row;
-  flex:1;
-  padding:6px 9px;
-  gap:8px;
-  align-items:center;
-  min-height:0;
-  overflow:hidden;
-}
-.kc-bar{
-  width:5px;
-  border-radius:3px;
-  align-self:stretch;
-  flex-shrink:0;
-}
-.kc-name{
-  flex:1;
-  font-size:clamp(8px,0.85vw,12px);
-  font-weight:700;
-  color:#212121;
-  line-height:1.3;
-  overflow:hidden;
-}
-.kc-vals{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  flex-shrink:0;
-}
-.ka{
-  font-size:clamp(13px,1.5vw,22px);
-  font-weight:900;
-  color:#004745;
-  line-height:1;
-}
-.kp{
-  font-size:clamp(7px,0.7vw,9px);
-  color:#6a8a8b;
-}
-.kc-chip{
-  font-size:clamp(7px,0.7vw,9px);
-  font-weight:700;
-  border-radius:6px;
-  padding:3px 7px;
-  white-space:nowrap;
-  flex-shrink:0;
-}
-.chip-green{background:#e6f9e6;color:#1a7a1a;}
-.chip-red{background:#fce8e8;color:#b02020;}
-.chip-amber{background:#fff3cd;color:#856404;}
-.chip-teal{background:#e0f4f5;color:#005e60;}
-.bowler-note{
-  font-size:clamp(7px,0.7vw,9px);
-  color:#6a8a8b;
-  font-style:italic;
-  text-align:right;
-  margin-top:3px;
-  flex-shrink:0;
+.mc {
+  background: #003d3e;
+  border-radius: 10px;
+  height: 78%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
-/* Action Plan */
-.ap-badges{
-  display:flex;
-  flex-direction:row;
-  gap:8px;
-  margin-bottom:8px;
-  flex-shrink:0;
-}
-.ap-badge{
-  flex:1;
-  border-radius:8px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:5px 6px;
-}
-.ap-badge-num{
-  font-size:clamp(14px,1.7vw,26px);
-  font-weight:900;
-  line-height:1;
-}
-.ap-badge-lbl{
-  font-size:clamp(7px,0.68vw,9px);
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-  margin-top:1px;
-}
-.ap-cols{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.ap-col{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  overflow:hidden;
-}
-.ap-col-hdr{
-  font-size:clamp(7px,0.72vw,10px);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.7px;
-  margin-bottom:2px;
-  flex-shrink:0;
-}
-.ap-col-hdr-green{color:#1a7a1a;}
-.ap-col-hdr-sky{color:#005e60;}
-.ap-chip{
-  border-radius:999px;
-  padding:3px 8px;
-  font-size:clamp(7px,0.7vw,9px);
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  flex-shrink:0;
-}
-.ap-chip-green{background:#e6f9e6;color:#1a7a1a;}
-.ap-chip-sky{background:#e0f4f5;color:#005e60;}
-
-/* Safety */
-.safety-zone{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  flex:1;
-  overflow:hidden;
-}
-.safety-circle{
-  width:clamp(48px,5.5vw,78px);
-  height:clamp(48px,5.5vw,78px);
-  border-radius:50%;
-  background:#75ca64;
-  box-shadow:0 0 18px 6px rgba(117,202,100,0.5);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:clamp(20px,2.6vw,36px);
-  color:#fff;
-  font-weight:900;
-  flex-shrink:0;
-}
-.safety-label{
-  font-size:clamp(13px,1.5vw,21px);
-  font-weight:900;
-  color:#004745;
-}
-.safety-chips{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:5px;
-}
-.safety-chip{
-  background:#e6f9e6;
-  color:#1a7a1a;
-  font-weight:700;
-  border-radius:999px;
-  padding:3px 10px;
-  font-size:clamp(7px,0.72vw,10px);
-}
-.safety-note{
-  font-size:clamp(6px,0.65vw,9px);
-  color:#6a8a8b;
-  text-align:center;
-  font-style:italic;
+.mc-global {
+  flex: 1.45;
 }
 
-/* CapEx */
-.capex-budget-label{
-  font-size:clamp(8px,0.85vw,12px);
-  font-weight:700;
-  color:#212121;
-  margin-bottom:4px;
-  flex-shrink:0;
+.mc-loc {
+  flex: 1;
 }
-.capex-track{
-  width:100%;
-  height:21px;
-  background:#ddeaeb;
-  border-radius:11px;
-  overflow:hidden;
-  flex-shrink:0;
-  margin-bottom:3px;
+
+.mc-num-global {
+  color: #c8ff08;
+  font-size: clamp(26px, 3.3vw, 52px);
+  font-weight: 900;
+  line-height: 1;
 }
-.capex-fill{
-  height:100%;
-  border-radius:11px;
-  background:#005e60;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  padding-right:8px;
+
+.mc-num-loc {
+  color: #fff;
+  font-size: clamp(20px, 2.4vw, 38px);
+  font-weight: 900;
+  line-height: 1;
 }
-.capex-fill-pct{
-  color:#c8ff08;
-  font-size:clamp(9px,0.9vw,12px);
-  font-weight:900;
+
+.mc-num-zero {
+  color: rgba(255,255,255,0.3);
+  font-size: clamp(20px, 2.4vw, 38px);
+  font-weight: 900;
+  line-height: 1;
 }
-.capex-sub{
-  font-size:clamp(7px,0.7vw,9px);
-  color:#6a8a8b;
-  margin-bottom:6px;
-  flex-shrink:0;
+
+.mc-label {
+  color: #59c3c9;
+  font-size: clamp(7px, 0.75vw, 10px);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
 }
-.capex-rows{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  flex:1;
-  overflow:hidden;
-  min-height:0;
+
+.mc-sub {
+  color: rgba(255,255,255,0.5);
+  font-size: clamp(6px, 0.62vw, 9px);
 }
-.capex-row{
-  display:flex;
-  flex-direction:row;
-  align-items:center;
-  gap:6px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
+
+.mc-chip {
+  background: rgba(89,195,201,0.15);
+  color: #59c3c9;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: clamp(7px, 0.7vw, 10px);
 }
-.capex-proj{
-  flex:1;
-  font-size:clamp(8px,0.82vw,11px);
-  color:#212121;
-  font-weight:600;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+
+.mc-scope {
+  background: rgba(89,195,201,0.12);
+  color: #59c3c9;
+  border: 1px solid rgba(89,195,201,0.5);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: clamp(6px, 0.62vw, 9px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.capex-amt{
-  font-size:clamp(8px,0.82vw,11px);
-  font-weight:700;
-  color:#004745;
-  flex-shrink:0;
-  min-width:38px;
-  text-align:right;
+
+/* ---- MAIN BODY ---- */
+.main-body {
+  background: #f0f4f5;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px;
+  flex: 1;
+  overflow: hidden;
 }
-.capex-chip{
-  font-size:clamp(6px,0.65vw,9px);
-  font-weight:700;
-  border-radius:6px;
-  padding:2px 7px;
-  white-space:nowrap;
-  flex-shrink:0;
+
+/* ---- LEFT COLUMN ---- */
+.left-col {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
 }
-.capex-note{
-  font-size:clamp(6px,0.65vw,9px);
-  color:#6a8a8b;
-  font-style:italic;
-  text-align:right;
-  margin-top:3px;
-  flex-shrink:0;
+
+.pill-ev {
+  background: #005e60;
+  color: #c8ff08;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: clamp(8px, 0.88vw, 11px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+.pill-sky {
+  background: #59c3c9;
+  color: #003d3e;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: clamp(8px, 0.88vw, 11px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+.pll-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pll-row {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 7px rgba(0,0,0,0.09);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 10px;
+  gap: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pll-row.muted {
+  opacity: 0.42;
+}
+
+.pll-identity {
+  flex: 0 0 25%;
+  overflow: hidden;
+}
+
+.pll-name {
+  font-size: clamp(9px, 0.98vw, 13px);
+  font-weight: 800;
+  color: #212121;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pll-tech {
+  font-size: clamp(7px, 0.75vw, 10px);
+  color: #6a8a8b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.count-chip {
+  background: #1a2e2e;
+  border-radius: 7px;
+  min-width: 42px;
+  padding: 3px 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.count-chip-num {
+  font-size: clamp(11px, 1.15vw, 16px);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.count-chip-num-active {
+  color: #c8ff08;
+}
+
+.count-chip-num-zero {
+  color: rgba(255,255,255,0.3);
+}
+
+.count-chip-label {
+  font-size: clamp(6px, 0.65vw, 9px);
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.bar-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.bar-track {
+  height: 13px;
+  background: #ddeaeb;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 7px;
+}
+
+.bar-meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bar-label {
+  font-size: clamp(7px, 0.7vw, 10px);
+  color: #6a8a8b;
+  font-weight: 600;
+}
+
+.over-badge {
+  background: #c8ff08;
+  color: #003d3e;
+  font-size: clamp(6px, 0.62vw, 8px);
+  font-weight: 900;
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+.bar-dash {
+  font-size: clamp(10px, 1vw, 14px);
+  color: #bbb;
+  font-weight: 700;
+}
+
+/* ---- RIGHT COLUMN ---- */
+.right-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.outlook-summary {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.outlook-sum-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.outlook-sum-num {
+  color: #59c3c9;
+  font-size: clamp(18px, 2.1vw, 32px);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.outlook-sum-label {
+  text-transform: uppercase;
+  color: #888;
+  font-size: clamp(7px, 0.7vw, 9px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.outlook-table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #ddeaeb;
+}
+
+.outlook-thead {
+  background: #003d3e;
+  color: rgba(255,255,255,0.85);
+  font-size: clamp(8px, 0.82vw, 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 52px 62px;
+  padding: 5px 10px;
+  flex-shrink: 0;
+}
+
+.outlook-tbody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.outlook-tr {
+  display: grid;
+  grid-template-columns: 1fr 1fr 52px 62px;
+  padding: 5px 10px;
+  align-items: center;
+  flex: 1;
+}
+
+.outlook-tr:nth-child(even) {
+  background: #f7fafa;
+}
+
+.ot-pll {
+  font-size: clamp(9px, 0.92vw, 13px);
+  font-weight: 600;
+  color: #212121;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ot-tech {
+  font-size: clamp(8px, 0.82vw, 11px);
+  color: #5a7a7b;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ot-num {
+  text-align: center;
+  font-weight: 900;
+  font-size: clamp(10px, 1.05vw, 14px);
+  color: #59c3c9;
+}
+
+/* ============================================================
+   SLIDE 2 STYLES
+   ============================================================ */
+
+.status-bar {
+  flex: 0 0 16%;
+  background: #004a4c;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.sb-card {
+  background: #003d3e;
+  border-radius: 10px;
+  height: 78%;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 14px;
+  gap: 12px;
+}
+
+.rag-dot {
+  width: clamp(24px, 2.8vw, 42px);
+  height: clamp(24px, 2.8vw, 42px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rag-green {
+  background: #75ca64;
+  box-shadow: 0 0 14px rgba(117,202,100,0.65);
+}
+
+.rag-red {
+  background: #e63946;
+  box-shadow: 0 0 14px rgba(230,57,70,0.65);
+}
+
+.rag-amber {
+  background: #f5a623;
+  box-shadow: 0 0 14px rgba(245,166,35,0.65);
+}
+
+.sb-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sb-label {
+  font-size: clamp(10px, 1.08vw, 15px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.sb-sub {
+  font-size: clamp(8px, 0.82vw, 11px);
+  color: rgba(255,255,255,0.58);
+}
+
+/* 2x2 grid body */
+.grid-body {
+  flex: 1;
+  background: #f0f4f5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.zone {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 7px rgba(0,0,0,0.08);
+  padding: 9px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow: hidden;
+}
+
+/* BOWLER KPIs */
+.kpi-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.kc {
+  background: #f6fafa;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  padding: 6px 9px;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.kc-bar {
+  width: 5px;
+  border-radius: 3px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.kc-name {
+  flex: 1;
+  font-size: clamp(9px, 0.95vw, 13px);
+  font-weight: 700;
+  color: #212121;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kc-vals {
+  text-align: right;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.ka {
+  font-size: clamp(14px, 1.55vw, 22px);
+  font-weight: 900;
+  color: #004745;
+  line-height: 1.1;
+}
+
+.kp {
+  font-size: clamp(7px, 0.75vw, 10px);
+  color: #888;
+}
+
+.kc-chip {
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: clamp(7px, 0.7vw, 9px);
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chip-green { background: #e6f9e6; color: #1a7a1a; }
+.chip-red   { background: #fce8e8; color: #b02020; }
+.chip-amber { background: #fff3cd; color: #856404; }
+.chip-teal  { background: #e0f4f5; color: #005e60; }
+
+.note-tiny {
+  font-size: clamp(7px, 0.68vw, 9px);
+  color: #888;
+  font-style: italic;
+  flex-shrink: 0;
+}
+
+/* ACTION PLAN */
+.ap-badges {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+
+.ap-badge {
+  border-radius: 8px;
+  padding: 6px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ap-badge-num {
+  font-size: clamp(14px, 1.55vw, 22px);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.ap-badge-label {
+  font-size: clamp(7px, 0.68vw, 9px);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.ap-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.ap-list-header {
+  font-size: clamp(8px, 0.78vw, 10px);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ap-chip {
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: clamp(7px, 0.7vw, 9px);
+  margin-bottom: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.ap-chip-done { background: #e6f9e6; color: #1a7a1a; }
+.ap-chip-deck { background: #e0f4f5; color: #005e60; }
+
+/* SAFETY */
+.safety-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.incident-circle {
+  width: clamp(44px, 5vw, 68px);
+  height: clamp(44px, 5vw, 68px);
+  border-radius: 50%;
+  background: #e63946;
+  box-shadow: 0 0 22px rgba(230,57,70,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.incident-bang {
+  color: #fff;
+  font-size: clamp(18px, 2.4vw, 32px);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.incident-status {
+  font-size: clamp(12px, 1.35vw, 19px);
+  font-weight: 900;
+  color: #e63946;
+}
+
+.incident-card {
+  background: #fce8e8;
+  border-radius: 8px;
+  padding: 6px 10px;
+  width: 100%;
+  text-align: center;
+}
+
+.inc-line1 {
+  font-size: clamp(7px, 0.72vw, 10px);
+  color: #b02020;
+  font-weight: 700;
+}
+
+.inc-line2 {
+  font-size: clamp(7px, 0.68vw, 9px);
+  color: #b02020;
+}
+
+.inc-line3 {
+  font-size: clamp(6px, 0.65vw, 9px);
+  color: #c03030;
+  font-style: italic;
+}
+
+.safety-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.safety-kpi-chip {
+  background: #f9eded;
+  color: #b02020;
+  border: 1px solid rgba(230,57,70,0.3);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: clamp(6px, 0.65vw, 9px);
+  font-weight: 700;
+}
+
+/* CAPEX */
+.capex-budget {
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+
+.capex-budget-label {
+  font-size: clamp(8px, 0.82vw, 11px);
+  color: #004745;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.capex-track {
+  width: 100%;
+  height: 21px;
+  background: #ddeaeb;
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+.capex-fill {
+  width: 73%;
+  height: 100%;
+  background: #005e60;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.capex-fill-text {
+  color: #c8ff08;
+  font-size: clamp(8px, 0.82vw, 11px);
+  font-weight: 900;
+}
+
+.capex-sub {
+  font-size: clamp(7px, 0.7vw, 9px);
+  color: #6a8a8b;
+  margin-top: 3px;
+}
+
+.capex-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.cx-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px solid #f0f4f5;
+  flex: 1;
+}
+
+.cx-proj {
+  flex: 1;
+  font-size: clamp(8px, 0.82vw, 11px);
+  color: #212121;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cx-status {
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: clamp(6px, 0.65vw, 9px);
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cx-cost {
+  font-size: clamp(8px, 0.85vw, 12px);
+  font-weight: 800;
+  color: #004745;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 </style>
 </head>
 <body>
 
-<script>
-// Baked-in data
-var DATA = {
-  week: "May 11\u201315, 2026",
-  global_students: 166,
-  global_classes: 12,
-  hlc_students: 149,
-  blc_students: 5,
-  klc_students: 12,
-  other_students: 0,
-  outlook_classes: 26,
-  outlook_students: 217,
-  bowler_skill: "83%",
-  bowler_timecard: "72%",
-  bowler_util: "29%",
-  ap_in_progress: 59,
-  ap_on_deck: 56,
-  ap_complete_60d: 23,
-  capex_spent_pct: 73,
-  capex_committed_pct: 92
-};
-</script>
-
 <div id="sc">
 
-  <!-- ==================== SLIDE 1 ==================== -->
+  <!-- ============================================================
+       SLIDE 0 — DELIVERY OPERATIONS
+       ============================================================ -->
   <div class="slide active" id="slide-0">
 
-    <!-- Title Bar -->
+    <!-- TITLE BAR -->
     <div class="title-bar">
-      <span class="title-bar-left">OFS Training Delivery &mdash; Delivery Operations</span>
-      <span class="title-bar-pill">Week of May 11&ndash;15, 2026</span>
+      <div class="title-bar-left">OFS Training Delivery — Delivery Operations</div>
+      <div class="title-bar-badge">Week of May 11–15, 2026</div>
     </div>
 
-    <!-- Metric Strip -->
+    <!-- METRIC STRIP -->
     <div class="metric-strip">
-      <!-- Global -->
-      <div class="mc mc-wide">
-        <div class="mc-num">166</div>
-        <div class="mc-lbl">Global Students</div>
+
+      <!-- GLOBAL -->
+      <div class="mc mc-global">
+        <div class="mc-num-global">166</div>
+        <div class="mc-label">Global Students</div>
         <div class="mc-chip">12 Active Classes</div>
+        <div class="mc-scope">Internal Training</div>
       </div>
+
       <!-- HLC -->
-      <div class="mc">
-        <div class="mc-num mc-num-white">149</div>
-        <div class="mc-lbl" style="color:#c8ff08;">HLC</div>
+      <div class="mc mc-loc">
+        <div class="mc-num-loc">149</div>
+        <div class="mc-label">HLC</div>
         <div class="mc-sub">Houston, TX</div>
       </div>
+
       <!-- BLC -->
-      <div class="mc">
-        <div class="mc-num mc-num-white">5</div>
-        <div class="mc-lbl" style="color:#c8ff08;">BLC</div>
+      <div class="mc mc-loc">
+        <div class="mc-num-loc">5</div>
+        <div class="mc-label">BLC</div>
         <div class="mc-sub">Birr, Switzerland</div>
       </div>
+
       <!-- KLC -->
-      <div class="mc">
-        <div class="mc-num mc-num-white">12</div>
-        <div class="mc-lbl" style="color:#c8ff08;">KLC</div>
+      <div class="mc mc-loc">
+        <div class="mc-num-loc">12</div>
+        <div class="mc-label">KLC</div>
         <div class="mc-sub">Kuwait</div>
       </div>
-      <!-- Other -->
-      <div class="mc">
-        <div class="mc-num mc-num-muted">0</div>
-        <div class="mc-lbl" style="color:rgba(89,195,201,0.45);">Other</div>
+
+      <!-- OTHER -->
+      <div class="mc mc-loc">
+        <div class="mc-num-zero">0</div>
+        <div class="mc-label">Other</div>
         <div class="mc-sub">Dist. Learning</div>
       </div>
+
     </div>
 
-    <!-- Main Body -->
+    <!-- MAIN BODY -->
     <div class="main-body">
 
-      <!-- Left Column -->
+      <!-- LEFT COLUMN -->
       <div class="left-col">
-        <div class="pill-ev">Classes in Progress &mdash; Week of May 11&ndash;15, 2026</div>
-        <div class="pll-list">
+        <div class="pill-ev">Internal Classes in Progress — Week of May 11–15, 2026</div>
 
-          <!-- ROW 1: Sherif Khalifa | Gas Turbine — 26/24 OVER -->
+        <div class="pll-rows">
+
+          <!-- Row 1: Sherif Khalifa | 2 classes | 44/48 | 92% forest -->
           <div class="pll-row">
             <div class="pll-identity">
               <div class="pll-name">Sherif Khalifa</div>
               <div class="pll-tech">Gas Turbine</div>
             </div>
-            <div class="pll-chips">
-              <div class="chip-block">
-                <div class="chip-n">1</div>
-                <div class="chip-l">Classes</div>
-              </div>
-              <div class="chip-block">
-                <div class="chip-n">26</div>
-                <div class="chip-l">Students</div>
-              </div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">2</div>
+              <div class="count-chip-label">Classes</div>
             </div>
-            <div class="pll-bar-area">
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">44</div>
+              <div class="count-chip-label">Students</div>
+            </div>
+            <div class="bar-area">
               <div class="bar-track">
-                <div class="bar-fill bar-fill-lime" style="width:100%;"></div>
+                <div class="bar-fill" style="width:92%;background:#75ca64;"></div>
               </div>
               <div class="bar-meta">
-                <span class="bar-label">26/24</span>
-                <span class="over-badge">OVER</span>
+                <span class="bar-label">44 / 48</span>
+                <span class="bar-label">92%</span>
               </div>
             </div>
           </div>
 
-          <!-- ROW 2: Pablo Schibli | Steam Turbine — muted -->
-          <div class="pll-row muted">
+          <!-- Row 2: Pablo Schibli | 1 class | 24/24 | 100% forest -->
+          <div class="pll-row">
             <div class="pll-identity">
               <div class="pll-name">Pablo Schibli</div>
               <div class="pll-tech">Steam Turbine</div>
             </div>
-            <div class="pll-chips">
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Classes</div>
-              </div>
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Students</div>
-              </div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">1</div>
+              <div class="count-chip-label">Classes</div>
             </div>
-            <div class="pll-bar-area">
-              <div class="bar-dash">&mdash;</div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">24</div>
+              <div class="count-chip-label">Students</div>
+            </div>
+            <div class="bar-area">
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#75ca64;"></div>
+              </div>
+              <div class="bar-meta">
+                <span class="bar-label">24 / 24</span>
+                <span class="bar-label">100%</span>
+              </div>
             </div>
           </div>
 
-          <!-- ROW 3: Michele Alcantar | Generator + Excitation — muted -->
-          <div class="pll-row muted">
+          <!-- Row 3: Michele Alcantar | 2 classes | 21/28 | 75% amber -->
+          <div class="pll-row">
             <div class="pll-identity">
               <div class="pll-name">Michele Alcantar</div>
               <div class="pll-tech">Generator + Excitation</div>
             </div>
-            <div class="pll-chips">
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Classes</div>
-              </div>
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Students</div>
-              </div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">2</div>
+              <div class="count-chip-label">Classes</div>
             </div>
-            <div class="pll-bar-area">
-              <div class="bar-dash">&mdash;</div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">21</div>
+              <div class="count-chip-label">Students</div>
+            </div>
+            <div class="bar-area">
+              <div class="bar-track">
+                <div class="bar-fill" style="width:75%;background:#f5a623;"></div>
+              </div>
+              <div class="bar-meta">
+                <span class="bar-label">21 / 28</span>
+                <span class="bar-label">75%</span>
+              </div>
             </div>
           </div>
 
-          <!-- ROW 4: Mohammed Nizami | Controls — muted -->
-          <div class="pll-row muted">
+          <!-- Row 4: Mohammed Nizami | 1 class | 6/17 | 35% red -->
+          <div class="pll-row">
             <div class="pll-identity">
               <div class="pll-name">Mohammed Nizami</div>
               <div class="pll-tech">Controls</div>
             </div>
-            <div class="pll-chips">
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Classes</div>
-              </div>
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Students</div>
-              </div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">1</div>
+              <div class="count-chip-label">Classes</div>
             </div>
-            <div class="pll-bar-area">
-              <div class="bar-dash">&mdash;</div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">6</div>
+              <div class="count-chip-label">Students</div>
+            </div>
+            <div class="bar-area">
+              <div class="bar-track">
+                <div class="bar-fill" style="width:35%;background:#e63946;"></div>
+              </div>
+              <div class="bar-meta">
+                <span class="bar-label">6 / 17</span>
+                <span class="bar-label">35%</span>
+              </div>
             </div>
           </div>
 
-          <!-- ROW 5: Harry Hanson | Craft / Repairs / ILES — 140/167 84% -->
+          <!-- Row 5: Harry Hanson | 6 classes | 71/74 | 96% forest -->
           <div class="pll-row">
             <div class="pll-identity">
               <div class="pll-name">Harry Hanson</div>
               <div class="pll-tech">Craft / Repairs / ILES</div>
             </div>
-            <div class="pll-chips">
-              <div class="chip-block">
-                <div class="chip-n">11</div>
-                <div class="chip-l">Classes</div>
-              </div>
-              <div class="chip-block">
-                <div class="chip-n">140</div>
-                <div class="chip-l">Students</div>
-              </div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">6</div>
+              <div class="count-chip-label">Classes</div>
             </div>
-            <div class="pll-bar-area">
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-active">71</div>
+              <div class="count-chip-label">Students</div>
+            </div>
+            <div class="bar-area">
               <div class="bar-track">
-                <div class="bar-fill bar-fill-green" style="width:84%;"></div>
+                <div class="bar-fill" style="width:96%;background:#75ca64;"></div>
               </div>
               <div class="bar-meta">
-                <span class="bar-label">140/167</span>
+                <span class="bar-label">71 / 74</span>
+                <span class="bar-label">96%</span>
               </div>
             </div>
           </div>
 
-          <!-- ROW 6: Greg Walker | Aeroderivative — muted -->
+          <!-- Row 6: Greg Walker | 0 classes — muted -->
           <div class="pll-row muted">
             <div class="pll-identity">
               <div class="pll-name">Greg Walker</div>
               <div class="pll-tech">Aeroderivative</div>
             </div>
-            <div class="pll-chips">
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Classes</div>
-              </div>
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Students</div>
-              </div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-zero">0</div>
+              <div class="count-chip-label">Classes</div>
             </div>
-            <div class="pll-bar-area">
-              <div class="bar-dash">&mdash;</div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-zero">0</div>
+              <div class="count-chip-label">Students</div>
+            </div>
+            <div class="bar-area">
+              <div class="bar-meta">
+                <span class="bar-dash">—</span>
+              </div>
             </div>
           </div>
 
-          <!-- ROW 7: Linda | CTE / Workforce Dev — muted -->
+          <!-- Row 7: Linda | 0 classes — muted -->
           <div class="pll-row muted">
             <div class="pll-identity">
               <div class="pll-name">Linda</div>
               <div class="pll-tech">CTE / Workforce Dev</div>
             </div>
-            <div class="pll-chips">
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Classes</div>
-              </div>
-              <div class="chip-block">
-                <div class="chip-n chip-n-muted">0</div>
-                <div class="chip-l">Students</div>
-              </div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-zero">0</div>
+              <div class="count-chip-label">Classes</div>
             </div>
-            <div class="pll-bar-area">
-              <div class="bar-dash">&mdash;</div>
+            <div class="count-chip">
+              <div class="count-chip-num count-chip-num-zero">0</div>
+              <div class="count-chip-label">Students</div>
+            </div>
+            <div class="bar-area">
+              <div class="bar-meta">
+                <span class="bar-dash">—</span>
+              </div>
             </div>
           </div>
 
-        </div><!-- /pll-list -->
-      </div><!-- /left-col -->
+        </div>
+      </div>
 
-      <!-- Right Column -->
+      <!-- RIGHT COLUMN -->
       <div class="right-col">
-        <div class="pill-sky">30-Day Outlook &mdash; May 16 to Jun 14</div>
+        <div class="pill-sky">Internal 30-Day Outlook — May 16 to Jun 14</div>
 
-        <!-- Summary cards -->
-        <div class="oc-row">
-          <div class="oc-card">
-            <div class="oc-num">26</div>
-            <div class="oc-lbl">Classes Starting</div>
+        <div class="outlook-summary">
+          <div class="outlook-sum-card">
+            <div class="outlook-sum-num">26</div>
+            <div class="outlook-sum-label">Classes Starting</div>
           </div>
-          <div class="oc-card">
-            <div class="oc-num">217</div>
-            <div class="oc-lbl">Students Enrolled</div>
+          <div class="outlook-sum-card">
+            <div class="outlook-sum-num">217</div>
+            <div class="outlook-sum-label">Students Enrolled</div>
           </div>
         </div>
 
-        <!-- Outlook table -->
-        <div class="outlook-table-wrap">
-          <div class="ot-header">
+        <div class="outlook-table">
+          <div class="outlook-thead">
             <span>PLL</span>
             <span>Technology</span>
-            <span style="text-align:center;">Classes</span>
-            <span style="text-align:center;">Students</span>
+            <span style="text-align:center;">CL</span>
+            <span style="text-align:center;">Stud</span>
           </div>
-          <div class="ot-body">
-            <div class="ot-row">
-              <div class="ot-cell">Sherif Khalifa</div>
-              <div class="ot-cell">Gas Turbine</div>
-              <div class="ot-cell-num">0</div>
-              <div class="ot-cell-num">0</div>
+          <div class="outlook-tbody">
+            <div class="outlook-tr">
+              <span class="ot-pll">Sherif Khalifa</span>
+              <span class="ot-tech">Gas Turbine</span>
+              <span class="ot-num">0</span>
+              <span class="ot-num">0</span>
             </div>
-            <div class="ot-row">
-              <div class="ot-cell">Pablo Schibli</div>
-              <div class="ot-cell">Steam Turbine</div>
-              <div class="ot-cell-num">0</div>
-              <div class="ot-cell-num">0</div>
+            <div class="outlook-tr">
+              <span class="ot-pll">Pablo Schibli</span>
+              <span class="ot-tech">Steam Turbine</span>
+              <span class="ot-num">0</span>
+              <span class="ot-num">0</span>
             </div>
-            <div class="ot-row">
-              <div class="ot-cell">Michele Alcantar</div>
-              <div class="ot-cell">Generator + Excitation</div>
-              <div class="ot-cell-num">0</div>
-              <div class="ot-cell-num">0</div>
+            <div class="outlook-tr">
+              <span class="ot-pll">Michele Alcantar</span>
+              <span class="ot-tech">Generator + Excitation</span>
+              <span class="ot-num">0</span>
+              <span class="ot-num">0</span>
             </div>
-            <div class="ot-row">
-              <div class="ot-cell">Mohammed Nizami</div>
-              <div class="ot-cell">Controls</div>
-              <div class="ot-cell-num">0</div>
-              <div class="ot-cell-num">0</div>
+            <div class="outlook-tr">
+              <span class="ot-pll">Mohammed Nizami</span>
+              <span class="ot-tech">Controls</span>
+              <span class="ot-num">0</span>
+              <span class="ot-num">0</span>
             </div>
-            <div class="ot-row">
-              <div class="ot-cell">Harry Hanson</div>
-              <div class="ot-cell">Craft / Repairs / ILES</div>
-              <div class="ot-cell-num">26</div>
-              <div class="ot-cell-num">217</div>
+            <div class="outlook-tr">
+              <span class="ot-pll">Harry Hanson</span>
+              <span class="ot-tech">Craft / Repairs / ILES</span>
+              <span class="ot-num" style="color:#c8ff08;background:#003d3e;border-radius:6px;padding:1px 4px;">26</span>
+              <span class="ot-num" style="color:#c8ff08;background:#003d3e;border-radius:6px;padding:1px 4px;">217</span>
             </div>
-            <div class="ot-row">
-              <div class="ot-cell">Greg Walker</div>
-              <div class="ot-cell">Aeroderivative</div>
-              <div class="ot-cell-num">0</div>
-              <div class="ot-cell-num">0</div>
+            <div class="outlook-tr">
+              <span class="ot-pll">Greg Walker</span>
+              <span class="ot-tech">Aeroderivative</span>
+              <span class="ot-num">0</span>
+              <span class="ot-num">0</span>
             </div>
-            <div class="ot-row">
-              <div class="ot-cell">Linda</div>
-              <div class="ot-cell">CTE / Workforce Dev</div>
-              <div class="ot-cell-num">0</div>
-              <div class="ot-cell-num">0</div>
+            <div class="outlook-tr">
+              <span class="ot-pll">Linda</span>
+              <span class="ot-tech">CTE / Workforce Dev</span>
+              <span class="ot-num">0</span>
+              <span class="ot-num">0</span>
             </div>
           </div>
         </div>
 
-      </div><!-- /right-col -->
-    </div><!-- /main-body -->
-  </div><!-- /slide-0 -->
+      </div>
+    </div>
+  </div>
 
-
-  <!-- ==================== SLIDE 2 ==================== -->
+  <!-- ============================================================
+       SLIDE 1 — PERFORMANCE & IMPROVEMENT
+       ============================================================ -->
   <div class="slide" id="slide-1">
 
-    <!-- Title Bar -->
+    <!-- TITLE BAR -->
     <div class="title-bar">
-      <span class="title-bar-left">OFS Training Delivery &mdash; Performance &amp; Improvement</span>
-      <span class="title-bar-pill">Week of May 11&ndash;15, 2026</span>
+      <div class="title-bar-left">OFS Training Delivery — Performance &amp; Improvement</div>
+      <div class="title-bar-badge">Week of May 11–15, 2026</div>
     </div>
 
-    <!-- Master Status Bar -->
+    <!-- MASTER STATUS BAR -->
     <div class="status-bar">
-      <!-- Safety -->
-      <div class="sbc">
-        <div class="rag-dot rag-green"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">SAFETY</div>
-          <div class="sc-sub">No Incidents</div>
-        </div>
-      </div>
-      <!-- Bowler KPIs -->
-      <div class="sbc">
+
+      <div class="sb-card">
         <div class="rag-dot rag-red"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">BOWLER KPIs</div>
-          <div class="sc-sub">2 of 3 At Risk</div>
+        <div class="sb-text">
+          <div class="sb-label">Safety</div>
+          <div class="sb-sub">First Aid — May 8</div>
         </div>
       </div>
-      <!-- Action Plan -->
-      <div class="sbc">
+
+      <div class="sb-card">
+        <div class="rag-dot rag-red"></div>
+        <div class="sb-text">
+          <div class="sb-label">Bowler KPIs</div>
+          <div class="sb-sub">2 of 3 At Risk</div>
+        </div>
+      </div>
+
+      <div class="sb-card">
         <div class="rag-dot rag-green"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">ACTION PLAN</div>
-          <div class="sc-sub">0 Overdue</div>
+        <div class="sb-text">
+          <div class="sb-label">Action Plan</div>
+          <div class="sb-sub">0 Overdue</div>
         </div>
       </div>
-      <!-- CapEx 2026 -->
-      <div class="sbc">
+
+      <div class="sb-card">
         <div class="rag-dot rag-green"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">CAPEX 2026</div>
-          <div class="sc-sub">92% Committed</div>
+        <div class="sb-text">
+          <div class="sb-label">CapEx 2026</div>
+          <div class="sb-sub">92% Committed</div>
         </div>
       </div>
+
     </div>
 
-    <!-- 2x2 Grid Body -->
+    <!-- 2x2 GRID BODY -->
     <div class="grid-body">
 
-      <!-- Zone Top-Left: Bowler KPIs -->
+      <!-- ZONE TOP-LEFT: BOWLER KPIs -->
       <div class="zone">
         <div class="pill-ev">Bowler KPIs</div>
-        <div class="kpi-list">
+        <div class="kpi-cards">
 
-          <!-- KPI 1: Post-Training Skill Improvement — GREEN -->
           <div class="kc">
             <div class="kc-bar" style="background:#75ca64;"></div>
             <div class="kc-name">Post-Training Skill Improvement</div>
@@ -1764,7 +1854,6 @@ var DATA = {
             <div class="kc-chip chip-green">On Track</div>
           </div>
 
-          <!-- KPI 2: Timecard OTD — RED -->
           <div class="kc">
             <div class="kc-bar" style="background:#e63946;"></div>
             <div class="kc-name">Timecard OTD</div>
@@ -1775,10 +1864,9 @@ var DATA = {
             <div class="kc-chip chip-red">Below Target</div>
           </div>
 
-          <!-- KPI 3: Instructor Util >75% for 3mo — RED -->
           <div class="kc">
             <div class="kc-bar" style="background:#e63946;"></div>
-            <div class="kc-name">Instructor Util &gt;75% for 3mo</div>
+            <div class="kc-name">Instructor Util &gt;75% (3mo)</div>
             <div class="kc-vals">
               <div class="ka">29%</div>
               <div class="kp">Target: &lt;15%</div>
@@ -1787,125 +1875,136 @@ var DATA = {
           </div>
 
         </div>
-        <div class="bowler-note">Bowler updated monthly &mdash; Owner: Jim Rosen</div>
+        <div class="note-tiny">Bowler updated monthly — Owner: Jim Rosen</div>
       </div>
 
-      <!-- Zone Top-Right: Action Plan Health -->
+      <!-- ZONE TOP-RIGHT: ACTION PLAN HEALTH -->
       <div class="zone">
         <div class="pill-sky">Action Plan Health</div>
+
         <div class="ap-badges">
           <div class="ap-badge" style="background:#005e60;">
             <div class="ap-badge-num" style="color:#c8ff08;">59</div>
-            <div class="ap-badge-lbl" style="color:rgba(255,255,255,0.75);">In Progress</div>
+            <div class="ap-badge-label" style="color:rgba(200,255,8,0.7);">In Progress</div>
           </div>
           <div class="ap-badge" style="background:#59c3c9;">
             <div class="ap-badge-num" style="color:#003d3e;">56</div>
-            <div class="ap-badge-lbl" style="color:#003d3e;">On Deck</div>
+            <div class="ap-badge-label" style="color:#003d3e;">On Deck</div>
           </div>
           <div class="ap-badge" style="background:#75ca64;">
             <div class="ap-badge-num" style="color:#003d3e;">23</div>
-            <div class="ap-badge-lbl" style="color:#003d3e;">Complete (60d)</div>
+            <div class="ap-badge-label" style="color:#003d3e;">Complete 60d</div>
           </div>
         </div>
-        <div class="ap-cols">
-          <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-green">&#10003; Recently Completed</div>
-            <span class="ap-chip ap-chip-green">Xyleme LCMS Readiness Procedure</span>
-            <span class="ap-chip ap-chip-green">WFR Student/Parent Outreach Toolkit</span>
-            <span class="ap-chip ap-chip-green">e4 Point Course Materials Dev</span>
-            <span class="ap-chip ap-chip-green">Tools Definition - Craft</span>
-            <span class="ap-chip ap-chip-green">Digital Class Photos Tool Select</span>
+
+        <div class="ap-lists">
+          <div>
+            <div class="ap-list-header" style="color:#1a7a1a;">&#10003; Recently Completed</div>
+            <span class="ap-chip ap-chip-done">Xyleme LCMS Readiness Procedure</span>
+            <span class="ap-chip ap-chip-done">WFR Student/Parent Outreach Toolkit</span>
+            <span class="ap-chip ap-chip-done">e4 Point Course Materials Dev</span>
+            <span class="ap-chip ap-chip-done">Tools Definition — Craft</span>
+            <span class="ap-chip ap-chip-done">Digital Class Photos Tool Select</span>
           </div>
-          <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-sky">&#9654; On Deck</div>
-            <span class="ap-chip ap-chip-sky">OE Fam Feedback Incorporate &mdash; Jun 1</span>
-            <span class="ap-chip ap-chip-sky">Updated Materials Pilot &mdash; Jun 1</span>
-            <span class="ap-chip ap-chip-sky">e4 Point Pilot Session &mdash; Jun 1</span>
-            <span class="ap-chip ap-chip-sky">Digital Photos Pilot &amp; Sustain &mdash; Jun 1</span>
-            <span class="ap-chip ap-chip-sky">HA Advanced Controls Load &mdash; Jun 1</span>
+          <div>
+            <div class="ap-list-header" style="color:#005e60;">&#9654; On Deck</div>
+            <span class="ap-chip ap-chip-deck">OE Fam Feedback Incorporate — Jun 1</span>
+            <span class="ap-chip ap-chip-deck">Updated Materials Pilot — Jun 1</span>
+            <span class="ap-chip ap-chip-deck">e4 Point Pilot Session — Jun 1</span>
+            <span class="ap-chip ap-chip-deck">Digital Photos Pilot &amp; Sustain — Jun 1</span>
+            <span class="ap-chip ap-chip-deck">HA Advanced Controls Load — Jun 1</span>
           </div>
         </div>
       </div>
 
-      <!-- Zone Bottom-Left: Safety Status -->
+      <!-- ZONE BOTTOM-LEFT: SAFETY STATUS -->
       <div class="zone">
         <div class="pill-ev">Safety Status</div>
-        <div class="safety-zone">
-          <div class="safety-circle">&#10003;</div>
-          <div class="safety-label">All Clear</div>
-          <div class="safety-chips">
-            <span class="safety-chip">I&amp;I: 0</span>
-            <span class="safety-chip">I&amp;I Rate: 0</span>
-            <span class="safety-chip">Severe Incidents: 0</span>
+
+        <div class="safety-inner">
+          <div class="incident-circle">
+            <span class="incident-bang">!</span>
           </div>
-          <div class="safety-chips">
-            <span class="safety-chip">Live Save: 92%</span>
-            <span class="safety-chip">Read Across: 90%</span>
+          <div class="incident-status">Active First Aid</div>
+          <div class="incident-card">
+            <div class="inc-line1">May 8, 2026 &middot; 10:30 AM &middot; HLC Trailer 101</div>
+            <div class="inc-line2">Student slipped on wet metal stairs — tailbone, left heel, left toe</div>
+            <div class="inc-line3">Action: Extra caution reinforced for wet conditions</div>
           </div>
-          <div class="safety-note">Confirm against DM Board before publishing</div>
+          <div class="safety-kpis">
+            <span class="safety-kpi-chip">I&amp;I: 0</span>
+            <span class="safety-kpi-chip">I&amp;I Rate: 0</span>
+            <span class="safety-kpi-chip">Severe: 0</span>
+            <span class="safety-kpi-chip">Live Save: 92%</span>
+            <span class="safety-kpi-chip">Read Across: 90%</span>
+          </div>
         </div>
+        <div class="note-tiny" style="text-align:center;">Confirm against DM Board before publishing</div>
       </div>
 
-      <!-- Zone Bottom-Right: 2026 CapEx -->
+      <!-- ZONE BOTTOM-RIGHT: 2026 CAPEX -->
       <div class="zone">
         <div class="pill-sky">2026 CapEx</div>
-        <div class="capex-budget-label">$4.00M of $5.49M Spent (73%)</div>
-        <div class="capex-track">
-          <div class="capex-fill" style="width:73%;">
-            <span class="capex-fill-pct">73%</span>
+
+        <div class="capex-budget">
+          <div class="capex-budget-label">$4.00M of $5.49M Spent (73%)</div>
+          <div class="capex-track">
+            <div class="capex-fill">
+              <span class="capex-fill-text">73%</span>
+            </div>
           </div>
+          <div class="capex-sub">$1.04M projected remaining — 92% committed total</div>
         </div>
-        <div class="capex-sub">$1.04M projected remaining &mdash; 92% committed total</div>
+
         <div class="capex-rows">
 
-          <div class="capex-row">
-            <div class="capex-proj">HA Tooling</div>
-            <div class="capex-amt">$700K</div>
-            <div class="capex-chip chip-green">Everything requested</div>
+          <div class="cx-row">
+            <span class="cx-proj">HA Tooling</span>
+            <span class="cx-status chip-green">Everything requested</span>
+            <span class="cx-cost">$700K</span>
           </div>
 
-          <div class="capex-row">
-            <div class="capex-proj">Building 2 New Roof</div>
-            <div class="capex-amt">$575K</div>
-            <div class="capex-chip chip-amber">with Sourcing</div>
+          <div class="cx-row">
+            <span class="cx-proj">Building 2 New Roof</span>
+            <span class="cx-status chip-amber">with Sourcing</span>
+            <span class="cx-cost">$575K</span>
           </div>
 
-          <div class="capex-row">
-            <div class="capex-proj">New Switchgear bldg. 2</div>
-            <div class="capex-amt">$350K</div>
-            <div class="capex-chip chip-green">PO opened</div>
+          <div class="cx-row">
+            <span class="cx-proj">New Switchgear bldg. 2</span>
+            <span class="cx-status chip-green">PO opened</span>
+            <span class="cx-cost">$350K</span>
           </div>
 
-          <div class="capex-row">
-            <div class="capex-proj">FFB hardware for additional carts</div>
-            <div class="capex-amt">$300K</div>
-            <div class="capex-chip chip-green">PO opened</div>
+          <div class="cx-row">
+            <span class="cx-proj">FFB hardware — add'l carts</span>
+            <span class="cx-status chip-green">PO opened</span>
+            <span class="cx-cost">$300K</span>
           </div>
 
-          <div class="capex-row">
-            <div class="capex-proj">New AC units bldg. 1 phase A</div>
-            <div class="capex-amt">$250K</div>
-            <div class="capex-chip chip-teal">PO received</div>
+          <div class="cx-row">
+            <span class="cx-proj">New AC units bldg. 1 phase A</span>
+            <span class="cx-status chip-teal">PO received</span>
+            <span class="cx-cost">$250K</span>
           </div>
 
-          <div class="capex-row">
-            <div class="capex-proj">ALA Outage Kit</div>
-            <div class="capex-amt">$211K</div>
-            <div class="capex-chip chip-green">AR Created</div>
+          <div class="cx-row">
+            <span class="cx-proj">ALA Outage Kit</span>
+            <span class="cx-status chip-green">AR Created</span>
+            <span class="cx-cost">$211K</span>
           </div>
 
         </div>
-        <div class="capex-note">CapEx updated quarterly</div>
+        <div class="note-tiny">CapEx updated quarterly</div>
       </div>
 
-    </div><!-- /grid-body -->
-  </div><!-- /slide-1 -->
+    </div>
+  </div>
 
-</div><!-- /sc -->
+</div>
 
-<!-- Progress bar -->
+<!-- Progress bar and slide counter -->
 <div id="pt"><div id="pf"></div></div>
-<!-- Slide counter -->
 <div id="sn">1 / 2</div>
 
 <script>
