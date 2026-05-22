@@ -1,1391 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OFS Training Delivery — Command Board</title>
-<style>
-/* GE Vernova Design System — Dashboard Edition
-   Colors sourced from official Brand & Visual Identity Guidelines, V7.0, September 2025
-   Color names: Evergreen, Day, Urgency Green, Night */
-
-:root {
-  /* Primary palette */
-  --color-evergreen: #005E60;
-  --color-day: #FFFFFF;
-  --color-urgency-green: #C8FF08;
-  --color-night: #212121;
-
-  /* Evergreen tint palette */
-  --color-dark-evergreen: #004745;
-  --color-evergreen-tint1: #458A8A;
-  --color-evergreen-tint2: #96BDBD;
-  --color-evergreen-tint3: #C7DBDB;
-
-  /* Secondary palette — grays */
-  --color-gray1: #FAFAFA;
-  --color-gray2: #E3E3E3;
-  --color-gray3: #CCCCCC;
-  --color-gray4: #696969;
-  --color-gray5: #484848;
-
-  /* Tertiary palette — charts/graphs only */
-  --color-dark-sky: #2176FF;
-  --color-sky: #5FB7FF;
-  --color-dark-forest: #3E9E00;
-  --color-forest: #7BDD3C;
-  --color-dark-earth: #4A2419;
-  --color-earth: #774936;
-
-  /* Legacy compatibility aliases */
-  --color-dk1: #005E60;
-  --color-lt1: #FFFFFF;
-  --color-dk2: #212121;
-  --color-lt2: #C8FF08;
-  --color-accent1: #004745;
-  --color-accent2: #E3E3E3;
-  --color-accent3: #CCCCCC;
-  --color-accent4: #696969;
-  --color-accent5: #484848;
-  --color-accent6: #458A8A;
-  --color-hlink: #2176FF;
-  --color-fol-hlink: #3E9E00;
-
-  /* Typography */
-  --font-heading: "GE Vernova Sans Condensed Extrabold", "Inter", "Segoe UI", sans-serif;
-  --font-body: "Inter", "Segoe UI", sans-serif;
-
-  /* Layout */
-  --radius-card: 18px;
-  --shadow-elevated: 0 12px 42px rgba(0, 0, 0, 0.14);
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--color-gray1);
-  color: var(--color-night);
-  font-family: var(--font-body);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
-a { color: var(--color-dark-sky); text-decoration: none; }
-a:hover { color: var(--color-dark-forest); text-decoration: underline; }
-
-.dashboard {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 28px 24px 60px;
-}
-
-.dash-header {
-  background: var(--color-dark-evergreen);
-  color: var(--color-day);
-  border-radius: var(--radius-card);
-  padding: 36px 44px 28px;
-  margin-bottom: 28px;
-  box-shadow: var(--shadow-elevated);
-  position: relative;
-  overflow: hidden;
-}
-.dash-header::after {
-  content: "";
-  position: absolute;
-  top: -60px; right: -80px;
-  width: 320px; height: 320px;
-  border-radius: 50%;
-  background: rgba(200, 255, 8, 0.06);
-  pointer-events: none;
-}
-.dash-header h1 {
-  font-family: var(--font-heading);
-  font-size: 38px;
-  margin: 0 0 4px;
-  color: var(--color-urgency-green);
-  letter-spacing: 0.3px;
-}
-.dash-header p {
-  margin: 0;
-  opacity: 0.82;
-  font-size: 16px;
-}
-
-.section-title {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  color: var(--color-evergreen);
-  margin: 32px 0 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.kpi-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.kpi-card {
-  background: var(--color-day);
-  border: 1px solid var(--color-gray3);
-  border-radius: 14px;
-  padding: 20px 22px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  transition: transform 0.15s;
-}
-.kpi-card:hover { transform: translateY(-2px); }
-.kpi-card .kpi-value {
-  font-family: var(--font-heading);
-  font-size: 36px;
-  color: var(--color-dark-evergreen);
-  margin: 0 0 2px;
-}
-.kpi-card .kpi-label {
-  color: var(--color-gray4);
-  font-size: 13px;
-  margin: 0;
-}
-.kpi-card .kpi-delta {
-  display: inline-block;
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 6px;
-}
-.delta-up   { background: #e6f9e6; color: #1a7a1a; }
-.delta-down { background: #fce8e8; color: #b02020; }
-.delta-flat { background: var(--color-gray2); color: var(--color-night); }
-
-.chart-panel {
-  background: var(--color-day);
-  border: 1px solid var(--color-gray3);
-  border-radius: var(--radius-card);
-  padding: 28px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  margin-bottom: 20px;
-}
-.chart-panel h3 {
-  font-family: var(--font-heading);
-  font-size: 17px;
-  color: var(--color-night);
-  margin: 0 0 16px;
-}
-
-.row-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-@media (max-width: 900px) { .row-2 { grid-template-columns: 1fr; } }
-
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 32px;
-  align-items: start;
-}
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px;
-}
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 22px;
-}
-
-.boxed {
-  background: var(--color-gray1);
-  border: 1px solid var(--color-gray3);
-  border-radius: 12px;
-  padding: 18px 20px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-  margin-top: 12px;
-}
-.stat {
-  background: var(--color-day);
-  border: 1px solid var(--color-gray3);
-  border-radius: 12px;
-  padding: 16px 18px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-.stat__value {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  color: var(--color-dark-evergreen);
-  margin: 0 0 6px;
-}
-.stat__label {
-  margin: 0;
-  color: var(--color-gray4);
-  font-size: 15px;
-}
-
-.quote {
-  position: relative;
-  padding: 20px 22px 20px 26px;
-  border-left: 5px solid var(--color-evergreen-tint1);
-  background: var(--color-gray1);
-  color: var(--color-gray5);
-  font-size: 18px;
-  line-height: 1.6;
-}
-.quote__author {
-  margin-top: 12px;
-  font-weight: 600;
-  color: var(--color-night);
-}
-
-.callout {
-  border-left: 6px solid var(--color-dark-evergreen);
-  padding: 12px 14px;
-  background: var(--color-evergreen-tint3);
-  border-radius: 10px;
-  color: var(--color-night);
-}
-
-.timeline {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 14px;
-}
-.timeline__item {
-  background: var(--color-day);
-  border: 1px solid var(--color-gray3);
-  border-radius: 12px;
-  padding: 14px 16px;
-  position: relative;
-}
-.timeline__item::before {
-  content: "";
-  position: absolute;
-  top: 14px; left: 10px;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--color-dark-evergreen);
-}
-.timeline__title {
-  margin: 0 0 6px 12px;
-  font-family: var(--font-heading);
-  color: var(--color-night);
-}
-.timeline__text {
-  margin: 0 0 0 12px;
-  color: var(--color-gray5);
-  font-size: 15px;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: var(--color-gray2);
-  color: var(--color-gray5);
-  font-weight: 600;
-  letter-spacing: 0.2px;
-}
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: var(--color-urgency-green);
-  color: var(--color-dark-evergreen);
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-
-.divider {
-  height: 6px;
-  width: 72px;
-  border-radius: 6px;
-  background: var(--color-evergreen-tint1);
-  margin: 10px 0 22px;
-}
-
-.tab-nav {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.tab-btn {
-  padding: 8px 18px;
-  border-radius: 10px;
-  border: 1px solid var(--color-gray3);
-  background: var(--color-day);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-gray5);
-  cursor: pointer;
-  transition: all 0.12s;
-}
-.tab-btn:hover { background: var(--color-gray2); }
-.tab-btn.active {
-  background: var(--color-dark-evergreen);
-  color: var(--color-day);
-  border-color: var(--color-dark-evergreen);
-}
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-.program-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 16px;
-}
-.program-card {
-  background: var(--color-day);
-  border: 1px solid var(--color-gray3);
-  border-radius: 14px;
-  padding: 22px 24px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  cursor: pointer;
-  transition: transform 0.12s, box-shadow 0.12s;
-}
-.program-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.10);
-}
-.program-card .pc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-.program-card .pc-name {
-  font-family: var(--font-heading);
-  font-size: 17px;
-  color: var(--color-night);
-  margin: 0;
-}
-.program-card .pc-bu {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 6px;
-  background: var(--color-gray2);
-  color: var(--color-gray5);
-  white-space: nowrap;
-}
-.program-card .pc-lead {
-  font-size: 13px;
-  color: var(--color-gray4);
-  margin: 0 0 8px;
-}
-.program-card .pc-value {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  color: var(--color-evergreen);
-  margin: 0 0 4px;
-}
-.program-card .pc-value-label {
-  font-size: 12px;
-  color: var(--color-gray4);
-  margin: 0 0 10px;
-}
-.program-card .pc-milestone {
-  font-size: 13px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  display: inline-block;
-}
-.ms-on-track { background: #e6f9e6; color: #1a7a1a; }
-.ms-delayed   { background: #fff3cd; color: #856404; }
-.ms-at-risk   { background: #fce8e8; color: #b02020; }
-.ms-complete  { background: #d4edda; color: #155724; }
-
-.program-detail-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 1000;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-}
-.program-detail-overlay.active { display: flex; }
-.program-detail-panel {
-  background: var(--color-day);
-  border-radius: var(--radius-card);
-  max-width: 780px;
-  width: 100%;
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 36px 40px;
-  box-shadow: var(--shadow-elevated);
-  position: relative;
-}
-.program-detail-panel .close-btn {
-  position: absolute;
-  top: 16px; right: 20px;
-  background: none;
-  border: none;
-  font-size: 26px;
-  cursor: pointer;
-  color: var(--color-gray4);
-  line-height: 1;
-}
-.program-detail-panel .close-btn:hover { color: var(--color-night); }
-.program-detail-panel h2 {
-  font-family: var(--font-heading);
-  font-size: 26px;
-  color: var(--color-evergreen);
-  margin: 0 0 6px;
-}
-.program-detail-panel .pd-meta {
-  color: var(--color-gray4);
-  font-size: 14px;
-  margin: 0 0 18px;
-}
-.program-detail-panel .pd-body {
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--color-night);
-}
-.program-detail-panel .pd-body p { margin: 0 0 12px; }
-.program-detail-panel .pd-body ul { margin: 0 0 12px 18px; padding: 0; }
-.program-detail-panel .pd-body li + li { margin-top: 4px; }
-
-.funnel-container { display: flex; flex-direction: column; gap: 6px; }
-.funnel-bar {
-  height: 44px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  padding: 0 18px;
-  color: var(--color-day);
-  font-weight: 700;
-  font-size: 14px;
-  transition: opacity 0.15s;
-  margin: 0 auto;
-}
-.funnel-bar:hover { opacity: 0.88; }
-.funnel-bar .fb-count {
-  margin-left: auto;
-  font-family: var(--font-heading);
-  font-size: 20px;
-}
-
-.risk-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-.risk-table th {
-  text-align: left;
-  padding: 8px 12px;
-  border-bottom: 2px solid var(--color-gray3);
-  color: var(--color-gray4);
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
-.risk-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--color-gray1);
-  vertical-align: top;
-}
-.risk-table tr:hover td { background: var(--color-gray1); }
-.sev-high { color: #b02020; font-weight: 700; }
-.sev-med  { color: #856404; font-weight: 700; }
-.sev-low  { color: #1a7a1a; font-weight: 700; }
-
-.adoption-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-}
-.adoption-card {
-  background: var(--color-day);
-  border: 1px solid var(--color-gray3);
-  border-radius: 14px;
-  padding: 22px 24px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-}
-.adoption-card h4 {
-  font-family: var(--font-heading);
-  font-size: 16px;
-  color: var(--color-night);
-  margin: 0 0 14px;
-}
-.adopt-metric {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--color-gray1);
-}
-.adopt-metric:last-child { border-bottom: none; }
-.adopt-metric .am-label { color: var(--color-gray4); font-size: 13px; }
-.adopt-metric .am-val {
-  font-family: var(--font-heading);
-  font-size: 20px;
-  color: var(--color-dark-evergreen);
-}
-
-.chart-svg { width: 100%; overflow: visible; }
-.chart-gridline { stroke: var(--color-gray2); stroke-width: 1; }
-.chart-axis-label { font-size: 11px; fill: var(--color-gray4); font-family: var(--font-body); }
-.chart-bar-target { fill: var(--color-gray3); }
-.chart-bar-actual { fill: var(--color-dark-evergreen); }
-.chart-line-target { fill: none; stroke: var(--color-gray3); stroke-width: 2.5; stroke-dasharray: 6 4; }
-.chart-line-actual { fill: none; stroke: var(--color-dark-evergreen); stroke-width: 2.5; }
-.chart-dot-target { fill: var(--color-gray3); }
-.chart-dot-actual { fill: var(--color-dark-evergreen); }
-.chart-label { font-size: 11px; fill: var(--color-night); font-family: var(--font-body); font-weight: 600; }
-
-.chart-tooltip {
-  position: absolute;
-  background: var(--color-night);
-  color: var(--color-day);
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  pointer-events: none;
-  z-index: 500;
-  display: none;
-  white-space: nowrap;
-}
-
-.legend {
-  display: flex;
-  gap: 18px;
-  font-size: 12px;
-  color: var(--color-gray4);
-  margin-bottom: 8px;
-}
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.legend-swatch {
-  width: 14px; height: 14px;
-  border-radius: 4px;
-  display: inline-block;
-}
-
-.fin-bar-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-.fin-bar-label {
-  width: 180px;
-  text-align: right;
-  font-size: 13px;
-  color: var(--color-night);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.fin-bar-track {
-  flex: 1;
-  height: 28px;
-  background: var(--color-gray2);
-  border-radius: 6px;
-  position: relative;
-  overflow: hidden;
-}
-.fin-bar-fill {
-  height: 100%;
-  border-radius: 6px;
-  background: var(--color-dark-evergreen);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 8px;
-  color: var(--color-day);
-  font-size: 12px;
-  font-weight: 700;
-  transition: width 0.5s ease;
-}
-.fin-bar-fill.alt { background: var(--color-evergreen-tint1); }
-
-.image-frame {
-  position: relative;
-  width: 100%;
-  padding-top: 62%;
-  border-radius: 12px;
-  background: var(--color-gray2);
-  overflow: hidden;
-  border: 1px solid var(--color-gray3);
-}
-.image-frame img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ============================================
-   COMMAND BOARD — Dashboard-Specific Overrides
-   ============================================ */
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OFS Training Delivery — Week of May 25–29, 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+  <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{
-  width:100vw;height:100vh;overflow:hidden;
-  background:#003d3e;
-  font-family:'Segoe UI',Arial,sans-serif;
-}
-
+html,body{width:100vw;height:100vh;overflow:hidden;background:#003d3e;font-family:'Segoe UI',Arial,sans-serif;}
 #sc{width:100vw;height:100vh;position:relative;}
-
-.slide{
-  position:absolute;top:0;left:0;
-  width:100%;height:100%;
-  display:flex;flex-direction:column;
-  opacity:0;
-  pointer-events:none;
-  transform:scale(0.985);
-  transition:opacity 0.5s ease,transform 0.5s ease;
-}
-.slide.active{
-  opacity:1;
-  pointer-events:auto;
-  transform:scale(1.0);
-}
-
-#pt{
-  position:fixed;bottom:0;left:0;
-  width:100%;height:5px;
-  background:rgba(255,255,255,0.1);
-  z-index:9999;
-}
-#pf{
-  height:100%;width:0%;
-  background:#c8ff08;
-  transition:none;
-}
-#sn{
-  position:fixed;bottom:8px;right:14px;
-  font-size:11px;
-  color:rgba(255,255,255,0.4);
-  z-index:9999;
-  font-family:'Segoe UI',Arial,sans-serif;
-}
-
-/* Title Bar */
-.title-bar{
-  flex:0 0 8%;
-  min-height:50px;
-  background:#005e60;
-  border-bottom:3px solid #c8ff08;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 16px;
-  gap:10px;
-}
-.title-bar-left{
-  color:#fff;
-  font-weight:800;
-  font-size:clamp(13px,1.55vw,22px);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.title-bar-pill{
-  background:#c8ff08;
-  color:#003d3e;
-  font-weight:800;
-  border-radius:999px;
-  padding:5px 16px;
-  font-size:clamp(10px,1.1vw,14px);
-  white-space:nowrap;
-  flex-shrink:0;
-}
-
-/* Metric Strip */
-.metric-strip{
-  flex:0 0 22%;
-  background:#004a4c;
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  padding:0 14px;
-  align-items:center;
-}
-.mc{
-  background:#003d3e;
-  border-radius:10px;
-  height:78%;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.18);
-  padding:4px 6px;
-}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(0.985);transition:opacity 0.5s ease,transform 0.5s ease;}
+.slide.active{opacity:1;pointer-events:auto;transform:scale(1.0);}
+#pt{position:fixed;bottom:0;left:0;width:100%;height:5px;background:rgba(255,255,255,0.1);z-index:9999;}
+#pf{height:100%;width:0%;background:#c8ff08;transition:none;}
+#sn{position:fixed;bottom:8px;right:14px;font-size:11px;color:rgba(255,255,255,0.4);z-index:9999;}
+.title-bar{flex:0 0 8%;min-height:50px;background:#005e60;border-bottom:3px solid #c8ff08;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:10px;}
+.title-bar-left{color:#fff;font-weight:800;font-size:clamp(13px,1.55vw,22px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.title-bar-pill{background:#c8ff08;color:#003d3e;font-weight:800;border-radius:999px;padding:5px 16px;font-size:clamp(10px,1.1vw,14px);white-space:nowrap;flex-shrink:0;}
+.metric-strip{flex:0 0 22%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
+.mc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 2px 7px rgba(0,0,0,0.18);padding:4px 6px;}
 .mc.mc-wide{flex:1.45;}
-.mc-num{
-  font-size:clamp(26px,3.3vw,52px);
-  font-weight:900;
-  line-height:1;
-  color:#c8ff08;
-}
+.mc-num{font-size:clamp(26px,3.3vw,52px);font-weight:900;line-height:1;color:#c8ff08;}
 .mc-num-white{color:#fff;}
 .mc-num-muted{color:rgba(255,255,255,0.3);}
-.mc-lbl{
-  color:#59c3c9;
-  font-size:clamp(8px,0.82vw,11px);
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.8px;
-}
-.mc-sub{
-  color:rgba(255,255,255,0.5);
-  font-size:clamp(7px,0.7vw,10px);
-}
-.mc-chip{
-  background:rgba(89,195,201,0.18);
-  color:#59c3c9;
-  border-radius:999px;
-  padding:2px 8px;
-  font-size:clamp(7px,0.68vw,9px);
-  font-weight:700;
-  margin-top:2px;
-}
-
-/* Main Body */
-.main-body{
-  flex:1;
-  background:#f0f4f5;
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  padding:10px;
-  overflow:hidden;
-  min-height:0;
-}
-
-/* Pill headers */
-.pill-ev{
-  background:#005e60;
-  color:#c8ff08;
-  border-radius:999px;
-  padding:4px 14px;
-  font-size:clamp(8px,0.88vw,11px);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.9px;
-  display:inline-block;
-  margin-bottom:6px;
-  flex-shrink:0;
-}
-.pill-sky{
-  background:#59c3c9;
-  color:#003d3e;
-  border-radius:999px;
-  padding:4px 14px;
-  font-size:clamp(8px,0.88vw,11px);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.9px;
-  display:inline-block;
-  margin-bottom:6px;
-  flex-shrink:0;
-}
-
-/* Left column — PLL rows */
-.left-col{
-  flex:0 0 55%;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-  overflow:hidden;
-}
-.pll-list{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.pll-row{
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:row;
-  padding:0 10px;
-  gap:8px;
-  align-items:center;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
+.mc-lbl{color:#59c3c9;font-size:clamp(8px,0.82vw,11px);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;}
+.mc-sub{color:rgba(255,255,255,0.5);font-size:clamp(7px,0.7vw,10px);}
+.mc-chip{background:rgba(89,195,201,0.18);color:#59c3c9;border-radius:999px;padding:2px 8px;font-size:clamp(7px,0.68vw,9px);font-weight:700;margin-top:2px;}
+.main-body{flex:1;background:#f0f4f5;display:flex;flex-direction:row;gap:10px;padding:10px;overflow:hidden;min-height:0;}
+.pill-ev{background:#005e60;color:#c8ff08;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
+.pill-sky{background:#59c3c9;color:#003d3e;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
+.left-col{flex:0 0 55%;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.pll-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
+.pll-row{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:row;padding:0 10px;gap:8px;align-items:center;flex:1;min-height:0;overflow:hidden;}
 .pll-row.muted{opacity:0.45;}
-.pll-identity{
-  flex:0 0 25%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  overflow:hidden;
-}
-.pll-name{
-  font-size:clamp(9px,0.98vw,13px);
-  font-weight:800;
-  color:#212121;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.pll-tech{
-  font-size:clamp(8px,0.78vw,11px);
-  color:#6a8a8b;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.pll-chips{
-  display:flex;
-  flex-direction:row;
-  gap:5px;
-  flex-shrink:0;
-}
-.chip-block{
-  background:#1a2e2e;
-  border-radius:7px;
-  min-width:42px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:3px 7px;
-}
-.chip-n{
-  font-size:clamp(11px,1.15vw,16px);
-  font-weight:900;
-  color:#c8ff08;
-  line-height:1.1;
-}
+.pll-identity{flex:0 0 25%;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
+.pll-name{font-size:clamp(9px,0.98vw,13px);font-weight:800;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pll-tech{font-size:clamp(8px,0.78vw,11px);color:#6a8a8b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pll-chips{display:flex;flex-direction:row;gap:5px;flex-shrink:0;}
+.chip-block{background:#1a2e2e;border-radius:7px;min-width:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 7px;}
+.chip-n{font-size:clamp(11px,1.15vw,16px);font-weight:900;color:#c8ff08;line-height:1.1;}
 .chip-n-muted{color:rgba(255,255,255,0.35);}
-.chip-l{
-  font-size:clamp(7px,0.68vw,9px);
-  color:rgba(255,255,255,0.55);
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-}
-.pll-bar-area{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:3px;
-  min-width:0;
-}
-.bar-track{
-  width:100%;
-  height:13px;
-  background:#ddeaeb;
-  border-radius:7px;
-  overflow:hidden;
-  position:relative;
-}
-.bar-fill{
-  height:100%;
-  border-radius:7px;
-  transition:width 0.4s ease;
-}
+.chip-l{font-size:clamp(7px,0.68vw,9px);color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.5px;}
+.pll-bar-area{flex:1;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;}
+.bar-track{width:100%;height:13px;background:#ddeaeb;border-radius:7px;overflow:hidden;position:relative;}
+.bar-fill{height:100%;border-radius:7px;transition:width 0.4s ease;}
 .bar-fill-green{background:#75ca64;}
 .bar-fill-lime{background:#c8ff08;}
 .bar-fill-amber{background:#f5a623;}
 .bar-fill-red{background:#e63946;}
-.bar-meta{
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-.bar-label{
-  font-size:clamp(7px,0.72vw,10px);
-  color:#6a8a8b;
-  font-weight:600;
-}
-.over-badge{
-  background:#c8ff08;
-  color:#003d3e;
-  font-size:clamp(6px,0.62vw,8px);
-  font-weight:800;
-  text-transform:uppercase;
-  border-radius:999px;
-  padding:1px 6px;
-  letter-spacing:0.5px;
-}
-.bar-dash{
-  font-size:clamp(9px,0.9vw,13px);
-  color:#aac5c6;
-  font-weight:700;
-}
-
-/* Right column — Outlook */
-.right-col{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-  overflow:hidden;
-}
-.oc-row{
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  margin-bottom:8px;
-  flex-shrink:0;
-}
-.oc-card{
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:6px 10px;
-}
-.oc-num{
-  font-size:clamp(18px,2.1vw,32px);
-  font-weight:900;
-  color:#59c3c9;
-  line-height:1.1;
-}
-.oc-lbl{
-  font-size:clamp(7px,0.72vw,10px);
-  color:#6a8a8b;
-  text-transform:uppercase;
-  letter-spacing:0.7px;
-  font-weight:700;
-}
-
-/* Outlook table */
-.outlook-table-wrap{
-  flex:1;
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-}
-.ot-header{
-  display:grid;
-  grid-template-columns:1fr 1fr 56px 66px;
-  background:#003d3e;
-  padding:5px 10px;
-  flex-shrink:0;
-}
-.ot-header span{
-  color:#fff;
-  font-size:clamp(7px,0.72vw,10px);
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.6px;
-}
-.ot-body{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-.ot-row{
-  display:grid;
-  grid-template-columns:1fr 1fr 56px 66px;
-  padding:0 10px;
-  flex:1;
-  align-items:center;
-  border-bottom:1px solid #f0f4f5;
-}
+.bar-meta{display:flex;align-items:center;gap:5px;}
+.bar-label{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;font-weight:600;}
+.over-badge{background:#c8ff08;color:#003d3e;font-size:clamp(6px,0.62vw,8px);font-weight:800;text-transform:uppercase;border-radius:999px;padding:1px 6px;letter-spacing:0.5px;}
+.bar-dash{font-size:clamp(9px,0.9vw,13px);color:#aac5c6;font-weight:700;}
+.right-col{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.oc-row{display:flex;flex-direction:row;gap:10px;margin-bottom:8px;flex-shrink:0;}
+.oc-card{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 10px;}
+.oc-num{font-size:clamp(18px,2.1vw,32px);font-weight:900;color:#59c3c9;line-height:1.1;}
+.oc-lbl{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;text-transform:uppercase;letter-spacing:0.7px;font-weight:700;}
+.outlook-table-wrap{flex:1;background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;min-height:0;}
+.ot-header{display:grid;grid-template-columns:1fr 1fr 56px 66px;background:#003d3e;padding:5px 10px;flex-shrink:0;}
+.ot-header span{color:#fff;font-size:clamp(7px,0.72vw,10px);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;}
+.ot-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.ot-row{display:grid;grid-template-columns:1fr 1fr 56px 66px;padding:0 10px;flex:1;align-items:center;border-bottom:1px solid #f0f4f5;}
 .ot-row:nth-child(even){background:#f7fafa;}
-.ot-cell{
-  font-size:clamp(8px,0.82vw,11px);
-  color:#212121;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.ot-cell-num{
-  font-size:clamp(9px,0.92vw,13px);
-  font-weight:900;
-  color:#59c3c9;
-  text-align:center;
-}
-
-/* ============================================
-   SLIDE 2 — PERFORMANCE & IMPROVEMENT
-   ============================================ */
-
-/* Status Bar */
-.status-bar{
-  flex:0 0 16%;
-  background:#004a4c;
-  display:flex;
-  flex-direction:row;
-  gap:10px;
-  padding:0 14px;
-  align-items:center;
-}
-.sbc{
-  background:#003d3e;
-  border-radius:10px;
-  height:78%;
-  flex:1;
-  display:flex;
-  flex-direction:row;
-  padding:0 14px;
-  gap:12px;
-  align-items:center;
-  box-shadow:0 2px 7px rgba(0,0,0,0.18);
-}
-.rag-dot{
-  width:clamp(24px,2.8vw,42px);
-  height:clamp(24px,2.8vw,42px);
-  border-radius:50%;
-  flex-shrink:0;
-}
-.rag-green{
-  background:#75ca64;
-  box-shadow:0 0 10px 3px rgba(117,202,100,0.65);
-}
-.rag-red{
-  background:#e63946;
-  box-shadow:0 0 10px 3px rgba(230,57,70,0.65);
-}
-.rag-amber{
-  background:#f5a623;
-  box-shadow:0 0 10px 3px rgba(245,166,35,0.65);
-}
+.ot-cell{font-size:clamp(8px,0.82vw,11px);color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ot-cell-num{font-size:clamp(9px,0.92vw,13px);font-weight:900;color:#59c3c9;text-align:center;}
+.status-bar{flex:0 0 16%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
+.sbc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:row;padding:0 14px;gap:12px;align-items:center;box-shadow:0 2px 7px rgba(0,0,0,0.18);}
+.rag-dot{width:clamp(24px,2.8vw,42px);height:clamp(24px,2.8vw,42px);border-radius:50%;flex-shrink:0;}
+.rag-green{background:#75ca64;box-shadow:0 0 10px 3px rgba(117,202,100,0.65);}
+.rag-red{background:#e63946;box-shadow:0 0 10px 3px rgba(230,57,70,0.65);}
+.rag-amber{background:#f5a623;box-shadow:0 0 10px 3px rgba(245,166,35,0.65);}
 .sc-text{display:flex;flex-direction:column;gap:2px;}
-.sc-lbl{
-  font-size:clamp(10px,1.08vw,15px);
-  font-weight:800;
-  color:#fff;
-}
-.sc-sub{
-  font-size:clamp(8px,0.82vw,11px);
-  color:rgba(255,255,255,0.58);
-}
-
-/* 2x2 Grid Body */
-.grid-body{
-  flex:1;
-  background:#f0f4f5;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:1fr 1fr;
-  gap:10px;
-  padding:10px;
-  overflow:hidden;
-  min-height:0;
-}
-.zone{
-  background:#fff;
-  border-radius:10px;
-  box-shadow:0 2px 7px rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:column;
-  padding:8px 10px;
-  overflow:hidden;
-  min-height:0;
-}
-
-/* Bowler KPIs */
-.kpi-list{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.kc{
-  background:#f6fafa;
-  border-radius:8px;
-  display:flex;
-  flex-direction:row;
-  flex:1;
-  padding:6px 9px;
-  gap:8px;
-  align-items:center;
-  min-height:0;
-  overflow:hidden;
-}
-.kc-bar{
-  width:5px;
-  border-radius:3px;
-  align-self:stretch;
-  flex-shrink:0;
-}
-.kc-name{
-  flex:1;
-  font-size:clamp(8px,0.85vw,12px);
-  font-weight:700;
-  color:#212121;
-  line-height:1.3;
-  overflow:hidden;
-}
-.kc-vals{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  flex-shrink:0;
-}
-.ka{
-  font-size:clamp(13px,1.5vw,22px);
-  font-weight:900;
-  color:#004745;
-  line-height:1;
-}
-.kp{
-  font-size:clamp(7px,0.7vw,9px);
-  color:#6a8a8b;
-}
-.kc-chip{
-  font-size:clamp(7px,0.7vw,9px);
-  font-weight:700;
-  border-radius:6px;
-  padding:3px 7px;
-  white-space:nowrap;
-  flex-shrink:0;
-}
+.sc-lbl{font-size:clamp(10px,1.08vw,15px);font-weight:800;color:#fff;}
+.sc-sub{font-size:clamp(8px,0.82vw,11px);color:rgba(255,255,255,0.58);}
+.grid-body{flex:1;background:#f0f4f5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:10px;overflow:hidden;min-height:0;}
+.zone{background:#fff;border-radius:10px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:column;padding:8px 10px;overflow:hidden;min-height:0;}
+.kpi-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
+.kc{background:#f6fafa;border-radius:8px;display:flex;flex-direction:row;flex:1;padding:6px 9px;gap:8px;align-items:center;min-height:0;overflow:hidden;}
+.kc-bar{width:5px;border-radius:3px;align-self:stretch;flex-shrink:0;}
+.kc-name{flex:1;font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;line-height:1.3;overflow:hidden;}
+.kc-vals{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;}
+.ka{font-size:clamp(13px,1.5vw,22px);font-weight:900;color:#004745;line-height:1;}
+.kp{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;}
+.kc-chip{font-size:clamp(7px,0.7vw,9px);font-weight:700;border-radius:6px;padding:3px 7px;white-space:nowrap;flex-shrink:0;}
 .chip-green{background:#e6f9e6;color:#1a7a1a;}
 .chip-red{background:#fce8e8;color:#b02020;}
 .chip-amber{background:#fff3cd;color:#856404;}
 .chip-teal{background:#e0f4f5;color:#005e60;}
-.bowler-note{
-  font-size:clamp(7px,0.7vw,9px);
-  color:#6a8a8b;
-  font-style:italic;
-  text-align:right;
-  margin-top:3px;
-  flex-shrink:0;
-}
-
-/* Action Plan */
-.ap-badges{
-  display:flex;
-  flex-direction:row;
-  gap:8px;
-  margin-bottom:8px;
-  flex-shrink:0;
-}
-.ap-badge{
-  flex:1;
-  border-radius:8px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:5px 6px;
-}
-.ap-badge-num{
-  font-size:clamp(14px,1.7vw,26px);
-  font-weight:900;
-  line-height:1;
-}
-.ap-badge-lbl{
-  font-size:clamp(7px,0.68vw,9px);
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-  margin-top:1px;
-}
-.ap-cols{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.ap-col{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  overflow:hidden;
-}
-.ap-col-hdr{
-  font-size:clamp(7px,0.72vw,10px);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.7px;
-  margin-bottom:2px;
-  flex-shrink:0;
-}
+.bowler-note{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
+.ap-badges{display:flex;flex-direction:row;gap:8px;margin-bottom:8px;flex-shrink:0;}
+.ap-badge{flex:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 6px;}
+.ap-badge-num{font-size:clamp(14px,1.7vw,26px);font-weight:900;line-height:1;}
+.ap-badge-lbl{font-size:clamp(7px,0.68vw,9px);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
+.ap-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0;overflow:hidden;}
+.ap-col{display:flex;flex-direction:column;gap:4px;overflow:hidden;}
+.ap-col-hdr{font-size:clamp(7px,0.72vw,10px);font-weight:800;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:2px;flex-shrink:0;}
 .ap-col-hdr-green{color:#1a7a1a;}
 .ap-col-hdr-sky{color:#005e60;}
-.ap-chip{
-  border-radius:999px;
-  padding:3px 8px;
-  font-size:clamp(7px,0.7vw,9px);
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  flex-shrink:0;
-}
+.ap-chip{border-radius:999px;padding:3px 8px;font-size:clamp(7px,0.7vw,9px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
 .ap-chip-green{background:#e6f9e6;color:#1a7a1a;}
 .ap-chip-sky{background:#e0f4f5;color:#005e60;}
-
-/* Safety */
-.safety-zone{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  flex:1;
-  overflow:hidden;
-}
-.safety-circle{
-  width:clamp(48px,5.5vw,78px);
-  height:clamp(48px,5.5vw,78px);
-  border-radius:50%;
-  background:#75ca64;
-  box-shadow:0 0 18px 6px rgba(117,202,100,0.5);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:clamp(20px,2.6vw,36px);
-  color:#fff;
-  font-weight:900;
-  flex-shrink:0;
-}
-.safety-label{
-  font-size:clamp(13px,1.5vw,21px);
-  font-weight:900;
-  color:#004745;
-}
-.safety-chips{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:5px;
-}
-.safety-chip{
-  background:#e6f9e6;
-  color:#1a7a1a;
-  font-weight:700;
-  border-radius:999px;
-  padding:3px 10px;
-  font-size:clamp(7px,0.72vw,10px);
-}
-.safety-note{
-  font-size:clamp(6px,0.65vw,9px);
-  color:#6a8a8b;
-  text-align:center;
-  font-style:italic;
-}
-
-/* CapEx */
-.capex-budget-label{
-  font-size:clamp(8px,0.85vw,12px);
-  font-weight:700;
-  color:#212121;
-  margin-bottom:4px;
-  flex-shrink:0;
-}
-.capex-track{
-  width:100%;
-  height:21px;
-  background:#ddeaeb;
-  border-radius:11px;
-  overflow:hidden;
-  flex-shrink:0;
-  margin-bottom:3px;
-}
-.capex-fill{
-  height:100%;
-  border-radius:11px;
-  background:#005e60;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  padding-right:8px;
-}
-.capex-fill-pct{
-  color:#c8ff08;
-  font-size:clamp(9px,0.9vw,12px);
-  font-weight:900;
-}
-.capex-sub{
-  font-size:clamp(7px,0.7vw,9px);
-  color:#6a8a8b;
-  margin-bottom:6px;
-  flex-shrink:0;
-}
-.capex-rows{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  flex:1;
-  overflow:hidden;
-  min-height:0;
-}
-.capex-row{
-  display:flex;
-  flex-direction:row;
-  align-items:center;
-  gap:6px;
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
-.capex-proj{
-  flex:1;
-  font-size:clamp(8px,0.82vw,11px);
-  color:#212121;
-  font-weight:600;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.capex-amt{
-  font-size:clamp(8px,0.82vw,11px);
-  font-weight:700;
-  color:#004745;
-  flex-shrink:0;
-  min-width:38px;
-  text-align:right;
-}
-.capex-chip{
-  font-size:clamp(6px,0.65vw,9px);
-  font-weight:700;
-  border-radius:6px;
-  padding:2px 7px;
-  white-space:nowrap;
-  flex-shrink:0;
-}
-.capex-note{
-  font-size:clamp(6px,0.65vw,9px);
-  color:#6a8a8b;
-  font-style:italic;
-  text-align:right;
-  margin-top:3px;
-  flex-shrink:0;
-}
-
-/* MAP SLIDES */
+.safety-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;flex:1;overflow:hidden;}
+.safety-circle{width:clamp(48px,5.5vw,78px);height:clamp(48px,5.5vw,78px);border-radius:50%;background:#75ca64;box-shadow:0 0 18px 6px rgba(117,202,100,0.5);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,2.6vw,36px);color:#fff;font-weight:900;flex-shrink:0;}
+.safety-label{font-size:clamp(13px,1.5vw,21px);font-weight:900;color:#004745;}
+.safety-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;}
+.safety-chip{background:#e6f9e6;color:#1a7a1a;font-weight:700;border-radius:999px;padding:3px 10px;font-size:clamp(7px,0.72vw,10px);}
+.safety-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;text-align:center;font-style:italic;}
+.capex-budget-label{font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;margin-bottom:4px;flex-shrink:0;}
+.capex-track{width:100%;height:21px;background:#ddeaeb;border-radius:11px;overflow:hidden;flex-shrink:0;margin-bottom:3px;}
+.capex-fill{height:100%;border-radius:11px;background:#005e60;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.capex-fill-pct{color:#c8ff08;font-size:clamp(9px,0.9vw,12px);font-weight:900;}
+.capex-sub{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;margin-bottom:6px;flex-shrink:0;}
+.capex-rows{display:flex;flex-direction:column;gap:4px;flex:1;overflow:hidden;min-height:0;}
+.capex-row{display:flex;flex-direction:row;align-items:center;gap:6px;flex:1;min-height:0;overflow:hidden;}
+.capex-proj{flex:1;font-size:clamp(8px,0.82vw,11px);color:#212121;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.capex-amt{font-size:clamp(8px,0.82vw,11px);font-weight:700;color:#004745;flex-shrink:0;min-width:38px;text-align:right;}
+.capex-chip{font-size:clamp(6px,0.65vw,9px);font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;flex-shrink:0;}
+.capex-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
 .map-body{flex:1;display:flex;flex-direction:column;background:#f0f4f5;overflow:hidden;}
 .map-container{flex:1;background:#005e5d;position:relative;overflow:hidden;}
 .map-stat-bar{flex:0 0 42px;background:#004a4c;border-top:2px solid rgba(200,255,8,0.25);position:relative;display:flex;align-items:center;justify-content:center;gap:32px;}
@@ -1397,136 +130,244 @@ html,body{
 svg{width:100%;height:100%;}
 @keyframes pulse-ring{0%{transform:scale(1);opacity:0.65;}100%{transform:scale(1.9);opacity:0;}}
 #tooltip4{position:fixed;background:#003d3e;color:#fff;padding:7px 13px;border-radius:6px;font-size:12px;z-index:999;pointer-events:none;display:none;}
-
-</style>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+  </style>
+</head>
 <body>
 <div id="sc">
+  <!-- SLIDE 1: DELIVERY OPERATIONS -->
   <div class="slide active" id="slide-0">
     <div class="title-bar">
-      <span class="title-bar-left">OFS Training Delivery &mdash; Delivery Operations</span>
-      <span class="title-bar-pill">Week of May 18&ndash;22, 2026</span>
+      <div class="title-bar-left">OFS Training Delivery &mdash; Delivery Operations</div>
+      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
     </div>
     <div class="metric-strip">
-      <div class="mc mc-wide"><div class="mc-num">290</div><div class="mc-lbl">Global Students</div><div class="mc-chip">23 Active Classes</div></div>
-      <div class="mc"><div class="mc-num mc-num-white">150</div><div class="mc-lbl" style="color:#c8ff08;">HLC</div><div class="mc-sub">Houston, TX</div></div>
-      <div class="mc"><div class="mc-num mc-num-white">5</div><div class="mc-lbl" style="color:#c8ff08;">BLC</div><div class="mc-sub">Birr, Switzerland</div></div>
-      <div class="mc"><div class="mc-num mc-num-white">12</div><div class="mc-lbl" style="color:#c8ff08;">KLC</div><div class="mc-sub">Kuwait</div></div>
-      <div class="mc"><div class="mc-num mc-num-muted">0</div><div class="mc-lbl" style="color:rgba(89,195,201,0.45);">Other</div><div class="mc-sub">Dist. Learning</div></div>
+      <div class="mc mc-wide">
+        <div class="mc-num">219</div>
+        <div class="mc-lbl">Global Students</div>
+        <div class="mc-chip">15 Active Classes</div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white">138</div>
+        <div class="mc-lbl">HLC</div>
+        <div class="mc-sub">Houston, TX</div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white">5</div>
+        <div class="mc-lbl">BLC</div>
+        <div class="mc-sub">Birr, Switzerland</div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white">12</div>
+        <div class="mc-lbl">KLC</div>
+        <div class="mc-sub">Kuwait</div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white">40</div>
+        <div class="mc-lbl" style="color:#59c3c9;">Other</div>
+        <div class="mc-sub">Dist. Learning</div>
+      </div>
     </div>
     <div class="main-body">
       <div class="left-col">
-        <div class="pill-ev">Classes in Progress &mdash; Week of May 18&ndash;22, 2026</div>
+        <div class="pill-ev">Classes in Progress &mdash; Week of May 25&ndash;29, 2026</div>
         <div class="pll-list">
+          <!-- ROW 1 -->
           <div class="pll-row">
-            <div class="pll-identity"><div class="pll-name">Sherif Khalifa</div><div class="pll-tech">Gas Turbine</div></div>
-            <div class="pll-chips"><div class="chip-block"><div class="chip-n">2</div><div class="chip-l">Classes</div></div><div class="chip-block"><div class="chip-n">56</div><div class="chip-l">Students</div></div></div>
+            <div class="pll-identity">
+              <div class="pll-name">Sherif Khalifa</div>
+              <div class="pll-tech">Gas Turbine</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
+              <div class="chip-block"><div class="chip-n">44</div><div class="chip-l">STU</div></div>
+            </div>
             <div class="pll-bar-area">
               <div class="bar-track"><div class="bar-fill bar-fill-green" style="width:92%;"></div></div>
               <div class="bar-meta"><span class="bar-label">INT 44/48</span></div>
-              <div style="font-size:clamp(7px,0.65vw,9px);color:#6a8a8b;margin-top:1px;">SS: 1 cls / 12 stu</div>
             </div>
           </div>
+          <!-- ROW 2 -->
           <div class="pll-row">
-            <div class="pll-identity"><div class="pll-name">Pablo Schibli</div><div class="pll-tech">Steam Turbine</div></div>
-            <div class="pll-chips"><div class="chip-block"><div class="chip-n">4</div><div class="chip-l">Classes</div></div><div class="chip-block"><div class="chip-n">60</div><div class="chip-l">Students</div></div></div>
+            <div class="pll-identity">
+              <div class="pll-name">Pablo Schibli</div>
+              <div class="pll-tech">Steam Turbine</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
+              <div class="chip-block"><div class="chip-n">36</div><div class="chip-l">STU</div></div>
+            </div>
             <div class="pll-bar-area">
-              <div class="bar-track"><div class="bar-fill bar-fill-lime" style="width:100%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 24/24</span><span class="over-badge">OVER</span></div>
-              <div style="font-size:clamp(7px,0.65vw,9px);color:#6a8a8b;margin-top:1px;">OE: 3 cls / 36 stu</div>
+              <div class="bar-track"><div class="bar-fill bar-fill-green" style="width:100%;"></div></div>
+              <div class="bar-meta"><span class="bar-label">INT 24/24</span></div>
+              <div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">OE: 1 cls / 12 stu</div>
             </div>
           </div>
+          <!-- ROW 3 -->
           <div class="pll-row">
-            <div class="pll-identity"><div class="pll-name">Michele Alcantar</div><div class="pll-tech">Generator + Excitation</div></div>
-            <div class="pll-chips"><div class="chip-block"><div class="chip-n">2</div><div class="chip-l">Classes</div></div><div class="chip-block"><div class="chip-n">33</div><div class="chip-l">Students</div></div></div>
+            <div class="pll-identity">
+              <div class="pll-name">Michele Alcantar</div>
+              <div class="pll-tech">Generator + Excitation</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
+              <div class="chip-block"><div class="chip-n">21</div><div class="chip-l">STU</div></div>
+            </div>
             <div class="pll-bar-area">
               <div class="bar-track"><div class="bar-fill bar-fill-amber" style="width:75%;"></div></div>
               <div class="bar-meta"><span class="bar-label">INT 21/28</span></div>
-              <div style="font-size:clamp(7px,0.65vw,9px);color:#6a8a8b;margin-top:1px;">OE: 1 cls / 12 stu</div>
             </div>
           </div>
+          <!-- ROW 4 -->
           <div class="pll-row">
-            <div class="pll-identity"><div class="pll-name">Mohammed Nizami</div><div class="pll-tech">Controls</div></div>
-            <div class="pll-chips"><div class="chip-block"><div class="chip-n">5</div><div class="chip-l">Classes</div></div><div class="chip-block"><div class="chip-n">42</div><div class="chip-l">Students</div></div></div>
+            <div class="pll-identity">
+              <div class="pll-name">Mohammed Nizami</div>
+              <div class="pll-tech">Controls</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block"><div class="chip-n">1</div><div class="chip-l">CLS</div></div>
+              <div class="chip-block"><div class="chip-n">6</div><div class="chip-l">STU</div></div>
+            </div>
             <div class="pll-bar-area">
               <div class="bar-track"><div class="bar-fill bar-fill-red" style="width:35%;"></div></div>
               <div class="bar-meta"><span class="bar-label">INT 6/17</span></div>
-              <div style="font-size:clamp(7px,0.65vw,9px);color:#6a8a8b;margin-top:1px;">SS: 1 cls / 12 stu &nbsp;|&nbsp; OE: 3 cls / 24 stu</div>
             </div>
           </div>
+          <!-- ROW 5 -->
           <div class="pll-row">
-            <div class="pll-identity"><div class="pll-name">Harry Hanson</div><div class="pll-tech">Craft / Repairs / ILES</div></div>
-            <div class="pll-chips"><div class="chip-block"><div class="chip-n">8</div><div class="chip-l">Classes</div></div><div class="chip-block"><div class="chip-n">72</div><div class="chip-l">Students</div></div></div>
+            <div class="pll-identity">
+              <div class="pll-name">Harry Hanson</div>
+              <div class="pll-tech">Craft / Repairs / ILES</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block"><div class="chip-n">5</div><div class="chip-l">CLS</div></div>
+              <div class="chip-block"><div class="chip-n">60</div><div class="chip-l">STU</div></div>
+            </div>
             <div class="pll-bar-area">
               <div class="bar-track"><div class="bar-fill bar-fill-green" style="width:97%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 72/74</span></div>
+              <div class="bar-meta"><span class="bar-label">INT 60/62</span></div>
             </div>
           </div>
+          <!-- ROW 6 -->
           <div class="pll-row">
-            <div class="pll-identity"><div class="pll-name">Greg Walker</div><div class="pll-tech">Aeroderivative</div></div>
-            <div class="pll-chips"><div class="chip-block"><div class="chip-n">2</div><div class="chip-l">Classes</div></div><div class="chip-block"><div class="chip-n">27</div><div class="chip-l">Students</div></div></div>
+            <div class="pll-identity">
+              <div class="pll-name">Greg Walker</div>
+              <div class="pll-tech">Aeroderivative</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block"><div class="chip-n">1</div><div class="chip-l">CLS</div></div>
+              <div class="chip-block"><div class="chip-n">12</div><div class="chip-l">STU</div></div>
+            </div>
             <div class="pll-bar-area">
-              <div class="bar-dash">&mdash;</div>
-              <div style="font-size:clamp(7px,0.65vw,9px);color:#6a8a8b;margin-top:1px;">SS: 1 cls / 15 stu &nbsp;|&nbsp; OE: 1 cls / 12 stu</div>
+              <div class="bar-meta"><span class="bar-dash">—</span></div>
+              <div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">OE: 1 cls / 12 stu</div>
             </div>
           </div>
-          <div class="pll-row muted">
-            <div class="pll-identity"><div class="pll-name">Linda</div><div class="pll-tech">CTE / Workforce Dev</div></div>
-            <div class="pll-chips"><div class="chip-block"><div class="chip-n chip-n-muted">0</div><div class="chip-l">Classes</div></div><div class="chip-block"><div class="chip-n chip-n-muted">0</div><div class="chip-l">Students</div></div></div>
-            <div class="pll-bar-area"><div class="bar-dash">&mdash;</div></div>
+          <!-- ROW 7 -->
+          <div class="pll-row">
+            <div class="pll-identity">
+              <div class="pll-name">Linda</div>
+              <div class="pll-tech">CTE / Workforce Dev</div>
+            </div>
+            <div class="pll-chips">
+              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
+              <div class="chip-block"><div class="chip-n">40</div><div class="chip-l">STU</div></div>
+            </div>
+            <div class="pll-bar-area">
+              <div class="bar-track"><div class="bar-fill bar-fill-lime" style="width:100%;"></div></div>
+              <div class="bar-meta"><span class="bar-label">INT 40/36</span><span class="over-badge">OVER</span></div>
+            </div>
           </div>
         </div>
       </div>
       <div class="right-col">
-        <div class="pill-sky">30-Day Outlook &mdash; May 23 to Jun 21</div>
+        <div class="pill-sky">30-Day Outlook &mdash; May 30 to Jun 28</div>
         <div class="oc-row">
-          <div class="oc-card"><div class="oc-num">56</div><div class="oc-lbl">Classes Starting</div></div>
-          <div class="oc-card"><div class="oc-num">539</div><div class="oc-lbl">Students Enrolled</div></div>
+          <div class="oc-card">
+            <div class="oc-num">69</div>
+            <div class="oc-lbl">Classes Starting</div>
+          </div>
+          <div class="oc-card">
+            <div class="oc-num">642</div>
+            <div class="oc-lbl">Students Enrolled</div>
+          </div>
         </div>
         <div class="outlook-table-wrap">
-          <div class="ot-header"><span>PLL</span><span>Technology</span><span style="text-align:center;">Classes</span><span style="text-align:center;">Students</span></div>
+          <div class="ot-header">
+            <span>Instructor</span>
+            <span>Subject</span>
+            <span>Classes</span>
+            <span>Students</span>
+          </div>
           <div class="ot-body">
-            <div class="ot-row"><div class="ot-cell">Sherif Khalifa</div><div class="ot-cell">Gas Turbine</div><div class="ot-cell-num">5</div><div class="ot-cell-num">46</div></div>
-            <div class="ot-row"><div class="ot-cell">Pablo Schibli</div><div class="ot-cell">Steam Turbine</div><div class="ot-cell-num">5</div><div class="ot-cell-num">53</div></div>
-            <div class="ot-row"><div class="ot-cell">Michele Alcantar</div><div class="ot-cell">Generator + Excitation</div><div class="ot-cell-num">6</div><div class="ot-cell-num">70</div></div>
-            <div class="ot-row"><div class="ot-cell">Mohammed Nizami</div><div class="ot-cell">Controls</div><div class="ot-cell-num">11</div><div class="ot-cell-num">112</div></div>
-            <div class="ot-row"><div class="ot-cell">Harry Hanson</div><div class="ot-cell">Craft / Repairs / ILES</div><div class="ot-cell-num">17</div><div class="ot-cell-num">166</div></div>
-            <div class="ot-row"><div class="ot-cell">Greg Walker</div><div class="ot-cell">Aeroderivative</div><div class="ot-cell-num">12</div><div class="ot-cell-num">92</div></div>
-            <div class="ot-row"><div class="ot-cell">Linda</div><div class="ot-cell">CTE / Workforce Dev</div><div class="ot-cell-num" style="color:#bbb;">0</div><div class="ot-cell-num" style="color:#bbb;">0</div></div>
+            <div class="ot-row">
+              <div class="ot-cell">Sherif Khalifa</div>
+              <div class="ot-cell">Gas Turbine</div>
+              <div class="ot-cell-num">9</div>
+              <div class="ot-cell-num">85</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Pablo Schibli</div>
+              <div class="ot-cell">Steam Turbine</div>
+              <div class="ot-cell-num">5</div>
+              <div class="ot-cell-num">54</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Michele Alcantar</div>
+              <div class="ot-cell">Generator + Excitation</div>
+              <div class="ot-cell-num">8</div>
+              <div class="ot-cell-num">95</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Mohammed Nizami</div>
+              <div class="ot-cell">Controls</div>
+              <div class="ot-cell-num">14</div>
+              <div class="ot-cell-num">144</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Harry Hanson</div>
+              <div class="ot-cell">Craft / Repairs / ILES</div>
+              <div class="ot-cell-num">18</div>
+              <div class="ot-cell-num">159</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Greg Walker</div>
+              <div class="ot-cell">Aeroderivative</div>
+              <div class="ot-cell-num">13</div>
+              <div class="ot-cell-num">93</div>
+            </div>
+            <div class="ot-row">
+              <div class="ot-cell">Linda</div>
+              <div class="ot-cell">CTE / Workforce Dev</div>
+              <div class="ot-cell-num">2</div>
+              <div class="ot-cell-num">12</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- SLIDE 2: PERFORMANCE & IMPROVEMENT -->
   <div class="slide" id="slide-1">
-
-    <!-- Title Bar -->
     <div class="title-bar">
-      <span class="title-bar-left">OFS Training Delivery &mdash; Performance &amp; Improvement</span>
-      <span class="title-bar-pill">Week of May 18&ndash;22, 2026</span>
+      <div class="title-bar-left">OFS Training Delivery &mdash; Performance & Improvement</div>
+      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
     </div>
-
-    <!-- Master Status Bar -->
     <div class="status-bar">
-      <!-- Safety -->
+      <div class="sbc">
+        <div class="rag-dot rag-green"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">SAFETY</div>
+          <div class="sc-sub">All Clear &mdash; 0 Incidents</div>
+        </div>
+      </div>
       <div class="sbc">
         <div class="rag-dot rag-amber"></div>
         <div class="sc-text">
-          <div class="sc-lbl">SAFETY</div>
-          <div class="sc-sub">2 Minor Incidents &mdash; Yellow</div>
-        </div>
-      </div>
-      <!-- Bowler KPIs -->
-      <div class="sbc">
-        <div class="rag-dot rag-red"></div>
-        <div class="sc-text">
           <div class="sc-lbl">BOWLER KPIs</div>
-          <div class="sc-sub">2 of 3 At Risk</div>
+          <div class="sc-sub">1 At Risk, 1 Amber</div>
         </div>
       </div>
-      <!-- Action Plan -->
       <div class="sbc">
         <div class="rag-dot rag-green"></div>
         <div class="sc-text">
@@ -1534,496 +375,547 @@ svg{width:100%;height:100%;}
           <div class="sc-sub">0 Overdue</div>
         </div>
       </div>
-      <!-- CapEx 2026 -->
       <div class="sbc">
         <div class="rag-dot rag-amber"></div>
         <div class="sc-text">
           <div class="sc-lbl">CAPEX 2026</div>
-          <div class="sc-sub">85% Spent</div>
+          <div class="sc-sub">80% Spent</div>
         </div>
       </div>
     </div>
-
-    <!-- 2x2 Grid Body -->
     <div class="grid-body">
-
-      <!-- Zone Top-Left: Bowler KPIs -->
+      <!-- TOP-LEFT: Bowler KPIs -->
       <div class="zone">
         <div class="pill-ev">Bowler KPIs</div>
         <div class="kpi-list">
-
-          <!-- KPI 1: Post-Training Skill Improvement — GREEN -->
           <div class="kc">
             <div class="kc-bar" style="background:#75ca64;"></div>
             <div class="kc-name">Post-Training Skill Improvement</div>
             <div class="kc-vals">
               <div class="ka">83%</div>
               <div class="kp">Plan: 70%</div>
+              <div class="kc-chip chip-green">On Track</div>
             </div>
-            <div class="kc-chip chip-green">On Track</div>
           </div>
-
-          <!-- KPI 2: Timecard OTD — RED -->
           <div class="kc">
-            <div class="kc-bar" style="background:#e63946;"></div>
+            <div class="kc-bar" style="background:#f5a623;"></div>
             <div class="kc-name">Timecard OTD</div>
             <div class="kc-vals">
-              <div class="ka">72%</div>
+              <div class="ka">85%</div>
               <div class="kp">Plan: 92%</div>
+              <div class="kc-chip chip-amber">Below Target</div>
             </div>
-            <div class="kc-chip chip-red">Below Target</div>
           </div>
-
-          <!-- KPI 3: Instructor Util >75% for 3mo — RED -->
           <div class="kc">
             <div class="kc-bar" style="background:#e63946;"></div>
-            <div class="kc-name">Instructor Util &gt;75% for 3mo</div>
+            <div class="kc-name">Instructor Util >75% for 3mo</div>
             <div class="kc-vals">
-              <div class="ka">29%</div>
-              <div class="kp">Target: &lt;15%</div>
+              <div class="ka">19%</div>
+              <div class="kp">Target: <15%</div>
+              <div class="kc-chip chip-red">Over Threshold</div>
             </div>
-            <div class="kc-chip chip-red">Over Threshold</div>
           </div>
-
         </div>
-        <div class="bowler-note">Bowler updated monthly &mdash; Owner: Jim Rosen</div>
+        <div class="bowler-note">April data &mdash; Owner: Jim Rosen</div>
       </div>
-
-      <!-- Zone Top-Right: Action Plan Health -->
+      <!-- TOP-RIGHT: Action Plan Health -->
       <div class="zone">
         <div class="pill-sky">Action Plan Health</div>
         <div class="ap-badges">
           <div class="ap-badge" style="background:#005e60;">
-            <div class="ap-badge-num" style="color:#c8ff08;">47</div>
+            <div class="ap-badge-num" style="color:#c8ff08;">116</div>
             <div class="ap-badge-lbl" style="color:rgba(255,255,255,0.75);">In Progress</div>
           </div>
           <div class="ap-badge" style="background:#59c3c9;">
-            <div class="ap-badge-num" style="color:#003d3e;">56</div>
+            <div class="ap-badge-num" style="color:#003d3e;">0</div>
             <div class="ap-badge-lbl" style="color:#003d3e;">On Deck</div>
           </div>
           <div class="ap-badge" style="background:#75ca64;">
-            <div class="ap-badge-num" style="color:#003d3e;">23</div>
+            <div class="ap-badge-num" style="color:#003d3e;">38</div>
             <div class="ap-badge-lbl" style="color:#003d3e;">Complete (60d)</div>
           </div>
         </div>
         <div class="ap-cols">
           <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-green">&#10003; Recently Completed</div>
-            <span class="ap-chip ap-chip-green">Apr 30 &mdash; GT Sim-based OJT Materials</span>
-            <span class="ap-chip ap-chip-green">Apr 30 &mdash; WFR Student Outreach Toolkit</span>
-            <span class="ap-chip ap-chip-green">Apr 30 &mdash; e4 Point Course Materials</span>
-            <span class="ap-chip ap-chip-green">Apr 30 &mdash; ICS Level 2 Course Update</span>
-            <span class="ap-chip ap-chip-green">Apr 30 &mdash; Aero E-Tools Training</span>
+            <div class="ap-col-hdr ap-col-hdr-green">✓ Recently Completed</div>
+            <div class="ap-chip ap-chip-green">May 29 &mdash; Create Kahuna roles per OFS Lifting Workshop</div>
+            <div class="ap-chip ap-chip-green">Apr 30 &mdash; Standard process for communicating to instructors</div>
+            <div class="ap-chip ap-chip-green">Apr 30 &mdash; Finalize testing & functionality of request workflows</div>
+            <div class="ap-chip ap-chip-green">Apr 30 &mdash; Includes simulator readiness</div>
+            <div class="ap-chip ap-chip-green">Apr 30 &mdash; AP-0744 completion item</div>
           </div>
           <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-sky">&#9654; On Deck</div>
-            <span class="ap-chip ap-chip-sky">May 29 &mdash; Load e4 Point into Systems</span>
-            <span class="ap-chip ap-chip-sky">Jun 30 &mdash; Controls HMI Cimplicity Class</span>
-            <span class="ap-chip ap-chip-sky">Oct 31 &mdash; Pilot ST ELT-A Course</span>
-            <span class="ap-chip ap-chip-sky">Oct 31 &mdash; CC Simulator Operator OJT</span>
-            <span class="ap-chip ap-chip-sky">Oct 31 &mdash; Pilot GT ELT-A1 &amp; ELT-A2</span>
+            <div class="ap-col-hdr ap-col-hdr-sky">▶ On Deck</div>
+            <div class="ap-chip ap-chip-sky">May 29 &mdash; Identify best way to connect with Staff</div>
+            <div class="ap-chip ap-chip-sky">Jun 29 &mdash; Design online resource for OFS Programs</div>
+            <div class="ap-chip ap-chip-sky">Jun 30 &mdash; MM & Xyleme integration</div>
+            <div class="ap-chip ap-chip-sky">Jun 30 &mdash; Complete LO Application Management training</div>
+            <div class="ap-chip ap-chip-sky">Jun 30 &mdash; AP-0388-3</div>
           </div>
         </div>
       </div>
-
-      <!-- Zone Bottom-Left: Safety Status -->
+      <!-- BOTTOM-LEFT: Safety Status -->
       <div class="zone">
         <div class="pill-ev">Safety Status</div>
         <div class="safety-zone">
-          <div class="safety-circle" style="background:#f5a623;box-shadow:0 0 18px 6px rgba(245,166,35,0.5);">!</div>
-          <div class="safety-label" style="color:#f5a623;">2 Minor Incidents</div>
+          <div class="safety-circle">✓</div>
+          <div class="safety-label">All Clear</div>
           <div class="safety-chips">
-            <span class="safety-chip">I&amp;I: 0</span><span class="safety-chip">I&amp;I Rate: 0</span><span class="safety-chip">Severe: 0</span><span class="safety-chip">Live Save &#10003;</span><span class="safety-chip">Read Across &#10003;</span>
+            <div class="safety-chip">I&I: 0</div>
+            <div class="safety-chip">I&I Rate: 0</div>
+            <div class="safety-chip">Severe: 0</div>
+            <div class="safety-chip">Live Save ✓</div>
+            <div class="safety-chip">Read Across ✓</div>
           </div>
-          <div style="background:rgba(245,166,35,0.10);border-left:3px solid #f5a623;border-radius:0 4px 4px 0;padding:5px 8px;margin-top:4px;font-size:clamp(6px,0.68vw,9px);color:#212121;line-height:1.55;width:100%;">
-            <div style="margin-bottom:3px;">&#128993; May 13 &middot; HLC &mdash; 7FA Bearing 2 lube oil spill. Sorbent pad left in drain. Flow stopped, permit issued, cleaned. System normal.</div>
-            <div>&#128993; May 8, 10:30 AM &middot; Trailer 101 &mdash; Student slipped on wet stairs. First aid: tailbone, heel &amp; toe. Caution &amp; reporting reinforced.</div>
+          <div style="background:rgba(106,138,139,0.08);border-left:3px solid rgba(106,138,139,0.4);border-radius:0 4px 4px 0;padding:5px 8px;margin-top:4px;font-size:clamp(6px,0.68vw,9px);color:#6a8a8b;line-height:1.55;width:100%;">
+            <div style="font-style:italic;font-weight:700;margin-bottom:3px;color:#888;">Prior Incidents (Reference Only)</div>
+            <div style="margin-bottom:3px;">🔴 May 13 &middot; HLC &mdash; 7FA Bearing 2 lube oil spill. Sorbent pad left in drain. Flow stopped, permit issued, cleaned. System normal.</div>
+            <div>🔴 May 8, 10:30 AM &middot; Trailer 101 &mdash; Student slipped on wet stairs. First aid: tailbone, heel & toe. Caution & reporting reinforced.</div>
           </div>
         </div>
       </div>
-
-      <!-- Zone Bottom-Right: 2026 CapEx -->
+      <!-- BOTTOM-RIGHT: 2026 CapEx -->
       <div class="zone">
         <div class="pill-sky">2026 CapEx</div>
-        <div class="capex-budget-label">$4.68M of $5.49M Spent (85%)</div>
-        <div class="capex-track">
-          <div class="capex-fill" style="width:85%;">
-            <span class="capex-fill-pct">85%</span>
-          </div>
-        </div>
-        <div class="capex-sub">$1.04M projected remaining</div>
+        <div class="capex-budget-label">$4.37M of $5.49M Spent (80%)</div>
+        <div class="capex-track"><div class="capex-fill" style="width:80%;"><span class="capex-fill-pct">80%</span></div></div>
+        <div class="capex-sub">$1.11M projected remaining</div>
         <div class="capex-rows">
-
           <div class="capex-row">
-            <div class="capex-proj">HA Mock-up (International Location)</div>
-            <div class="capex-amt">$1.3M</div>
-            <div class="capex-chip chip-teal">In Progress</div>
+            <div class="capex-proj">HA Mock-up (Intl Location)</div>
+            <div class="capex-amt">$1.31M</div>
+            <div class="capex-chip chip-teal">Active</div>
           </div>
-
           <div class="capex-row">
-            <div class="capex-proj">HA Tooling &mdash; 7HA Gas Turbine</div>
+            <div class="capex-proj">New Crane for Bay 1</div>
+            <div class="capex-amt">$1.00M</div>
+            <div class="capex-chip chip-teal">Active</div>
+          </div>
+          <div class="capex-row">
+            <div class="capex-proj">HA Tooling</div>
             <div class="capex-amt">$700K</div>
             <div class="capex-chip chip-green">PO Opened</div>
           </div>
-
           <div class="capex-row">
-            <div class="capex-proj">ITS Mockup &mdash; Combustion Section</div>
-            <div class="capex-amt">$579K</div>
-            <div class="capex-chip chip-green">PO Opened</div>
+            <div class="capex-proj">HA Improvements</div>
+            <div class="capex-amt">$600K</div>
+            <div class="capex-chip chip-teal">Active</div>
           </div>
-
+          <div class="capex-row">
+            <div class="capex-proj">ITS Mockup</div>
+            <div class="capex-amt">$579K</div>
+            <div class="capex-chip chip-teal">Active</div>
+          </div>
           <div class="capex-row">
             <div class="capex-proj">Building 2 New Roof</div>
             <div class="capex-amt">$575K</div>
-            <div class="capex-chip chip-amber">With Sourcing</div>
+            <div class="capex-chip chip-amber">AR Created</div>
           </div>
-
-          <div class="capex-row">
-            <div class="capex-proj">New Switchgear Building 2</div>
-            <div class="capex-amt">$350K</div>
-            <div class="capex-chip chip-green">PO Opened</div>
-          </div>
-
-          <div class="capex-row">
-            <div class="capex-proj">FFB Hardware &mdash; Additional Carts</div>
-            <div class="capex-amt">$300K</div>
-            <div class="capex-chip chip-green">PO Opened</div>
-          </div>
-
         </div>
         <div class="capex-note">CapEx updated quarterly</div>
       </div>
+    </div>
+  </div>
 
-    </div><!-- /grid-body -->
-  </div><!-- /slide-1 -->
-
-  <!-- SLIDE 2: Internal Student Map -->
-    <div class="slide" id="slide-2">
-      <div class="dash-header">
-        <div class="dash-header-left">OFS Training Delivery — Where in the World are Our Students From?</div>
-        <div class="dash-header-badge">Week of May 18–22, 2026</div>
-      </div>
-      <div class="map-body">
-        <div class="map-container" id="map3-container"></div>
-        <div class="map-stat-bar">
-          <div class="map-stat">
-            <div class="map-stat-number">167</div>
-            <div class="map-stat-label">Active Students</div>
-          </div>
-          <span class="map-stat-sep">|</span>
-          <div class="map-stat">
-            <div class="map-stat-number">25</div>
-            <div class="map-stat-label">Countries</div>
-          </div>
-          <span class="map-stat-sep">|</span>
-          <div class="map-stat">
-            <div class="map-stat-number">12</div>
-            <div class="map-stat-label">Active Classes</div>
-          </div>
-          <div class="map-stat-meta">Internal Only | In-Progress</div>
+  <!-- SLIDE 3: INTERNAL STUDENT MAP -->
+  <div class="slide" id="slide-2">
+    <div class="title-bar">
+      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World are Our Students From?</div>
+      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
+    </div>
+    <div class="map-body">
+      <div class="map-container" id="map3-container"></div>
+      <div class="map-stat-bar">
+        <div class="map-stat">
+          <div class="map-stat-number">195</div>
+          <div class="map-stat-label">Active Students</div>
         </div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat">
+          <div class="map-stat-number">28</div>
+          <div class="map-stat-label">Countries</div>
+        </div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat">
+          <div class="map-stat-number">13</div>
+          <div class="map-stat-label">Active Classes</div>
+        </div>
+        <div class="map-stat-meta">Internal Only | In-Progress</div>
       </div>
     </div>
+  </div>
 
-    <!-- SLIDE 3: Customer Training Map -->
-    <div class="slide" id="slide-3">
-      <div class="dash-header">
-        <div class="dash-header-left">OFS Training Delivery — Where in the World Are We Training Our Customers?</div>
-        <div class="dash-header-badge">Week of May 18–22, 2026</div>
-      </div>
-      <div class="map-body">
-        <div class="map-container" id="map4-container"></div>
-        <div class="map-stat-bar">
-          <div class="map-stat">
-            <div class="map-stat-number">123</div>
-            <div class="map-stat-label">Active Students</div>
-          </div>
-          <span class="map-stat-sep">|</span>
-          <div class="map-stat">
-            <div class="map-stat-number">11</div>
-            <div class="map-stat-label">Active Classes</div>
-          </div>
-          <span class="map-stat-sep">|</span>
-          <div class="map-stat">
-            <div class="map-stat-number">5</div>
-            <div class="map-stat-label">Countries</div>
-          </div>
-          <div class="map-stat-meta">OE + Site Specific | In-Progress Only</div>
+  <!-- SLIDE 4: CUSTOMER TRAINING MAP -->
+  <div class="slide" id="slide-3">
+    <div class="title-bar">
+      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World Are We Training Our Customers?</div>
+      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
+    </div>
+    <div class="map-body">
+      <div class="map-container" id="map4-container"></div>
+      <div class="map-stat-bar">
+        <div class="map-stat">
+          <div class="map-stat-number">24</div>
+          <div class="map-stat-label">Active Students</div>
         </div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat">
+          <div class="map-stat-number">2</div>
+          <div class="map-stat-label">Active Classes</div>
+        </div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat">
+          <div class="map-stat-number">2</div>
+          <div class="map-stat-label">Countries</div>
+        </div>
+        <div class="map-stat-meta">OE + Site Specific | In-Progress Only</div>
       </div>
     </div>
-  
-</div><!-- /sc -->
+  </div>
+</div>
 
 <!-- Progress bar -->
 <div id="pt"><div id="pf"></div></div>
-<!-- Slide counter -->
 <div id="sn">1 / 4</div>
 <div id="tooltip4"></div>
 
 <script>
-    // AUTO-CYCLING
-    (function(){
-      var DURATIONS=[30000,30000,35000,35000];
-      var cur=0,tot=4,timer=null,raf=null,t0=null;
-      function show(n){
-        cur=(n+tot)%tot;
-        for(var i=0;i<tot;i++){
-          var el=document.getElementById('slide-'+i);
-          if(i===cur){el.classList.add('active');}else{el.classList.remove('active');}
-        }
-        document.getElementById('sn').textContent=(cur+1)+' / '+tot;
-        startBar();
-        if(timer)clearTimeout(timer);
-        timer=setTimeout(function(){show(cur+1);},DURATIONS[cur]);
-      }
-      function startBar(){
-        if(raf){cancelAnimationFrame(raf);raf=null;}
-        t0=null;
-        var pf=document.getElementById('pf');
-        pf.style.width='0%';
-        var dur=DURATIONS[cur];
-        function tick(ts){if(!t0)t0=ts;var pct=Math.min((ts-t0)/dur*100,100);pf.style.width=pct+'%';if(pct<100){raf=requestAnimationFrame(tick);}}
-        raf=requestAnimationFrame(tick);
-      }
-      show(0);
-    })();
-
-    // INTERNAL STUDENTS DATA
-    const INTERNAL_STUDENTS = [
-      { country: 'United States', students: 97,  lon: -98.58, lat: 39.83 },
-      { country: 'Mexico',        students: 15,  lon: -102.55, lat: 23.63 },
-      { country: 'Chile',         students:  8,  lon: -71.54, lat: -35.67 },
-      { country: 'Saudi Arabia',  students:  7,  lon: 45.08, lat: 23.89 },
-      { country: 'Spain',         students:  6,  lon: -3.71, lat: 40.42 },
-      { country: 'Oman',          students:  6,  lon: 57.55, lat: 21.47 },
-      { country: 'Croatia',       students:  3,  lon: 15.97, lat: 45.81 },
-      { country: 'Taiwan',        students:  3,  lon: 121.00, lat: 24.00 },
-      { country: 'Egypt',         students:  2,  lon: 30.80, lat: 26.82 },
-      { country: 'Italy',         students:  2,  lon: 12.57, lat: 41.87 },
-      { country: 'Canada',        students:  2,  lon: -96.80, lat: 56.13 },
-      { country: 'Malaysia',      students:  2,  lon: 109.70, lat: 4.21 },
-      { country: 'Brazil',        students:  2,  lon: -51.93, lat: -14.24 },
-      { country: 'Peru',          students:  1,  lon: -75.02, lat: -9.19 },
-      { country: 'United Kingdom',students:  1,  lon: -2.00, lat: 54.00 },
-      { country: 'South Korea',   students:  1,  lon: 128.00, lat: 36.00 },
-      { country: 'UAE',           students:  1,  lon: 53.85, lat: 23.42 },
-      { country: 'Algeria',       students:  1,  lon: 1.66, lat: 28.03 },
-      { country: 'Kuwait',        students:  1,  lon: 47.48, lat: 29.31 },
-      { country: 'Argentina',     students:  1,  lon: -64.97, lat: -34.00 },
-      { country: 'India',         students:  1,  lon: 78.96, lat: 20.59 },
-      { country: 'Ghana',         students:  1,  lon: -1.02, lat: 7.95 },
-      { country: 'Germany',       students:  1,  lon: 10.45, lat: 51.17 },
-      { country: 'China',         students:  1,  lon: 104.20, lat: 35.86 },
-      { country: 'Jordan',        students:  1,  lon: 36.24, lat: 30.59 }
-    ];
-
-    function getBubbleSizeInternal(stu){
-      if(stu>=96) return {d:68,f:19};
-      if(stu>=15) return {d:44,f:14};
-      if(stu>=8)  return {d:38,f:13};
-      if(stu>=7)  return {d:34,f:13};
-      if(stu>=6)  return {d:32,f:12};
-      if(stu>=3)  return {d:28,f:11};
-      if(stu==2)  return {d:24,f:11};
-      return {d:20,f:10};
+// ============================================================================
+// CAROUSEL LOGIC
+// ============================================================================
+(function(){
+  var DURATIONS=[30000,30000,35000,35000];
+  var cur=0,tot=4,timer=null,raf=null,t0=null;
+  function show(n){
+    cur=(n+tot)%tot;
+    for(var i=0;i<tot;i++){
+      var el=document.getElementById('slide-'+i);
+      if(i===cur){el.classList.add('active');}else{el.classList.remove('active');}
     }
+    document.getElementById('sn').textContent=(cur+1)+' / '+tot;
+    startBar();
+    if(timer)clearTimeout(timer);
+    timer=setTimeout(function(){show(cur+1);},DURATIONS[cur]);
+  }
+  function startBar(){
+    if(raf){cancelAnimationFrame(raf);raf=null;}
+    t0=null;
+    var pf=document.getElementById('pf');
+    pf.style.width='0%';
+    var dur=DURATIONS[cur];
+    function tick(ts){if(!t0)t0=ts;var pct=Math.min((ts-t0)/dur*100,100);pf.style.width=pct+'%';if(pct<100){raf=requestAnimationFrame(tick);}}
+    raf=requestAnimationFrame(tick);
+  }
+  show(0);
+})();
 
-    // SLIDE 2 MAP INIT
-    window.addEventListener('DOMContentLoaded', function(){
-      var container3 = document.getElementById('map3-container');
-      if(!container3) return;
-      function initMap3(){
-        container3.innerHTML='';
-        var width = container3.clientWidth;
-        var height = container3.clientHeight;
-        var svg = d3.select(container3).append('svg')
-          .attr('width', width).attr('height', height)
-          .style('position','absolute').style('top','0').style('left','0');
-        var projection = d3.geoEquirectangular().fitSize([width, height], {type:'Sphere'});
-        var geoPath = d3.geoPath(projection);
-        d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(topology){
-          var land = topojson.feature(topology, topology.objects.land);
-          var countries = topojson.feature(topology, topology.objects.countries);
-          var borders = topojson.mesh(topology, topology.objects.countries, function(a,b){return a!==b;});
-          var graticule = d3.geoGraticule();
-          svg.append('path').attr('d', geoPath({type:'Sphere'})).attr('fill','#005e5d');
-          svg.append('path').attr('d', geoPath(graticule())).attr('stroke','rgba(200,255,8,0.07)').attr('stroke-width',0.5).attr('fill','none');
-          svg.selectAll('.land').data(land.features).enter().append('path').attr('class','land').attr('d',geoPath).attr('fill','#007a76').attr('stroke','rgba(200,255,8,0.12)').attr('stroke-width',0.3);
-          svg.append('path').attr('d', geoPath(borders)).attr('stroke','rgba(200,255,8,0.12)').attr('stroke-width',0.3).attr('fill','none');
-          var equator = {type:'LineString', coordinates:[[-180,0],[180,0]]};
-          svg.append('path').attr('d',geoPath(equator)).attr('stroke','rgba(200,255,8,0.15)').attr('stroke-width',1).attr('stroke-dasharray','4,4').attr('fill','none');
-          var ireland = countries.features.find(function(f){return f.id===372;});
-          if(ireland){
-            svg.append('path').attr('d',geoPath(ireland)).attr('fill','rgba(200,255,8,0.20)').attr('stroke','rgba(200,255,8,0.95)').attr('stroke-width',1.8);
-            var irelandCenter = d3.geoCentroid(ireland);
-            var ixy = projection(irelandCenter);
-            var pulseGroup = svg.append('g');
-            pulseGroup.append('circle').attr('cx',ixy[0]).attr('cy',ixy[1]).attr('r',8).attr('fill','rgba(200,255,8,0.8)').attr('stroke','rgba(200,255,8,0.95)').attr('stroke-width',1);
-            pulseGroup.append('circle').attr('cx',ixy[0]).attr('cy',ixy[1]).attr('r',8).attr('fill','none').attr('stroke','rgba(200,255,8,0.7)').attr('stroke-width',2).style('animation','pulse-ring 2s ease-out infinite');
-          }
-          var bubbles = INTERNAL_STUDENTS.map(function(loc){
-            var size = getBubbleSizeInternal(loc.students);
-            var xy = projection([loc.lon, loc.lat]);
-            return {x:xy[0], y:xy[1], r:size.d/2, f:size.f, loc:loc};
-          });
-          for(var iter=0;iter<40;iter++){
-            for(var i=0;i<bubbles.length;i++){
-              for(var j=i+1;j<bubbles.length;j++){
-                var dx=bubbles[j].x-bubbles[i].x, dy=bubbles[j].y-bubbles[i].y;
-                var dist=Math.sqrt(dx*dx+dy*dy);
-                var minDist=bubbles[i].r+bubbles[j].r+8;
-                if(dist<minDist){
-                  var angle=Math.atan2(dy,dx), push=(minDist-dist)/2*0.3;
-                  bubbles[i].x-=Math.cos(angle)*push; bubbles[i].y-=Math.sin(angle)*push;
-                  bubbles[j].x+=Math.cos(angle)*push; bubbles[j].y+=Math.sin(angle)*push;
-                }
-              }
-            }
-          }
-          var bubblesGroup = d3.select(container3).append('div')
-            .style('position','absolute').style('top','0').style('left','0')
-            .style('width','100%').style('height','100%').style('pointer-events','none');
-          bubbles.forEach(function(b){
-            var bubbleDiv = bubblesGroup.append('div')
-              .style('position','absolute').style('width',b.r*2+'px').style('height',b.r*2+'px')
-              .style('border-radius','50%').style('background','#c8ff08').style('color','#003d3e')
-              .style('font-weight','900').style('font-size',b.f+'px')
-              .style('display','flex').style('align-items','center').style('justify-content','center')
-              .style('box-shadow','0 2px 18px rgba(200,255,8,0.65)')
-              .style('left',(b.x-b.r)+'px').style('top',(b.y-b.r)+'px')
-              .style('cursor','pointer').style('pointer-events','all')
-              .text(b.loc.students);
-            if(b.loc.students>=6){
-              bubblesGroup.append('div')
-                .style('position','absolute').style('width',b.r*2+'px').style('height',b.r*2+'px')
-                .style('border-radius','50%').style('border','2px solid rgba(200,255,8,0.7)')
-                .style('left',(b.x-b.r)+'px').style('top',(b.y-b.r)+'px')
-                .style('animation','pulse-ring 2s ease-out infinite').style('pointer-events','none');
-            }
-            bubblesGroup.append('div')
-              .style('position','absolute').style('color','#fff')
-              .style('font-size','clamp(8px,0.6vw,10px)').style('font-weight','600')
-              .style('text-shadow','0 1px 3px rgba(0,0,0,0.9)').style('text-align','center')
-              .style('width','110px').style('left',(b.x-55)+'px').style('top',(b.y+b.r+3)+'px')
-              .style('line-height','1.3').style('pointer-events','none')
-              .text(b.loc.country);
-            bubbleDiv.on('mouseover',function(event){ var tt=document.getElementById('tooltip4'); tt.textContent=b.loc.country+' — '+b.loc.students+' students'; tt.style.display='block'; tt.style.left=(event.pageX+10)+'px'; tt.style.top=(event.pageY+10)+'px'; })
-              .on('mousemove',function(event){ var tt=document.getElementById('tooltip4'); tt.style.left=(event.pageX+10)+'px'; tt.style.top=(event.pageY+10)+'px'; })
-              .on('mouseout',function(){ document.getElementById('tooltip4').style.display='none'; });
-          });
-        });
+// ============================================================================
+// SLIDE 3: INTERNAL STUDENT MAP
+// ============================================================================
+const INTERNAL_STUDENTS = [
+  { country: 'United States', students: 97,  lon: -98.58, lat: 39.83 },
+  { country: 'Malaysia',      students: 27,  lon: 109.70, lat: 4.21 },
+  { country: 'Mexico',        students: 12,  lon: -102.55, lat: 23.63 },
+  { country: 'Saudi Arabia',  students: 7,   lon: 45.08, lat: 23.89 },
+  { country: 'Indonesia',     students: 7,   lon: 117.00, lat: -2.00 },
+  { country: 'Oman',          students: 6,   lon: 57.55, lat: 21.47 },
+  { country: 'Spain',         students: 6,   lon: -3.71, lat: 40.42 },
+  { country: 'Taiwan',        students: 4,   lon: 121.00, lat: 24.00 },
+  { country: 'Croatia',       students: 3,   lon: 15.97, lat: 45.81 },
+  { country: 'Egypt',         students: 2,   lon: 30.80, lat: 26.82 },
+  { country: 'China',         students: 2,   lon: 104.20, lat: 35.86 },
+  { country: 'India',         students: 2,   lon: 78.96, lat: 20.59 },
+  { country: 'Italy',         students: 2,   lon: 12.57, lat: 41.87 },
+  { country: 'Australia',     students: 2,   lon: 133.78, lat: -25.27 },
+  { country: 'Canada',        students: 2,   lon: -96.80, lat: 56.13 },
+  { country: 'Brazil',        students: 2,   lon: -51.93, lat: -14.24 },
+  { country: 'United Kingdom',students: 1,   lon: -2.00, lat: 54.00 },
+  { country: 'South Korea',   students: 1,   lon: 128.00, lat: 36.00 },
+  { country: 'UAE',           students: 1,   lon: 53.85, lat: 23.42 },
+  { country: 'Thailand',      students: 1,   lon: 101.00, lat: 15.00 },
+  { country: 'Algeria',       students: 1,   lon: 1.66, lat: 28.03 },
+  { country: 'Singapore',     students: 1,   lon: 103.82, lat: 1.35 },
+  { country: 'Peru',          students: 1,   lon: -75.02, lat: -9.19 },
+  { country: 'Kuwait',        students: 1,   lon: 47.48, lat: 29.31 },
+  { country: 'Jordan',        students: 1,   lon: 36.24, lat: 30.59 },
+  { country: 'Ghana',         students: 1,   lon: -1.02, lat: 7.95 },
+  { country: 'Germany',       students: 1,   lon: 10.45, lat: 51.17 },
+  { country: 'Vietnam',       students: 1,   lon: 108.28, lat: 14.06 }
+];
+
+function getBubbleSizeInternal(stu) {
+  if (stu >= 96) return {d: 72, f: 19};
+  if (stu >= 15) return {d: 50, f: 16};
+  if (stu >= 8)  return {d: 42, f: 14};
+  if (stu >= 7)  return {d: 38, f: 13};
+  if (stu >= 6)  return {d: 34, f: 13};
+  if (stu >= 3)  return {d: 29, f: 12};
+  if (stu === 2) return {d: 25, f: 11};
+  return {d: 21, f: 10};
+}
+
+function initMap3() {
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r => r.json())
+    .then(world => {
+      const container = document.getElementById('map3-container');
+      if (!container) return;
+      const w = container.clientWidth, h = container.clientHeight;
+      const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
+      const projection = d3.geoEquirectangular().fitSize([w, h], {type: 'Sphere'});
+      const path = d3.geoPath(projection);
+
+      // Ocean background
+      svg.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
+
+      // Graticule
+      const graticule = d3.geoGraticule().step([20, 20]);
+      svg.append('path').datum(graticule()).attr('d', path)
+        .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
+
+      // Land
+      const land = topojson.feature(world, world.objects.countries);
+      svg.selectAll('.land').data(land.features).enter().append('path')
+        .attr('class', 'land')
+        .attr('d', path)
+        .attr('fill', '#007a76')
+        .attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
+
+      // Ireland highlight (id 372)
+      const ireland = land.features.find(f => +f.id === 372);
+      if (ireland) {
+        svg.append('path').datum(ireland).attr('d', path)
+          .attr('fill', 'rgba(200,255,8,0.20)')
+          .attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
+        const ic = projection([-8, 53]);
+        const pulseIE = svg.append('circle').attr('cx', ic[0]).attr('cy', ic[1]).attr('r', 8)
+          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.9)').attr('stroke-width', 2);
+        (function animateIE() {
+          pulseIE.attr('r', 6).attr('opacity', 0.9)
+            .transition().duration(1400).ease(d3.easeCubicOut)
+            .attr('r', 20).attr('opacity', 0)
+            .on('end', animateIE);
+        })();
       }
-      initMap3();
-      window.addEventListener('resize', initMap3);
+
+      // Prepare node data with initial projected positions
+      const nodes = INTERNAL_STUDENTS.map(d => {
+        const [px, py] = projection([d.lon, d.lat]);
+        const sz = getBubbleSizeInternal(d.students);
+        return Object.assign({}, d, { x: px, y: py, ox: px, oy: py, r: sz.d / 2, fs: sz.f });
+      });
+
+      // Force simulation — use d.x, d.y (not re-project each tick)
+      const sim = d3.forceSimulation(nodes)
+        .force('collide', d3.forceCollide(d => d.r + 5).strength(0.85))
+        .force('x', d3.forceX(d => d.ox).strength(0.12))
+        .force('y', d3.forceY(d => d.oy).strength(0.12))
+        .stop();
+      for (let i = 0; i < 120; i++) sim.tick();
+
+      // Pulse ring group (behind bubbles)
+      const pulseGroup = svg.append('g').attr('class', 'pulse-rings');
+      nodes.filter(d => d.students >= 6).forEach(d => {
+        const ring = pulseGroup.append('circle')
+          .attr('cx', d.x).attr('cy', d.y).attr('r', d.r)
+          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.55)').attr('stroke-width', 1.5);
+        (function anim() {
+          ring.attr('r', d.r).attr('opacity', 0.7)
+            .transition().duration(1800).ease(d3.easeCubicOut)
+            .attr('r', d.r + 14).attr('opacity', 0)
+            .on('end', anim);
+        })();
+      });
+
+      // Bubble circles
+      svg.selectAll('.bub').data(nodes).enter().append('circle')
+        .attr('class', 'bub')
+        .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', d => d.r)
+        .attr('fill', '#c8ff08').attr('stroke', 'none')
+        .style('filter', 'drop-shadow(0 2px 8px rgba(200,255,8,0.5))')
+        .on('mouseover', function(e, d) {
+          const tt = document.getElementById('tooltip4');
+          tt.textContent = d.country + ' — ' + d.students + ' students';
+          tt.style.display = 'block'; tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
+        })
+        .on('mousemove', function(e) {
+          const tt = document.getElementById('tooltip4');
+          tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
+        })
+        .on('mouseout', () => { document.getElementById('tooltip4').style.display = 'none'; });
+
+      // Student COUNT number INSIDE each bubble
+      svg.selectAll('.bub-num').data(nodes).enter().append('text')
+        .attr('class', 'bub-num')
+        .attr('x', d => d.x).attr('y', d => d.y)
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('fill', '#003d3e').attr('font-weight', 900)
+        .attr('font-size', d => d.fs + 'px')
+        .attr('pointer-events', 'none')
+        .text(d => d.students);
+
+      // Country label BELOW each bubble
+      svg.selectAll('.bub-lbl').data(nodes).enter().append('text')
+        .attr('class', 'bub-lbl')
+        .attr('x', d => d.x).attr('y', d => d.y + d.r + 11)
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#fff')
+        .attr('font-size', 'clamp(7px, 0.58vw, 9px)')
+        .attr('font-weight', 600)
+        .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
+        .attr('pointer-events', 'none')
+        .text(d => d.country);
     });
+}
 
-    // CUSTOMER TRAINING LOCATIONS DATA
-    var TRAINING_LOCS = [
-      { loc: 'Heilbronn',          country: 'Germany',       stu: 12, cls: 1, lon: 9.22,   lat: 49.14 },
-      { loc: 'Megalopolis',        country: 'Greece',        stu: 12, cls: 1, lon: 22.14,  lat: 37.40 },
-      { loc: 'Playa del Carmen',   country: 'Mexico',        stu: 12, cls: 1, lon: -87.08, lat: 20.63 },
-      { loc: 'Kaohsiung',          country: 'Taiwan',        stu: 12, cls: 1, lon: 120.30, lat: 22.63 },
-      { loc: 'Taiwan (N)',         country: 'Taiwan',        stu: 18, cls: 2, lon: 121.00, lat: 24.80 },
-      { loc: 'Bennett, CO',        country: 'United States', stu: 12, cls: 1, lon: -104.43,lat: 39.75 },
-      { loc: 'Houston, TX',        country: 'United States', stu: 39, cls: 3, lon: -95.37, lat: 29.76 },
-      { loc: 'Pasco Co, FL',       country: 'United States', stu:  6, cls: 1, lon: -82.40, lat: 28.30 }
-    ];
+// ============================================================================
+// SLIDE 4: CUSTOMER TRAINING MAP
+// ============================================================================
+const TRAINING_LOCS = [
+  { loc: 'Cancun',  country: 'Mexico', stu: 12, cls: 1, lon: -86.85, lat: 21.16 },
+  { loc: 'Taiwan',  country: 'Taiwan', stu: 12, cls: 1, lon: 121.00, lat: 24.00 }
+];
 
-    function getBubbleSize(stu){
-      if(stu>=96) return {d:68,f:19};
-      if(stu>=15) return {d:52,f:16};
-      if(stu>=8)  return {d:42,f:14};
-      if(stu>=6)  return {d:34,f:13};
-      if(stu>=3)  return {d:29,f:12};
-      if(stu==2)  return {d:25,f:11};
-      return {d:22,f:10};
-    }
+function getBubbleSize(stu) {
+  if (stu >= 96) return {d: 72, f: 19};
+  if (stu >= 15) return {d: 50, f: 16};
+  if (stu >= 8)  return {d: 42, f: 14};
+  if (stu >= 7)  return {d: 38, f: 13};
+  if (stu >= 6)  return {d: 34, f: 13};
+  if (stu >= 3)  return {d: 29, f: 12};
+  if (stu === 2) return {d: 25, f: 11};
+  return {d: 21, f: 10};
+}
 
-    // SLIDE 3 MAP INIT
-    window.addEventListener('DOMContentLoaded', function(){
-      var container4 = document.getElementById('map4-container');
-      if(!container4) return;
-      function initMap(){
-        container4.innerHTML='';
-        var width = container4.clientWidth;
-        var height = container4.clientHeight;
-        var svg = d3.select(container4).append('svg')
-          .attr('width',width).attr('height',height)
-          .style('position','absolute').style('top','0').style('left','0');
-        var projection = d3.geoEquirectangular().fitSize([width,height],{type:'Sphere'});
-        var geoPath = d3.geoPath(projection);
-        d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(topology){
-          var land = topojson.feature(topology, topology.objects.land);
-          var countries = topojson.feature(topology, topology.objects.countries);
-          var borders = topojson.mesh(topology, topology.objects.countries, function(a,b){return a!==b;});
-          var graticule = d3.geoGraticule();
-          svg.append('path').attr('d',geoPath({type:'Sphere'})).attr('fill','#005e5d');
-          svg.append('path').attr('d',geoPath(graticule())).attr('stroke','rgba(200,255,8,0.07)').attr('stroke-width',0.5).attr('fill','none');
-          svg.selectAll('.land').data(land.features).enter().append('path').attr('class','land').attr('d',geoPath).attr('fill','#007a76').attr('stroke','rgba(200,255,8,0.12)').attr('stroke-width',0.3);
-          svg.append('path').attr('d',geoPath(borders)).attr('stroke','rgba(200,255,8,0.12)').attr('stroke-width',0.3).attr('fill','none');
-          var equator = {type:'LineString',coordinates:[[-180,0],[180,0]]};
-          svg.append('path').attr('d',geoPath(equator)).attr('stroke','rgba(200,255,8,0.15)').attr('stroke-width',1).attr('stroke-dasharray','4,4').attr('fill','none');
-          var ireland = countries.features.find(function(f){return f.id===372;});
-          if(ireland){
-            svg.append('path').attr('d',geoPath(ireland)).attr('fill','rgba(200,255,8,0.20)').attr('stroke','rgba(200,255,8,0.95)').attr('stroke-width',1.8);
-          }
-          var bubbles = TRAINING_LOCS.map(function(loc){
-            var size = getBubbleSize(loc.stu);
-            var xy = projection([loc.lon,loc.lat]);
-            return {x:xy[0], y:xy[1], r:size.d/2, f:size.f, loc:loc};
-          });
-          for(var iter=0;iter<40;iter++){
-            for(var i=0;i<bubbles.length;i++){
-              for(var j=i+1;j<bubbles.length;j++){
-                var dx=bubbles[j].x-bubbles[i].x, dy=bubbles[j].y-bubbles[i].y;
-                var dist=Math.sqrt(dx*dx+dy*dy);
-                var minDist=bubbles[i].r+bubbles[j].r+8;
-                if(dist<minDist){
-                  var angle=Math.atan2(dy,dx), push=(minDist-dist)/2*0.3;
-                  bubbles[i].x-=Math.cos(angle)*push; bubbles[i].y-=Math.sin(angle)*push;
-                  bubbles[j].x+=Math.cos(angle)*push; bubbles[j].y+=Math.sin(angle)*push;
-                }
-              }
-            }
-          }
-          var bubblesGroup = d3.select(container4).append('div')
-            .style('position','absolute').style('top','0').style('left','0')
-            .style('width','100%').style('height','100%').style('pointer-events','none');
-          bubbles.forEach(function(b){
-            var bubbleDiv = bubblesGroup.append('div')
-              .style('position','absolute').style('width',b.r*2+'px').style('height',b.r*2+'px')
-              .style('border-radius','50%').style('background','#c8ff08').style('color','#003d3e')
-              .style('font-weight','900').style('font-size',b.f+'px')
-              .style('display','flex').style('align-items','center').style('justify-content','center')
-              .style('box-shadow','0 2px 18px rgba(200,255,8,0.65)')
-              .style('left',(b.x-b.r)+'px').style('top',(b.y-b.r)+'px')
-              .style('cursor','pointer').style('pointer-events','all')
-              .text(b.loc.stu);
-            if(b.loc.stu>=12){
-              bubblesGroup.append('div')
-                .style('position','absolute').style('width',b.r*2+'px').style('height',b.r*2+'px')
-                .style('border-radius','50%').style('border','2px solid rgba(200,255,8,0.7)')
-                .style('left',(b.x-b.r)+'px').style('top',(b.y-b.r)+'px')
-                .style('animation','pulse-ring 2s ease-out infinite').style('pointer-events','none');
-            }
-            bubblesGroup.append('div')
-              .style('position','absolute').style('color','#fff')
-              .style('font-size','clamp(8px,0.6vw,10px)').style('font-weight','600')
-              .style('text-shadow','0 1px 3px rgba(0,0,0,0.9)').style('text-align','center')
-              .style('width','110px').style('left',(b.x-55)+'px').style('top',(b.y+b.r+3)+'px')
-              .style('line-height','1.3').style('pointer-events','none')
-              .html(b.loc.loc+'<br/>'+b.loc.country);
-            bubbleDiv.on('mouseover',function(event){ var tt=document.getElementById('tooltip4'); tt.textContent=b.loc.loc+', '+b.loc.country+' — '+b.loc.stu+' students, '+b.loc.cls+' class(es)'; tt.style.display='block'; tt.style.left=(event.pageX+10)+'px'; tt.style.top=(event.pageY+10)+'px'; })
-              .on('mousemove',function(event){ var tt=document.getElementById('tooltip4'); tt.style.left=(event.pageX+10)+'px'; tt.style.top=(event.pageY+10)+'px'; })
-              .on('mouseout',function(){ document.getElementById('tooltip4').style.display='none'; });
-          });
-        });
+function initMap4() {
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r => r.json())
+    .then(world => {
+      const container = document.getElementById('map4-container');
+      if (!container) return;
+      const w = container.clientWidth, h = container.clientHeight;
+      const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
+      const projection = d3.geoEquirectangular().fitSize([w, h], {type: 'Sphere'});
+      const path = d3.geoPath(projection);
+
+      // Ocean background
+      svg.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
+
+      // Graticule
+      const graticule = d3.geoGraticule().step([20, 20]);
+      svg.append('path').datum(graticule()).attr('d', path)
+        .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
+
+      // Land
+      const land = topojson.feature(world, world.objects.countries);
+      svg.selectAll('.land4').data(land.features).enter().append('path')
+        .attr('class', 'land4')
+        .attr('d', path)
+        .attr('fill', '#007a76')
+        .attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
+
+      // Ireland highlight
+      const ireland = land.features.find(f => +f.id === 372);
+      if (ireland) {
+        svg.append('path').datum(ireland).attr('d', path)
+          .attr('fill', 'rgba(200,255,8,0.20)')
+          .attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
+        const ic = projection([-8, 53]);
+        const pulseIE = svg.append('circle').attr('cx', ic[0]).attr('cy', ic[1]).attr('r', 8)
+          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.9)').attr('stroke-width', 2);
+        (function animateIE4() {
+          pulseIE.attr('r', 6).attr('opacity', 0.9)
+            .transition().duration(1400).ease(d3.easeCubicOut)
+            .attr('r', 20).attr('opacity', 0)
+            .on('end', animateIE4);
+        })();
       }
-      initMap();
-      window.addEventListener('resize', initMap);
-    });
-  </script>
 
+      // Prepare nodes with projected positions
+      const nodes4 = TRAINING_LOCS.map(d => {
+        const [px, py] = projection([d.lon, d.lat]);
+        const sz = getBubbleSize(d.stu);
+        return Object.assign({}, d, { x: px, y: py, ox: px, oy: py, r: sz.d / 2, fs: sz.f });
+      });
+
+      // Force simulation for collision avoidance
+      const sim4 = d3.forceSimulation(nodes4)
+        .force('collide', d3.forceCollide(d => d.r + 5).strength(0.85))
+        .force('x', d3.forceX(d => d.ox).strength(0.12))
+        .force('y', d3.forceY(d => d.oy).strength(0.12))
+        .stop();
+      for (let i = 0; i < 120; i++) sim4.tick();
+
+      // Pulse rings
+      const pulseGroup4 = svg.append('g').attr('class', 'pulse-rings4');
+      nodes4.filter(d => d.stu >= 6).forEach(d => {
+        const ring = pulseGroup4.append('circle')
+          .attr('cx', d.x).attr('cy', d.y).attr('r', d.r)
+          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.55)').attr('stroke-width', 1.5);
+        (function anim4() {
+          ring.attr('r', d.r).attr('opacity', 0.7)
+            .transition().duration(1800).ease(d3.easeCubicOut)
+            .attr('r', d.r + 14).attr('opacity', 0)
+            .on('end', anim4);
+        })();
+      });
+
+      // Bubble circles
+      svg.selectAll('.bub4').data(nodes4).enter().append('circle')
+        .attr('class', 'bub4')
+        .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', d => d.r)
+        .attr('fill', '#c8ff08').attr('stroke', 'none')
+        .style('filter', 'drop-shadow(0 2px 8px rgba(200,255,8,0.5))')
+        .on('mouseover', function(e, d) {
+          const tt = document.getElementById('tooltip4');
+          tt.textContent = d.loc + ', ' + d.country + ' — ' + d.stu + ' students, ' + d.cls + ' class(es)';
+          tt.style.display = 'block'; tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
+        })
+        .on('mousemove', function(e) {
+          const tt = document.getElementById('tooltip4');
+          tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
+        })
+        .on('mouseout', () => { document.getElementById('tooltip4').style.display = 'none'; });
+
+      // Student COUNT number INSIDE each bubble
+      svg.selectAll('.bub4-num').data(nodes4).enter().append('text')
+        .attr('class', 'bub4-num')
+        .attr('x', d => d.x).attr('y', d => d.y)
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('fill', '#003d3e').attr('font-weight', 900)
+        .attr('font-size', d => d.fs + 'px')
+        .attr('pointer-events', 'none')
+        .text(d => d.stu);
+
+      // City/Country label BELOW each bubble
+      svg.selectAll('.bub4-lbl').data(nodes4).enter().append('text')
+        .attr('class', 'bub4-lbl')
+        .attr('x', d => d.x).attr('y', d => d.y + d.r + 11)
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#fff')
+        .attr('font-size', 'clamp(7px, 0.58vw, 9px)')
+        .attr('font-weight', 600)
+        .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
+        .attr('pointer-events', 'none')
+        .text(d => d.loc + ', ' + d.country);
+    });
+}
+
+// Initialize maps when slides become active
+let map3Init = false, map4Init = false;
+const observer = new MutationObserver(() => {
+  const s2 = document.getElementById('slide-2');
+  const s3 = document.getElementById('slide-3');
+  if (s2 && s2.classList.contains('active') && !map3Init) {
+    map3Init = true;
+    setTimeout(initMap3, 50);
+  }
+  if (s3 && s3.classList.contains('active') && !map4Init) {
+    map4Init = true;
+    setTimeout(initMap4, 50);
+  }
+});
+observer.observe(document.getElementById('sc'), {attributes: true, subtree: true, attributeFilter: ['class']});
+</script>
 </body>
 </html>
