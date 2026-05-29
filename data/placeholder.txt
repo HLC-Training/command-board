@@ -1,0 +1,2 @@
+Data folder for weekly Excel source files.
+Upload all 7 Excel files here each Monday before running the board build.
