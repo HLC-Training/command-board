@@ -1,921 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OFS Training Delivery — Week of May 25–29, 2026</title>
-  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-  <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100vw;height:100vh;overflow:hidden;background:#003d3e;font-family:'Segoe UI',Arial,sans-serif;}
-#sc{width:100vw;height:100vh;position:relative;}
-.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(0.985);transition:opacity 0.5s ease,transform 0.5s ease;}
-.slide.active{opacity:1;pointer-events:auto;transform:scale(1.0);}
-#pt{position:fixed;bottom:0;left:0;width:100%;height:5px;background:rgba(255,255,255,0.1);z-index:9999;}
-#pf{height:100%;width:0%;background:#c8ff08;transition:none;}
-#sn{position:fixed;bottom:8px;right:14px;font-size:11px;color:rgba(255,255,255,0.4);z-index:9999;}
-.title-bar{flex:0 0 8%;min-height:50px;background:#005e60;border-bottom:3px solid #c8ff08;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:10px;}
-.title-bar-left{color:#fff;font-weight:800;font-size:clamp(13px,1.55vw,22px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.title-bar-pill{background:#c8ff08;color:#003d3e;font-weight:800;border-radius:999px;padding:5px 16px;font-size:clamp(10px,1.1vw,14px);white-space:nowrap;flex-shrink:0;}
-.metric-strip{flex:0 0 22%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
-.mc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 2px 7px rgba(0,0,0,0.18);padding:4px 6px;}
-.mc.mc-wide{flex:1.45;}
-.mc-num{font-size:clamp(26px,3.3vw,52px);font-weight:900;line-height:1;color:#c8ff08;}
-.mc-num-white{color:#fff;}
-.mc-num-muted{color:rgba(255,255,255,0.3);}
-.mc-lbl{color:#59c3c9;font-size:clamp(8px,0.82vw,11px);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;}
-.mc-sub{color:rgba(255,255,255,0.5);font-size:clamp(7px,0.7vw,10px);}
-.mc-chip{background:rgba(89,195,201,0.18);color:#59c3c9;border-radius:999px;padding:2px 8px;font-size:clamp(7px,0.68vw,9px);font-weight:700;margin-top:2px;}
-.main-body{flex:1;background:#f0f4f5;display:flex;flex-direction:row;gap:10px;padding:10px;overflow:hidden;min-height:0;}
-.pill-ev{background:#005e60;color:#c8ff08;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
-.pill-sky{background:#59c3c9;color:#003d3e;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
-.left-col{flex:0 0 55%;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
-.pll-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
-.pll-row{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:row;padding:0 10px;gap:8px;align-items:center;flex:1;min-height:0;overflow:hidden;}
-.pll-row.muted{opacity:0.45;}
-.pll-identity{flex:0 0 25%;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
-.pll-name{font-size:clamp(9px,0.98vw,13px);font-weight:800;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pll-tech{font-size:clamp(8px,0.78vw,11px);color:#6a8a8b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pll-chips{display:flex;flex-direction:row;gap:5px;flex-shrink:0;}
-.chip-block{background:#1a2e2e;border-radius:7px;min-width:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 7px;}
-.chip-n{font-size:clamp(11px,1.15vw,16px);font-weight:900;color:#c8ff08;line-height:1.1;}
-.chip-n-muted{color:rgba(255,255,255,0.35);}
-.chip-l{font-size:clamp(7px,0.68vw,9px);color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.5px;}
-.pll-bar-area{flex:1;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;}
-.bar-track{width:100%;height:13px;background:#ddeaeb;border-radius:7px;overflow:hidden;position:relative;}
-.bar-fill{height:100%;border-radius:7px;transition:width 0.4s ease;}
-.bar-fill-green{background:#75ca64;}
-.bar-fill-lime{background:#c8ff08;}
-.bar-fill-amber{background:#f5a623;}
-.bar-fill-red{background:#e63946;}
-.bar-meta{display:flex;align-items:center;gap:5px;}
-.bar-label{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;font-weight:600;}
-.over-badge{background:#c8ff08;color:#003d3e;font-size:clamp(6px,0.62vw,8px);font-weight:800;text-transform:uppercase;border-radius:999px;padding:1px 6px;letter-spacing:0.5px;}
-.bar-dash{font-size:clamp(9px,0.9vw,13px);color:#aac5c6;font-weight:700;}
-.right-col{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
-.oc-row{display:flex;flex-direction:row;gap:10px;margin-bottom:8px;flex-shrink:0;}
-.oc-card{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 10px;}
-.oc-num{font-size:clamp(18px,2.1vw,32px);font-weight:900;color:#59c3c9;line-height:1.1;}
-.oc-lbl{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;text-transform:uppercase;letter-spacing:0.7px;font-weight:700;}
-.outlook-table-wrap{flex:1;background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;min-height:0;}
-.ot-header{display:grid;grid-template-columns:1fr 1fr 56px 66px;background:#003d3e;padding:5px 10px;flex-shrink:0;}
-.ot-header span{color:#fff;font-size:clamp(7px,0.72vw,10px);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;}
-.ot-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.ot-row{display:grid;grid-template-columns:1fr 1fr 56px 66px;padding:0 10px;flex:1;align-items:center;border-bottom:1px solid #f0f4f5;}
-.ot-row:nth-child(even){background:#f7fafa;}
-.ot-cell{font-size:clamp(8px,0.82vw,11px);color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ot-cell-num{font-size:clamp(9px,0.92vw,13px);font-weight:900;color:#59c3c9;text-align:center;}
-.status-bar{flex:0 0 16%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
-.sbc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:row;padding:0 14px;gap:12px;align-items:center;box-shadow:0 2px 7px rgba(0,0,0,0.18);}
-.rag-dot{width:clamp(24px,2.8vw,42px);height:clamp(24px,2.8vw,42px);border-radius:50%;flex-shrink:0;}
-.rag-green{background:#75ca64;box-shadow:0 0 10px 3px rgba(117,202,100,0.65);}
-.rag-red{background:#e63946;box-shadow:0 0 10px 3px rgba(230,57,70,0.65);}
-.rag-amber{background:#f5a623;box-shadow:0 0 10px 3px rgba(245,166,35,0.65);}
-.sc-text{display:flex;flex-direction:column;gap:2px;}
-.sc-lbl{font-size:clamp(10px,1.08vw,15px);font-weight:800;color:#fff;}
-.sc-sub{font-size:clamp(8px,0.82vw,11px);color:rgba(255,255,255,0.58);}
-.grid-body{flex:1;background:#f0f4f5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:10px;overflow:hidden;min-height:0;}
-.zone{background:#fff;border-radius:10px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:column;padding:8px 10px;overflow:hidden;min-height:0;}
-.kpi-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
-.kc{background:#f6fafa;border-radius:8px;display:flex;flex-direction:row;flex:1;padding:6px 9px;gap:8px;align-items:center;min-height:0;overflow:hidden;}
-.kc-bar{width:5px;border-radius:3px;align-self:stretch;flex-shrink:0;}
-.kc-name{flex:1;font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;line-height:1.3;overflow:hidden;}
-.kc-vals{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;}
-.ka{font-size:clamp(13px,1.5vw,22px);font-weight:900;color:#004745;line-height:1;}
-.kp{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;}
-.kc-chip{font-size:clamp(7px,0.7vw,9px);font-weight:700;border-radius:6px;padding:3px 7px;white-space:nowrap;flex-shrink:0;}
-.chip-green{background:#e6f9e6;color:#1a7a1a;}
-.chip-red{background:#fce8e8;color:#b02020;}
-.chip-amber{background:#fff3cd;color:#856404;}
-.chip-teal{background:#e0f4f5;color:#005e60;}
-.bowler-note{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
-.ap-badges{display:flex;flex-direction:row;gap:8px;margin-bottom:8px;flex-shrink:0;}
-.ap-badge{flex:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 6px;}
-.ap-badge-num{font-size:clamp(14px,1.7vw,26px);font-weight:900;line-height:1;}
-.ap-badge-lbl{font-size:clamp(7px,0.68vw,9px);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
-.ap-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0;overflow:hidden;}
-.ap-col{display:flex;flex-direction:column;gap:4px;overflow:hidden;}
-.ap-col-hdr{font-size:clamp(7px,0.72vw,10px);font-weight:800;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:2px;flex-shrink:0;}
-.ap-col-hdr-green{color:#1a7a1a;}
-.ap-col-hdr-sky{color:#005e60;}
-.ap-chip{border-radius:999px;padding:3px 8px;font-size:clamp(7px,0.7vw,9px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
-.ap-chip-green{background:#e6f9e6;color:#1a7a1a;}
-.ap-chip-sky{background:#e0f4f5;color:#005e60;}
-.safety-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;flex:1;overflow:hidden;}
-.safety-circle{width:clamp(48px,5.5vw,78px);height:clamp(48px,5.5vw,78px);border-radius:50%;background:#75ca64;box-shadow:0 0 18px 6px rgba(117,202,100,0.5);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,2.6vw,36px);color:#fff;font-weight:900;flex-shrink:0;}
-.safety-label{font-size:clamp(13px,1.5vw,21px);font-weight:900;color:#004745;}
-.safety-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;}
-.safety-chip{background:#e6f9e6;color:#1a7a1a;font-weight:700;border-radius:999px;padding:3px 10px;font-size:clamp(7px,0.72vw,10px);}
-.safety-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;text-align:center;font-style:italic;}
-.capex-budget-label{font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;margin-bottom:4px;flex-shrink:0;}
-.capex-track{width:100%;height:21px;background:#ddeaeb;border-radius:11px;overflow:hidden;flex-shrink:0;margin-bottom:3px;}
-.capex-fill{height:100%;border-radius:11px;background:#005e60;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
-.capex-fill-pct{color:#c8ff08;font-size:clamp(9px,0.9vw,12px);font-weight:900;}
-.capex-sub{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;margin-bottom:6px;flex-shrink:0;}
-.capex-rows{display:flex;flex-direction:column;gap:4px;flex:1;overflow:hidden;min-height:0;}
-.capex-row{display:flex;flex-direction:row;align-items:center;gap:6px;flex:1;min-height:0;overflow:hidden;}
-.capex-proj{flex:1;font-size:clamp(8px,0.82vw,11px);color:#212121;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.capex-amt{font-size:clamp(8px,0.82vw,11px);font-weight:700;color:#004745;flex-shrink:0;min-width:38px;text-align:right;}
-.capex-chip{font-size:clamp(6px,0.65vw,9px);font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;flex-shrink:0;}
-.capex-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
-.map-body{flex:1;display:flex;flex-direction:column;background:#f0f4f5;overflow:hidden;}
-.map-container{flex:1;background:#005e5d;position:relative;overflow:hidden;}
-.map-stat-bar{flex:0 0 42px;background:#004a4c;border-top:2px solid rgba(200,255,8,0.25);position:relative;display:flex;align-items:center;justify-content:center;gap:32px;}
-.map-stat{display:flex;flex-direction:column;align-items:center;gap:2px;}
-.map-stat-number{font-size:clamp(15px,1.5vw,22px);font-weight:900;color:#c8ff08;}
-.map-stat-label{font-size:10px;color:rgba(255,255,255,0.85);}
-.map-stat-sep{color:rgba(200,255,8,0.3);}
-.map-stat-meta{position:absolute;right:14px;color:rgba(255,255,255,0.3);font-size:9px;}
-svg{width:100%;height:100%;}
-@keyframes pulse-ring{0%{transform:scale(1);opacity:0.65;}100%{transform:scale(1.9);opacity:0;}}
-#tooltip4{position:fixed;background:#003d3e;color:#fff;padding:7px 13px;border-radius:6px;font-size:12px;z-index:999;pointer-events:none;display:none;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OFS Training Delivery Command Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.js"></script>
+<style>
+:root{--ev:#005E60;--day:#FFFFFF;--night:#212121;--acc:#C8FF08;--evl:#E6F2F2;--evm:#007A7C;--grn:#2D7A45;--red:#C0392B;--amb:#E67E22;--gry:#6B7280;--bdr:#D1D5DB;--fh:'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif;--fb:Inter,'Segoe UI',Arial,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:var(--night);font-family:var(--fb)}
+.slide{position:absolute;top:0;left:0;width:100vw;height:100vh;display:none;overflow:hidden;flex-direction:column}
+.slide.active{display:flex}
+#pb{position:fixed;bottom:0;left:0;height:4px;background:var(--acc);z-index:200}
+#sc{position:fixed;bottom:8px;right:12px;font-size:10px;color:rgba(33,33,33,.35);z-index:200;font-family:var(--fb)}
+.gh{background:var(--ev);padding:6px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.gh .ht{font-family:var(--fh);font-size:17px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1.5px}
+.gh .hs{font-size:9px;color:rgba(255,255,255,.6);margin-top:1px}
+.gh .hw{font-size:13px;font-weight:700;color:var(--acc)}
+.gh .hl{font-size:10px;color:rgba(255,255,255,.6);text-align:right}
+.s1b{flex:1;display:flex;flex-direction:column;padding:7px 12px;gap:5px;background:var(--day);overflow:hidden}
+.ms{display:grid;grid-template-columns:1.4fr 1fr 1fr repeat(4,0.72fr);gap:5px;flex-shrink:0}
+.mc{background:var(--ev);border-radius:8px;padding:8px;text-align:center}
+.mc .mv{font-family:var(--fh);font-size:24px;font-weight:900;color:var(--day);line-height:1}
+.mc .ml{font-size:8px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
+.mc.hero{background:var(--night)}.mc.hero .mv{color:var(--acc);font-size:30px}
+.mc.loc{background:var(--evl)}.mc.loc .mv{color:var(--ev);font-size:20px}.mc.loc .ml{color:var(--gry)}
+.rag-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex-shrink:0}
+.rag-tile{border-radius:8px;padding:6px 9px;display:flex;align-items:center;gap:7px;border:2px solid transparent}
+.rag-tile.green{background:#F0FDF4;border-color:#2D7A45}
+.rag-tile.amber{background:#FFF7ED;border-color:#E67E22}
+.rag-tile.red{background:#FEF2F2;border-color:#C0392B}
+.rag-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0}
+.rag-tile.green .rag-icon{background:#2D7A45;color:white}
+.rag-tile.amber .rag-icon{background:#E67E22;color:white}
+.rag-tile.red .rag-icon{background:#C0392B;color:white}
+.rag-label{font-family:var(--fh);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;line-height:1}
+.rag-tile.green .rag-label{color:#2D7A45}
+.rag-tile.amber .rag-label{color:#E67E22}
+.rag-tile.red .rag-label{color:#C0392B}
+.rag-reason{font-size:7.5px;color:var(--gry);margin-top:2px;line-height:1.2}
+.s1-main{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:1;min-height:0}
+.kpip{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
+.kpit{font-family:var(--fh);font-size:9px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--ev);padding-bottom:4px;margin-bottom:5px;flex-shrink:0}
+.kpi-row{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid #F3F4F6;flex-shrink:0}
+.kpi-row:last-child{border-bottom:none}
+.kpi-badge{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:10px;font-weight:900;flex-shrink:0}
+.kpi-info{flex:1}
+.kpi-name{font-size:10px;font-weight:600;color:var(--night)}
+.kpi-dual{display:flex;gap:3px;margin-top:3px;align-items:center;flex-wrap:wrap}
+.kpi-tag{font-size:7px;padding:1px 5px;border-radius:3px;font-weight:700;white-space:nowrap}
+.kpi-tag.green{background:#D1FAE5;color:#065F46}
+.kpi-tag.amber{background:#FEF3C7;color:#92400E}
+.kpi-tag.red{background:#FEE2E2;color:#991B1B}
+.kpi-tag.gry{background:#F3F4F6;color:var(--gry)}
+.safety-hero{background:var(--night);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden;border:3px solid #C0392B}
+.safety-hero.green{border-color:#2D7A45}
+.safety-hero.amber{border-color:#E67E22}
+.safety-hero.red{border-color:#C0392B}
+.sh-top{display:flex;align-items:center;gap:9px;margin-bottom:7px;flex-shrink:0}
+.sh-circle{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;border:4px solid}
+.sh-circle.green{background:#2D7A45;border-color:#4ADE80;color:white}
+.sh-circle.amber{background:#E67E22;border-color:#FCD34D;color:white}
+.sh-circle.red{background:#C0392B;border-color:#F87171;color:white}
+.sh-title{font-family:var(--fh);font-size:17px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.sh-title.green{color:#4ADE80}
+.sh-title.amber{color:#FCD34D}
+.sh-title.red{color:#F87171}
+.sh-reason{font-size:8px;color:rgba(255,255,255,.55);margin-top:2px}
+.sh-incident{display:inline-block;font-size:8px;font-weight:700;padding:2px 8px;border-radius:3px;margin-top:3px}
+.sh-incident.green{background:#2D7A45;color:white}
+.sh-incident.amber{background:#E67E22;color:white}
+.sh-incident.red{background:#C0392B;color:white}
+.sh-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex-shrink:0}
+.sh-kpi{background:rgba(255,255,255,.08);border-radius:5px;padding:5px;text-align:center}
+.sh-kpi .sv{font-family:var(--fh);font-size:15px;font-weight:900;color:var(--acc);line-height:1}
+.sh-kpi .sl{font-size:7px;color:rgba(255,255,255,.55);text-transform:uppercase;margin-top:1px}
+.sh-kpi.kpi-red .sv{color:#F87171}
+.ap-panel{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
+.cx-panel{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
+.panel-title{font-family:var(--fh);font-size:9px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--ev);padding-bottom:3px;margin-bottom:5px;flex-shrink:0}
+.ap-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:5px;flex-shrink:0}
+.ap-stat{border-radius:5px;padding:4px;text-align:center;background:var(--evl)}
+.ap-stat .asn{font-family:var(--fh);font-size:16px;font-weight:900;color:var(--ev);line-height:1}
+.ap-stat .asl{font-size:6.5px;color:var(--gry);text-transform:uppercase}
+.ap-stat.amber{background:#FFF7ED}.ap-stat.amber .asn{color:#E67E22}
+.ap-stat.red{background:#FEF2F2}.ap-stat.red .asn{color:#C0392B}
+.ap-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px}
+.ap-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px}
+.ap-item:last-child{border-bottom:none}
+.ap-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ap-text{font-size:8px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-badge{font-size:6.5px;padding:1px 4px;border-radius:2px;flex-shrink:0;font-weight:700;white-space:nowrap}
+.ap-badge.delayed{background:#FEE2E2;color:#991B1B}
+.ap-badge.in-prog{background:#DBEAFE;color:#1E40AF}
+.ap-badge.not-started{background:#F3F4F6;color:var(--gry)}
+.cx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:5px;flex-shrink:0}
+.cx-stat{border-radius:5px;padding:4px;text-align:center;background:var(--evl)}
+.cx-stat .csn{font-family:var(--fh);font-size:16px;font-weight:900;color:var(--ev);line-height:1}
+.cx-stat .csl{font-size:6.5px;color:var(--gry);text-transform:uppercase}
+.cx-stat.hi{background:var(--night)}.cx-stat.hi .csn{color:var(--acc)}
+.cx-bars{display:flex;flex-direction:column;gap:3px;margin-bottom:4px;flex-shrink:0}
+.cx-bar-row{display:flex;align-items:center;gap:4px}
+.cx-bar-label{font-size:7.5px;color:var(--night);width:70px;flex-shrink:0}
+.cx-bar-track{flex:1;height:13px;background:#E5E7EB;border-radius:3px;overflow:hidden;position:relative}
+.cx-bar-fill{height:100%;border-radius:3px;position:relative}
+.cx-bar-val{position:absolute;right:3px;top:50%;transform:translateY(-50%);font-size:6.5px;font-weight:700;color:white;white-space:nowrap}
+.cx-bar-count{font-size:7px;color:var(--gry);width:18px;text-align:right;flex-shrink:0}
+.cx-item-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px}
+.cx-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px}
+.cx-item:last-child{border-bottom:none}
+.cx-cat-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.cx-item-text{font-size:8px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cx-item-cost{font-size:7px;color:var(--gry);flex-shrink:0;white-space:nowrap}
+.cx-item-badge{font-size:6.5px;padding:1px 4px;border-radius:2px;flex-shrink:0;font-weight:700;white-space:nowrap;background:#FEF3C7;color:#92400E}
+.s2b{flex:1;display:flex;flex-direction:column;padding:6px 8px;gap:4px;background:var(--day);overflow:hidden}
+.pg{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:4px;min-height:0}
+.pll-card{background:var(--day);border:1px solid var(--bdr);border-radius:7px;display:flex;flex-direction:column;overflow:hidden}
+.ph{background:var(--ev);padding:5px 7px;flex-shrink:0}
+.pn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.ph-hero{display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.ph-big{text-align:center;flex:1}
+.ph-big .pnum{font-family:var(--fh);font-size:21px;font-weight:900;color:var(--acc);line-height:1;display:block}
+.ph-big .plbl{font-size:7.5px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.4px}
+.ph-hdiv{width:1px;height:28px;background:rgba(255,255,255,.2)}
+.ph-breakdown{display:flex;gap:3px;margin-top:2px}
+.ph-type{flex:1;text-align:center;border-radius:3px;padding:2px 0}
+.ph-type .tn{font-family:var(--fh);font-size:13px;font-weight:900;line-height:1;display:block}
+.ph-type .tl{font-size:6.5px;text-transform:uppercase;letter-spacing:.3px}
+.ph-type.int-t{background:rgba(200,255,8,.12)}.ph-type.int-t .tn{color:var(--acc)}.ph-type.int-t .tl{color:rgba(200,255,8,.65)}
+.ph-type.oe-t{background:rgba(255,255,255,.1)}.ph-type.oe-t .tn{color:#7DD3FC}.ph-type.oe-t .tl{color:rgba(125,211,252,.65)}
+.la-section{background:rgba(0,94,96,.05);border-top:1px solid rgba(0,94,96,.15);padding:3px 6px;flex-shrink:0}
+.la-title{font-family:var(--fh);font-size:7px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px}
+.la-row{display:flex;gap:3px}
+.la-item{flex:1;text-align:center;background:var(--evl);border-radius:3px;padding:2px 0}
+.la-item .ln{font-family:var(--fh);font-size:13px;font-weight:900;color:var(--ev);line-height:1;display:block}
+.la-item .ll{font-size:6.5px;color:var(--gry);text-transform:uppercase}
+.pc{flex:1;overflow:hidden;padding:4px 6px;display:flex;flex-direction:column;gap:2px;min-height:0}
+.cr{display:flex;align-items:center;gap:4px;min-height:15px}
+.ew{width:36px;flex-shrink:0;height:8px;background:#E5E7EB;border-radius:3px;overflow:hidden}
+.eb{height:100%;border-radius:3px}.eb.over{background:var(--acc)}.eb.full{background:var(--grn)}.eb.mid{background:var(--amb)}.eb.low{background:var(--red)}.eb.oe{width:100%;background:var(--evm);opacity:.7}
+.oe-r .cn{color:var(--gry)}
+.cn{font-size:9px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cm{font-size:8px;color:var(--gry);flex-shrink:0;white-space:nowrap}
+.nc{font-size:9px;color:var(--gry);font-style:italic;padding:3px 0}
+.el{display:flex;gap:8px;font-size:9px;color:var(--gry);align-items:center;flex-shrink:0}
+.el span{display:flex;align-items:center;gap:2px}
+.eldot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.mb{flex:1;position:relative;overflow:hidden;background:var(--evl)}
+
+.sh-title-big{font-family:var(--fh);font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:2px;line-height:1;display:flex;align-items:center}
+.sh-title-big.green{color:#4ADE80}
+.sh-title-big.amber{color:#FCD34D}
+.sh-title-big.red{color:#F87171}
+.sv.green-val{color:#4ADE80}
+.sh-log{margin-top:6px;border-top:1px solid rgba(255,255,255,0.15);padding-top:5px;flex-shrink:0}
+.sh-log-title{font-size:8px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.sh-log-item{display:flex;align-items:flex-start;gap:5px;margin-bottom:3px}
+.sh-log-dot{width:6px;height:6px;border-radius:50%;background:#6B7280;flex-shrink:0;margin-top:3px}
+.sh-log-date{font-size:8px;color:#9CA3AF;font-weight:600;white-space:nowrap;min-width:72px;margin-right:4px}
+.sh-log-desc{font-size:8px;color:#D1D5DB;line-height:1.3}
+.ap-stat.on-deck{background:#EEF2FF;border:1px solid #818CF8}
+.ap-stat.on-deck .asn{color:#4F46E5}
+.kpi-filler{background:var(--ev);border-radius:6px;padding:7px 9px;margin-top:auto;flex-shrink:0}
+.kfi-title{font-family:var(--fh);font-size:9px;font-weight:900;color:var(--lim);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.kfi-grid{display:flex;gap:5px}
+.kfi-item{flex:1;background:rgba(0,0,0,0.2);border-radius:5px;padding:5px 4px;text-align:center}
+.kfi-item.ev{background:rgba(200,255,8,0.12);border:1px solid rgba(200,255,8,0.3)}
+.kfi-val{font-size:18px;font-weight:900;color:#fff;line-height:1}
+.kfi-lbl{font-size:7px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+
+.wag-card{background:var(--night);overflow:hidden}
+.wag-card .pn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1px;background:var(--ev);display:flex;align-items:center;gap:7px}
+.wag-body{padding:10px;display:flex;flex-direction:column;gap:9px;height:calc(100% - 38px);box-sizing:border-box}
+.wag-stats{display:flex;gap:8px;justify-content:center}
+.wag-stat-big{flex:1;text-align:center;background:rgba(255,255,255,0.06);border-radius:8px;padding:8px 5px}
+.wag-val{font-family:var(--fh);font-size:32px;font-weight:900;color:var(--day);line-height:1}
+.wag-lbl{font-size:9px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+.wag-locs{background:rgba(255,255,255,0.05);border-radius:8px;padding:8px}
+.wag-loc-title{font-size:8px;color:rgba(255,255,255,0.5);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.wag-loc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.wag-loc-item{border-radius:6px;padding:5px 3px;text-align:center}
+.wag-loc-item.hlc{background:rgba(0,94,96,0.4);border:1px solid rgba(0,94,96,0.6)}
+.wag-loc-item.blc{background:rgba(0,78,152,0.3);border:1px solid rgba(0,78,152,0.5)}
+.wag-loc-item.klc{background:rgba(100,100,100,0.2);border:1px solid rgba(150,150,150,0.3)}
+.wag-loc-item.oth{background:rgba(200,255,8,0.08);border:1px solid rgba(200,255,8,0.2)}
+.wag-loc-num{font-size:18px;font-weight:900;color:var(--day);line-height:1}
+.wag-loc-name{font-size:7px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;line-height:1.3}
+.wag-safety{display:flex;align-items:center;gap:10px;background:rgba(45,122,69,0.2);border:1px solid rgba(45,122,69,0.5);border-radius:8px;padding:9px 11px}
+.wag-safety-text{flex:1}
+.wag-safety-status{font-family:var(--fh);font-size:18px;font-weight:900;color:#4ADE80;text-transform:uppercase;letter-spacing:2px;line-height:1}
+.wag-safety-sub{font-size:9px;color:rgba(255,255,255,0.7);margin-top:3px;font-weight:600}
+.wag-safety-incidents{font-size:7.5px;color:rgba(255,255,255,0.45);margin-top:3px}
+</style>
 </head>
 <body>
-<div id="sc">
-  <!-- SLIDE 1: DELIVERY OPERATIONS -->
-  <div class="slide active" id="slide-0">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Delivery Operations</div>
-      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
-    </div>
-    <div class="metric-strip">
-      <div class="mc mc-wide">
-        <div class="mc-num">219</div>
-        <div class="mc-lbl">Global Students</div>
-        <div class="mc-chip">15 Active Classes</div>
-      </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white">138</div>
-        <div class="mc-lbl">HLC</div>
-        <div class="mc-sub">Houston, TX</div>
-      </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white">5</div>
-        <div class="mc-lbl">BLC</div>
-        <div class="mc-sub">Birr, Switzerland</div>
-      </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white">12</div>
-        <div class="mc-lbl">KLC</div>
-        <div class="mc-sub">Kuwait</div>
-      </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white">40</div>
-        <div class="mc-lbl" style="color:#59c3c9;">Other</div>
-        <div class="mc-sub">Dist. Learning</div>
-      </div>
-    </div>
-    <div class="main-body">
-      <div class="left-col">
-        <div class="pill-ev">Classes in Progress &mdash; Week of May 25&ndash;29, 2026</div>
-        <div class="pll-list">
-          <!-- ROW 1 -->
-          <div class="pll-row">
-            <div class="pll-identity">
-              <div class="pll-name">Sherif Khalifa</div>
-              <div class="pll-tech">Gas Turbine</div>
-            </div>
-            <div class="pll-chips">
-              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
-              <div class="chip-block"><div class="chip-n">44</div><div class="chip-l">STU</div></div>
-            </div>
-            <div class="pll-bar-area">
-              <div class="bar-track"><div class="bar-fill bar-fill-green" style="width:92%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 44/48</span></div>
-            </div>
-          </div>
-          <!-- ROW 2 -->
-          <div class="pll-row">
-            <div class="pll-identity">
-              <div class="pll-name">Pablo Schibli</div>
-              <div class="pll-tech">Steam Turbine</div>
-            </div>
-            <div class="pll-chips">
-              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
-              <div class="chip-block"><div class="chip-n">36</div><div class="chip-l">STU</div></div>
-            </div>
-            <div class="pll-bar-area">
-              <div class="bar-track"><div class="bar-fill bar-fill-green" style="width:100%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 24/24</span></div>
-              <div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">OE: 1 cls / 12 stu</div>
-            </div>
-          </div>
-          <!-- ROW 3 -->
-          <div class="pll-row">
-            <div class="pll-identity">
-              <div class="pll-name">Michele Alcantar</div>
-              <div class="pll-tech">Generator + Excitation</div>
-            </div>
-            <div class="pll-chips">
-              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
-              <div class="chip-block"><div class="chip-n">21</div><div class="chip-l">STU</div></div>
-            </div>
-            <div class="pll-bar-area">
-              <div class="bar-track"><div class="bar-fill bar-fill-amber" style="width:75%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 21/28</span></div>
-            </div>
-          </div>
-          <!-- ROW 4 -->
-          <div class="pll-row">
-            <div class="pll-identity">
-              <div class="pll-name">Mohammed Nizami</div>
-              <div class="pll-tech">Controls</div>
-            </div>
-            <div class="pll-chips">
-              <div class="chip-block"><div class="chip-n">1</div><div class="chip-l">CLS</div></div>
-              <div class="chip-block"><div class="chip-n">6</div><div class="chip-l">STU</div></div>
-            </div>
-            <div class="pll-bar-area">
-              <div class="bar-track"><div class="bar-fill bar-fill-red" style="width:35%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 6/17</span></div>
-            </div>
-          </div>
-          <!-- ROW 5 -->
-          <div class="pll-row">
-            <div class="pll-identity">
-              <div class="pll-name">Harry Hanson</div>
-              <div class="pll-tech">Craft / Repairs / ILES</div>
-            </div>
-            <div class="pll-chips">
-              <div class="chip-block"><div class="chip-n">5</div><div class="chip-l">CLS</div></div>
-              <div class="chip-block"><div class="chip-n">60</div><div class="chip-l">STU</div></div>
-            </div>
-            <div class="pll-bar-area">
-              <div class="bar-track"><div class="bar-fill bar-fill-green" style="width:97%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 60/62</span></div>
-            </div>
-          </div>
-          <!-- ROW 6 -->
-          <div class="pll-row">
-            <div class="pll-identity">
-              <div class="pll-name">Greg Walker</div>
-              <div class="pll-tech">Aeroderivative</div>
-            </div>
-            <div class="pll-chips">
-              <div class="chip-block"><div class="chip-n">1</div><div class="chip-l">CLS</div></div>
-              <div class="chip-block"><div class="chip-n">12</div><div class="chip-l">STU</div></div>
-            </div>
-            <div class="pll-bar-area">
-              <div class="bar-meta"><span class="bar-dash">—</span></div>
-              <div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">OE: 1 cls / 12 stu</div>
-            </div>
-          </div>
-          <!-- ROW 7 -->
-          <div class="pll-row">
-            <div class="pll-identity">
-              <div class="pll-name">Linda</div>
-              <div class="pll-tech">CTE / Workforce Dev</div>
-            </div>
-            <div class="pll-chips">
-              <div class="chip-block"><div class="chip-n">2</div><div class="chip-l">CLS</div></div>
-              <div class="chip-block"><div class="chip-n">40</div><div class="chip-l">STU</div></div>
-            </div>
-            <div class="pll-bar-area">
-              <div class="bar-track"><div class="bar-fill bar-fill-lime" style="width:100%;"></div></div>
-              <div class="bar-meta"><span class="bar-label">INT 40/36</span><span class="over-badge">OVER</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="right-col">
-        <div class="pill-sky">30-Day Outlook &mdash; May 30 to Jun 28</div>
-        <div class="oc-row">
-          <div class="oc-card">
-            <div class="oc-num">69</div>
-            <div class="oc-lbl">Classes Starting</div>
-          </div>
-          <div class="oc-card">
-            <div class="oc-num">642</div>
-            <div class="oc-lbl">Students Enrolled</div>
-          </div>
-        </div>
-        <div class="outlook-table-wrap">
-          <div class="ot-header">
-            <span>Instructor</span>
-            <span>Subject</span>
-            <span>Classes</span>
-            <span>Students</span>
-          </div>
-          <div class="ot-body">
-            <div class="ot-row">
-              <div class="ot-cell">Sherif Khalifa</div>
-              <div class="ot-cell">Gas Turbine</div>
-              <div class="ot-cell-num">9</div>
-              <div class="ot-cell-num">85</div>
-            </div>
-            <div class="ot-row">
-              <div class="ot-cell">Pablo Schibli</div>
-              <div class="ot-cell">Steam Turbine</div>
-              <div class="ot-cell-num">5</div>
-              <div class="ot-cell-num">54</div>
-            </div>
-            <div class="ot-row">
-              <div class="ot-cell">Michele Alcantar</div>
-              <div class="ot-cell">Generator + Excitation</div>
-              <div class="ot-cell-num">8</div>
-              <div class="ot-cell-num">95</div>
-            </div>
-            <div class="ot-row">
-              <div class="ot-cell">Mohammed Nizami</div>
-              <div class="ot-cell">Controls</div>
-              <div class="ot-cell-num">14</div>
-              <div class="ot-cell-num">144</div>
-            </div>
-            <div class="ot-row">
-              <div class="ot-cell">Harry Hanson</div>
-              <div class="ot-cell">Craft / Repairs / ILES</div>
-              <div class="ot-cell-num">18</div>
-              <div class="ot-cell-num">159</div>
-            </div>
-            <div class="ot-row">
-              <div class="ot-cell">Greg Walker</div>
-              <div class="ot-cell">Aeroderivative</div>
-              <div class="ot-cell-num">13</div>
-              <div class="ot-cell-num">93</div>
-            </div>
-            <div class="ot-row">
-              <div class="ot-cell">Linda</div>
-              <div class="ot-cell">CTE / Workforce Dev</div>
-              <div class="ot-cell-num">2</div>
-              <div class="ot-cell-num">12</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 2: PERFORMANCE & IMPROVEMENT -->
-  <div class="slide" id="slide-1">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Performance & Improvement</div>
-      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
-    </div>
-    <div class="status-bar">
-      <div class="sbc">
-        <div class="rag-dot rag-green"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">SAFETY</div>
-          <div class="sc-sub">All Clear &mdash; 0 Incidents</div>
-        </div>
-      </div>
-      <div class="sbc">
-        <div class="rag-dot rag-amber"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">BOWLER KPIs</div>
-          <div class="sc-sub">1 At Risk, 1 Amber</div>
-        </div>
-      </div>
-      <div class="sbc">
-        <div class="rag-dot rag-green"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">ACTION PLAN</div>
-          <div class="sc-sub">0 Overdue</div>
-        </div>
-      </div>
-      <div class="sbc">
-        <div class="rag-dot rag-amber"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">CAPEX 2026</div>
-          <div class="sc-sub">80% Spent</div>
-        </div>
-      </div>
-    </div>
-    <div class="grid-body">
-      <!-- TOP-LEFT: Bowler KPIs -->
-      <div class="zone">
-        <div class="pill-ev">Bowler KPIs</div>
-        <div class="kpi-list">
-          <div class="kc">
-            <div class="kc-bar" style="background:#75ca64;"></div>
-            <div class="kc-name">Post-Training Skill Improvement</div>
-            <div class="kc-vals">
-              <div class="ka">83%</div>
-              <div class="kp">Plan: 70%</div>
-              <div class="kc-chip chip-green">On Track</div>
-            </div>
-          </div>
-          <div class="kc">
-            <div class="kc-bar" style="background:#f5a623;"></div>
-            <div class="kc-name">Timecard OTD</div>
-            <div class="kc-vals">
-              <div class="ka">85%</div>
-              <div class="kp">Plan: 92%</div>
-              <div class="kc-chip chip-amber">Below Target</div>
-            </div>
-          </div>
-          <div class="kc">
-            <div class="kc-bar" style="background:#e63946;"></div>
-            <div class="kc-name">Instructor Util >75% for 3mo</div>
-            <div class="kc-vals">
-              <div class="ka">19%</div>
-              <div class="kp">Target: <15%</div>
-              <div class="kc-chip chip-red">Over Threshold</div>
-            </div>
-          </div>
-        </div>
-        <div class="bowler-note">April data &mdash; Owner: Jim Rosen</div>
-      </div>
-      <!-- TOP-RIGHT: Action Plan Health -->
-      <div class="zone">
-        <div class="pill-sky">Action Plan Health</div>
-        <div class="ap-badges">
-          <div class="ap-badge" style="background:#005e60;">
-            <div class="ap-badge-num" style="color:#c8ff08;">116</div>
-            <div class="ap-badge-lbl" style="color:rgba(255,255,255,0.75);">In Progress</div>
-          </div>
-          <div class="ap-badge" style="background:#59c3c9;">
-            <div class="ap-badge-num" style="color:#003d3e;">0</div>
-            <div class="ap-badge-lbl" style="color:#003d3e;">On Deck</div>
-          </div>
-          <div class="ap-badge" style="background:#75ca64;">
-            <div class="ap-badge-num" style="color:#003d3e;">38</div>
-            <div class="ap-badge-lbl" style="color:#003d3e;">Complete (60d)</div>
-          </div>
-        </div>
-        <div class="ap-cols">
-          <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-green">✓ Recently Completed</div>
-            <div class="ap-chip ap-chip-green">May 29 &mdash; Create Kahuna roles per OFS Lifting Workshop</div>
-            <div class="ap-chip ap-chip-green">Apr 30 &mdash; Standard process for communicating to instructors</div>
-            <div class="ap-chip ap-chip-green">Apr 30 &mdash; Finalize testing & functionality of request workflows</div>
-            <div class="ap-chip ap-chip-green">Apr 30 &mdash; Includes simulator readiness</div>
-            <div class="ap-chip ap-chip-green">Apr 30 &mdash; AP-0744 completion item</div>
-          </div>
-          <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-sky">▶ On Deck</div>
-            <div class="ap-chip ap-chip-sky">May 29 &mdash; Identify best way to connect with Staff</div>
-            <div class="ap-chip ap-chip-sky">Jun 29 &mdash; Design online resource for OFS Programs</div>
-            <div class="ap-chip ap-chip-sky">Jun 30 &mdash; MM & Xyleme integration</div>
-            <div class="ap-chip ap-chip-sky">Jun 30 &mdash; Complete LO Application Management training</div>
-            <div class="ap-chip ap-chip-sky">Jun 30 &mdash; AP-0388-3</div>
-          </div>
-        </div>
-      </div>
-      <!-- BOTTOM-LEFT: Safety Status -->
-      <div class="zone">
-        <div class="pill-ev">Safety Status</div>
-        <div class="safety-zone">
-          <div class="safety-circle">✓</div>
-          <div class="safety-label">All Clear</div>
-          <div class="safety-chips">
-            <div class="safety-chip">I&I: 0</div>
-            <div class="safety-chip">I&I Rate: 0</div>
-            <div class="safety-chip">Severe: 0</div>
-            <div class="safety-chip">Live Save ✓</div>
-            <div class="safety-chip">Read Across ✓</div>
-          </div>
-          <div style="background:rgba(106,138,139,0.08);border-left:3px solid rgba(106,138,139,0.4);border-radius:0 4px 4px 0;padding:5px 8px;margin-top:4px;font-size:clamp(6px,0.68vw,9px);color:#6a8a8b;line-height:1.55;width:100%;">
-            <div style="font-style:italic;font-weight:700;margin-bottom:3px;color:#888;">Prior Incidents (Reference Only)</div>
-            <div style="margin-bottom:3px;">🔴 May 13 &middot; HLC &mdash; 7FA Bearing 2 lube oil spill. Sorbent pad left in drain. Flow stopped, permit issued, cleaned. System normal.</div>
-            <div>🔴 May 8, 10:30 AM &middot; Trailer 101 &mdash; Student slipped on wet stairs. First aid: tailbone, heel & toe. Caution & reporting reinforced.</div>
-          </div>
-        </div>
-      </div>
-      <!-- BOTTOM-RIGHT: 2026 CapEx -->
-      <div class="zone">
-        <div class="pill-sky">2026 CapEx</div>
-        <div class="capex-budget-label">$4.37M of $5.49M Spent (80%)</div>
-        <div class="capex-track"><div class="capex-fill" style="width:80%;"><span class="capex-fill-pct">80%</span></div></div>
-        <div class="capex-sub">$1.11M projected remaining</div>
-        <div class="capex-rows">
-          <div class="capex-row">
-            <div class="capex-proj">HA Mock-up (Intl Location)</div>
-            <div class="capex-amt">$1.31M</div>
-            <div class="capex-chip chip-teal">Active</div>
-          </div>
-          <div class="capex-row">
-            <div class="capex-proj">New Crane for Bay 1</div>
-            <div class="capex-amt">$1.00M</div>
-            <div class="capex-chip chip-teal">Active</div>
-          </div>
-          <div class="capex-row">
-            <div class="capex-proj">HA Tooling</div>
-            <div class="capex-amt">$700K</div>
-            <div class="capex-chip chip-green">PO Opened</div>
-          </div>
-          <div class="capex-row">
-            <div class="capex-proj">HA Improvements</div>
-            <div class="capex-amt">$600K</div>
-            <div class="capex-chip chip-teal">Active</div>
-          </div>
-          <div class="capex-row">
-            <div class="capex-proj">ITS Mockup</div>
-            <div class="capex-amt">$579K</div>
-            <div class="capex-chip chip-teal">Active</div>
-          </div>
-          <div class="capex-row">
-            <div class="capex-proj">Building 2 New Roof</div>
-            <div class="capex-amt">$575K</div>
-            <div class="capex-chip chip-amber">AR Created</div>
-          </div>
-        </div>
-        <div class="capex-note">CapEx updated quarterly</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 3: INTERNAL STUDENT MAP -->
-  <div class="slide" id="slide-2">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World are Our Students From?</div>
-      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
-    </div>
-    <div class="map-body">
-      <div class="map-container" id="map3-container"></div>
-      <div class="map-stat-bar">
-        <div class="map-stat">
-          <div class="map-stat-number">195</div>
-          <div class="map-stat-label">Active Students</div>
-        </div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat">
-          <div class="map-stat-number">28</div>
-          <div class="map-stat-label">Countries</div>
-        </div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat">
-          <div class="map-stat-number">13</div>
-          <div class="map-stat-label">Active Classes</div>
-        </div>
-        <div class="map-stat-meta">Internal Only | In-Progress</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 4: CUSTOMER TRAINING MAP -->
-  <div class="slide" id="slide-3">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World Are We Training Our Customers?</div>
-      <div class="title-bar-pill">Week of May 25&ndash;29, 2026</div>
-    </div>
-    <div class="map-body">
-      <div class="map-container" id="map4-container"></div>
-      <div class="map-stat-bar">
-        <div class="map-stat">
-          <div class="map-stat-number">24</div>
-          <div class="map-stat-label">Active Students</div>
-        </div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat">
-          <div class="map-stat-number">2</div>
-          <div class="map-stat-label">Active Classes</div>
-        </div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat">
-          <div class="map-stat-number">2</div>
-          <div class="map-stat-label">Countries</div>
-        </div>
-        <div class="map-stat-meta">OE + Site Specific | In-Progress Only</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Progress bar -->
-<div id="pt"><div id="pf"></div></div>
-<div id="sn">1 / 4</div>
-<div id="tooltip4"></div>
-
+<!-- SLIDE 1 -->
+<div class="slide active" id="s1"><div class="gh"><div><div class="ht">OFS Training Delivery Command Board</div><div class="hs">v5.1 Build 2026-05-29</div></div><div class="hw">Jun 1 - 5, 2026</div><div class="hl">GE Vernova<br>Houston Learning Center</div></div><div class="s1b"><div class="ms"><div class="mc hero"><div class="mv">364</div><div class="ml">Students This Week</div></div><div class="mc"><div class="mv">268</div><div class="ml">Internal Students</div></div><div class="mc"><div class="mv">96</div><div class="ml">OE + SS Students</div></div><div class="mc loc"><div class="mv">164</div><div class="ml">HLC Houston</div></div><div class="mc loc"><div class="mv">37</div><div class="ml">BLC Birr</div></div><div class="mc loc"><div class="mv">0</div><div class="ml">KLC Kuwait</div></div><div class="mc loc"><div class="mv">67</div><div class="ml">Distance/Other</div></div></div><div class="rag-strip"><div class="rag-tile red"><div class="rag-icon">✗</div><div><div class="rag-label">BOWLER</div><div class="rag-reason">TC OTD & Inst. Util. off plan</div></div></div><div class="rag-tile green"><div class="rag-icon">✓</div><div><div class="rag-label">SAFETY</div><div class="rag-reason">0 incidents, KPIs on plan</div></div></div><div class="rag-tile amber"><div class="rag-icon">!</div><div><div class="rag-label">ACTION PLANS</div><div class="rag-reason">4 delayed items</div></div></div><div class="rag-tile amber"><div class="rag-icon">!</div><div><div class="rag-label">CAPEX</div><div class="rag-reason">15 high-priority active</div></div></div></div><div class="s1-main"><div class="kpip"><div class="kpit">&#128200; Bowler KPI &mdash; YTD &amp; Latest Month</div><div class="kpi-row"><div class="kpi-badge" style="background:#2D7A45;color:white">83%</div><div class="kpi-info"><div class="kpi-name">Post-Training Skill Improvement</div><div class="kpi-dual"><span class="kpi-tag gry">YTD: 83%</span><span class="kpi-tag green">MAR: 83%</span><span class="kpi-tag gry">Plan: 70%</span></div></div></div><div class="kpi-row"><div class="kpi-badge" style="background:#C0392B;color:white">72%</div><div class="kpi-info"><div class="kpi-name">Timecard OTD</div><div class="kpi-dual"><span class="kpi-tag gry">YTD: 72%</span><span class="kpi-tag amber">APR: 85%</span><span class="kpi-tag gry">Plan: 92%</span></div></div></div><div class="kpi-row"><div class="kpi-badge" style="background:#C0392B;color:white">29%</div><div class="kpi-info"><div class="kpi-name">Instructor Util (Borrowed)</div><div class="kpi-dual"><span class="kpi-tag gry">YTD: 29%</span><span class="kpi-tag red">APR: 19%</span><span class="kpi-tag gry">Reverse ≤15%</span></div></div></div><div class="kpi-filler"><div class="kfi-title">&#9889; WEEK HIGHLIGHT</div><div class="kfi-grid"><div class="kfi-item"><div class="kfi-val">364</div><div class="kfi-lbl">Students</div></div><div class="kfi-item"><div class="kfi-val">29</div><div class="kfi-lbl">Classes</div></div><div class="kfi-item ev"><div class="kfi-val">83%</div><div class="kfi-lbl">PTSI</div></div></div></div></div><div class="safety-hero green"><div class="sh-top"><div class="sh-circle green" style="font-size:26px">&#128737;</div><div style="flex:1"><div class="sh-title-big green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#4ADE80"/><path d="M9 12l2 2 4-4" stroke="#005E60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>SAFETY</div><div class="sh-reason" style="color:#4ADE80;font-size:9px;margin:2px 0">All KPIs on plan &mdash; 0 incidents this week</div><span class="sh-incident green" style="display:inline-block;margin-top:2px">&#9679; 0 Minor Incidents This Week</span></div></div><div class="sh-kpis"><div class="sh-kpi"><div class="sv green-val">0</div><div class="sl">Incidents &amp; Injuries</div></div><div class="sh-kpi"><div class="sv green-val">92%</div><div class="sl">Live Save Compliance</div></div><div class="sh-kpi"><div class="sv green-val">90%</div><div class="sl">Read Across Rate</div></div></div><div class="sh-log"><div class="sh-log-title">&#128197; Historical Incident Log</div><div class="sh-log-item"><span class="sh-log-dot"></span><div><span class="sh-log-date">Mar 14, 2026</span><span class="sh-log-desc">Slip on wet floor near lab entrance &mdash; no injury, area secured</span></div></div><div class="sh-log-item"><span class="sh-log-dot"></span><div><span class="sh-log-date">Apr 3, 2026</span><span class="sh-log-desc">Lube oil spill during maintenance exercise &mdash; contained, cleaned, no injury</span></div></div></div></div><div style="display:flex;flex-direction:column;gap:5px;overflow:hidden;min-height:0"><div class="ap-panel" style="flex:1;min-height:0"><div class="panel-title">&#9989; Action Plans &mdash; Delivery Team (42 items)</div><div class="ap-stats"><div class="ap-stat amber"><div class="asn">30</div><div class="asl">In Progress</div></div><div class="ap-stat red"><div class="asn">4</div><div class="asl">Delayed</div></div><div class="ap-stat on-deck"><div class="asn">11</div><div class="asl">On Deck</div></div></div><div class="ap-list"><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">Improve Controls ELT-A Program</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">Catching HA Turbine</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">ER Cases Reduction</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">Update OE MkVIe Labs</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Work Force Readiness Program Phase 4</div><div class="ap-badge in-prog">In Progress</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Improve ST ELT-A Program</div><div class="ap-badge in-prog">In Progress</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Gen Spec Program Changes</div><div class="ap-badge in-prog">In Progress</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Space & Infrastructure Optimize</div><div class="ap-badge in-prog">In Progress</div></div></div></div><div class="cx-panel" style="flex:1;min-height:0"><div class="panel-title">&#128176; CapEx 2026 &mdash; 42 Active Projects</div><div class="cx-stats"><div class="cx-stat hi"><div class="csn">15</div><div class="csl">High Pri</div></div><div class="cx-stat"><div class="csn">$3.8M</div><div class="csl">Budget</div></div><div class="cx-stat"><div class="csn">42</div><div class="csl">Active</div></div></div><div class="cx-bars"><div class="cx-bar-row"><div class="cx-bar-label">Equipment</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:86%;background:#0891B2"><span class="cx-bar-val">$3153K</span></div></div><div class="cx-bar-count">36</div></div><div class="cx-bar-row"><div class="cx-bar-label">Modernization</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:7%;background:#7C3AED"><span class="cx-bar-val">$275K</span></div></div><div class="cx-bar-count">3</div></div><div class="cx-bar-row"><div class="cx-bar-label">Safety</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:5%;background:#DC2626"><span class="cx-bar-val">$40K</span></div></div><div class="cx-bar-count">2</div></div><div class="cx-bar-row"><div class="cx-bar-label">Capability</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:2%;background:#059669"><span class="cx-bar-val">$16K</span></div></div><div class="cx-bar-count">1</div></div></div><div class="cx-item-list"><div class="cx-item"><div class="cx-cat-dot" style="background:#0891B2"></div><div class="cx-item-text">FFB Hardware for Additiona…</div><div class="cx-item-cost">$300K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#7C3AED"></div><div class="cx-item-text">Replace HMIs</div><div class="cx-item-cost">$150K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#7C3AED"></div><div class="cx-item-text">Aero MKVIe Modernization</div><div class="cx-item-cost">$100K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#0891B2"></div><div class="cx-item-text">LM2500+ Air Seal Puller</div><div class="cx-item-cost">$21K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#0891B2"></div><div class="cx-item-text">HA Tooling</div><div class="cx-item-cost">$85K</div><div class="cx-item-badge">HIGH</div></div></div></div></div></div></div></div>
+<!-- SLIDE 2 -->
+<div class="slide" id="s2"><div class="gh"><div><div class="ht">Internal Training Roster &mdash; PLL Assignments</div><div class="hs">Week of Jun 1 - 5, 2026 | Internal + OE/SS</div></div><div class="hw">364 Students Total This Week</div><div class="hl">GE Vernova<br>HLC Command Board</div></div><div class="s2b"><div class="pg"><div class="pll-card"><div class="ph"><div class="pn">Sherif Khalifa</div><div class="ph-hero"><div class="ph-big"><span class="pnum">4</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">47</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">35</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">12</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">17</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">207</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">8I/9O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">HA FE Tasks & Tools - Combustion Inspection 26-3</div><div class="cm">9/9-HLC</div></div><div class="cr"><div class="ew"><div class="eb mid" style="width:75%"></div></div><div class="cn">Entry Level Gas Turbine 26-1</div><div class="cm">18/24-HLC</div></div><div class="cr"><div class="ew"><div class="eb mid" style="width:67%"></div></div><div class="cn">GE Gas Turbine to Alstom GT x-over 26-1</div><div class="cm">8/12-BLC</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Gas Turbine - Operation</div><div class="cm">12-United States</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Pablo Schibli</div><div class="ph-hero"><div class="ph-big"><span class="pnum">5</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">72</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">24</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">48</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">9</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">120</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">3I/6O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Entry Level Steam Turbine 26-1</div><div class="cm">24/24-HLC</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">HRSG - Operation & Maintenance</div><div class="cm">12-Taiwan</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Steam Turbine Operation</div><div class="cm">12-United States</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Combined Cycle - Fundamentals</div><div class="cm">12-Taiwan</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Combined Cycle Fundamentals / extended</div><div class="cm">12-Taiwan</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Michele Alcantar</div><div class="ph-hero"><div class="ph-big"><span class="pnum">4</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">44</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">32</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">12</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">14</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">168</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">4I/10O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:92%"></div></div><div class="cn">GE to Alstom Generator Mechanical Crossover 26-2</div><div class="cm">11/12-BLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Generator Specialist Training 26-1</div><div class="cm">16/16-HLC</div></div><div class="cr"><div class="ew"><div class="eb low" style="width:42%"></div></div><div class="cn">Entry Level Electrical Excitation 26-1</div><div class="cm">5/12-HLC</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Excitation - Generator Excitation Intro</div><div class="cm">12-United States</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Mohammed Nizami</div><div class="ph-hero"><div class="ph-big"><span class="pnum">6</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">43</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">43</span><span class="tl">INT</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">18</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">169</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">10I/8O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Expert Steam Turbine WSC/HRSG/CCPP 26-1</div><div class="cm">10/10-BLC</div></div><div class="cr"><div class="ew"><div class="eb low" style="width:35%"></div></div><div class="cn">Entry Level GT MkVIe 26-1</div><div class="cm">6/17-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Foundation Fieldbus Advanced 26-3</div><div class="cm">6/6-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Mk VI 26-1</div><div class="cm">12/12-HLC</div></div><div class="cr"><div class="ew"><div class="eb low" style="width:33%"></div></div><div class="cn">Site Manager Level 2 26-1</div><div class="cm">5/15-HLC</div></div><div class="cr"><div class="ew"><div class="eb mid" style="width:67%"></div></div><div class="cn">GE Control to Alstom Control (ADVANT x-over) 26-1</div><div class="cm">4/6-BLC</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Harry Hanson</div><div class="ph-hero"><div class="ph-big"><span class="pnum">5</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">60</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">60</span><span class="tl">INT</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">23</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">206</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">23I/0O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb low" style="width:20%"></div></div><div class="cn">Craft Entry Level ST 26-3</div><div class="cm">2/10-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Steam Turbine 101 26-1</div><div class="cm">8/8-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">ELT Gas Turbine OSR Boot Camp 26-2</div><div class="cm">12/12-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Craft GE to Alstom GT Crossover 26-7</div><div class="cm">15/15-Other</div></div><div class="cr"><div class="ew"><div class="eb over" style="width:100%"></div></div><div class="cn">Craft Entry Level GT Accelerated 26-5</div><div class="cm">23/20-HLC</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Greg Walker</div><div class="ph-hero"><div class="ph-big"><span class="pnum">4</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">38</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">14</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">24</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">18</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">119</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">15I/3O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb mid" style="width:60%"></div></div><div class="cn">Aero Controls Fundamentals 26-1</div><div class="cm">6/10-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Gas Turbine - Rotalign Touch 26-2</div><div class="cm">8/8-Other</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">GT LM6000 Aero Package Operation</div><div class="cm">12-United States</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">GT Aero Package Operation & Maintenance (OJT)</div><div class="cm">12-Mexico</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Linda</div><div class="ph-hero"><div class="ph-big"><span class="pnum">0</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">0</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">0</span><span class="tl">INT</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">0</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">0</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">0I/0O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="nc">No classes this week</div></div></div><div class="pll-card wag-card"><div class="pn" style="border-bottom:1px solid rgba(0,94,96,0.15);padding:8px 10px;display:flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#C8FF08" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>WEEK AT A GLANCE<span style="margin-left:auto;font-size:9px;font-weight:500;color:var(--gry);text-transform:none">Jun 1 &ndash; 5, 2026</span></div><div class="wag-body"><div class="wag-stats"><div class="wag-stat-big"><div class="wag-val">364</div><div class="wag-lbl">Total Students</div></div><div class="wag-stat-big"><div class="wag-val" style="color:var(--lim)">29</div><div class="wag-lbl">Active Classes</div></div></div><div class="wag-locs"><div class="wag-loc-title">&#128205; LOCATIONS THIS WEEK</div><div class="wag-loc-grid"><div class="wag-loc-item hlc"><div class="wag-loc-num">164</div><div class="wag-loc-name">HLC<br>Houston</div></div><div class="wag-loc-item blc"><div class="wag-loc-num">37</div><div class="wag-loc-name">BLC<br>Birr</div></div><div class="wag-loc-item klc"><div class="wag-loc-num">0</div><div class="wag-loc-name">KLC<br>Kuwait</div></div><div class="wag-loc-item oth"><div class="wag-loc-num">67</div><div class="wag-loc-name">OE/SS<br>Remote</div></div></div></div><div class="wag-safety"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#C8FF08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="wag-safety-text"><div class="wag-safety-status">ALL CLEAR</div><div class="wag-safety-sub">0 incidents &bull; All KPIs on plan</div><div class="wag-safety-incidents">&#128197; Mar 14: Slip &bull; Apr 3: Lube oil spill (historical)</div></div></div></div></div></div><div class="el"><span><div class="eldot" style="background:var(--acc)"></div>Over-enrolled</span><span><div class="eldot" style="background:var(--grn)"></div>&ge;80%</span><span><div class="eldot" style="background:var(--amb)"></div>50&ndash;79%</span><span><div class="eldot" style="background:var(--red)"></div>&lt;50%</span><span><div class="eldot" style="background:var(--evm);opacity:.7"></div>OE/SS Contracted</span></div></div></div>
+<!-- SLIDE 3 -->
+<div class="slide" id="s3"><div class="gh"><div><div class="ht">Internal Training — Student Country of Origin</div><div class="hs">Where this week's students are coming from</div></div><div class="hw">23 Countries &middot; 256 Students</div><div class="hl">GE Vernova<br>HLC Command Board</div></div><div class="mb" id="map3-container"></div></div>
+<!-- SLIDE 4 -->
+<div class="slide" id="s4"><div class="gh"><div><div class="ht">Customer Training — Global Delivery</div><div class="hs">Site-Specific &amp; Open Enrollment delivery locations</div></div><div class="hw">96 Students &middot; 8 Classes This Week</div><div class="hl">GE Vernova<br>HLC Command Board</div></div><div class="mb" id="map4-container"></div></div>
+<div id="pb"></div><div id="sc">1/4</div>
 <script>
-// ============================================================================
-// CAROUSEL LOGIC
-// ============================================================================
-(function(){
-  var DURATIONS=[30000,30000,35000,35000];
-  var cur=0,tot=4,timer=null,raf=null,t0=null;
-  function show(n){
-    cur=(n+tot)%tot;
-    for(var i=0;i<tot;i++){
-      var el=document.getElementById('slide-'+i);
-      if(i===cur){el.classList.add('active');}else{el.classList.remove('active');}
-    }
-    document.getElementById('sn').textContent=(cur+1)+' / '+tot;
-    startBar();
-    if(timer)clearTimeout(timer);
-    timer=setTimeout(function(){show(cur+1);},DURATIONS[cur]);
-  }
-  function startBar(){
-    if(raf){cancelAnimationFrame(raf);raf=null;}
-    t0=null;
-    var pf=document.getElementById('pf');
-    pf.style.width='0%';
-    var dur=DURATIONS[cur];
-    function tick(ts){if(!t0)t0=ts;var pct=Math.min((ts-t0)/dur*100,100);pf.style.width=pct+'%';if(pct<100){raf=requestAnimationFrame(tick);}}
-    raf=requestAnimationFrame(tick);
-  }
-  show(0);
-})();
-
-// ============================================================================
-// SLIDE 3: INTERNAL STUDENT MAP
-// ============================================================================
-const INTERNAL_STUDENTS = [
-  { country: 'United States', students: 97,  lon: -98.58, lat: 39.83 },
-  { country: 'Malaysia',      students: 27,  lon: 109.70, lat: 4.21 },
-  { country: 'Mexico',        students: 12,  lon: -102.55, lat: 23.63 },
-  { country: 'Saudi Arabia',  students: 7,   lon: 45.08, lat: 23.89 },
-  { country: 'Indonesia',     students: 7,   lon: 117.00, lat: -2.00 },
-  { country: 'Oman',          students: 6,   lon: 57.55, lat: 21.47 },
-  { country: 'Spain',         students: 6,   lon: -3.71, lat: 40.42 },
-  { country: 'Taiwan',        students: 4,   lon: 121.00, lat: 24.00 },
-  { country: 'Croatia',       students: 3,   lon: 15.97, lat: 45.81 },
-  { country: 'Egypt',         students: 2,   lon: 30.80, lat: 26.82 },
-  { country: 'China',         students: 2,   lon: 104.20, lat: 35.86 },
-  { country: 'India',         students: 2,   lon: 78.96, lat: 20.59 },
-  { country: 'Italy',         students: 2,   lon: 12.57, lat: 41.87 },
-  { country: 'Australia',     students: 2,   lon: 133.78, lat: -25.27 },
-  { country: 'Canada',        students: 2,   lon: -96.80, lat: 56.13 },
-  { country: 'Brazil',        students: 2,   lon: -51.93, lat: -14.24 },
-  { country: 'United Kingdom',students: 1,   lon: -2.00, lat: 54.00 },
-  { country: 'South Korea',   students: 1,   lon: 128.00, lat: 36.00 },
-  { country: 'UAE',           students: 1,   lon: 53.85, lat: 23.42 },
-  { country: 'Thailand',      students: 1,   lon: 101.00, lat: 15.00 },
-  { country: 'Algeria',       students: 1,   lon: 1.66, lat: 28.03 },
-  { country: 'Singapore',     students: 1,   lon: 103.82, lat: 1.35 },
-  { country: 'Peru',          students: 1,   lon: -75.02, lat: -9.19 },
-  { country: 'Kuwait',        students: 1,   lon: 47.48, lat: 29.31 },
-  { country: 'Jordan',        students: 1,   lon: 36.24, lat: 30.59 },
-  { country: 'Ghana',         students: 1,   lon: -1.02, lat: 7.95 },
-  { country: 'Germany',       students: 1,   lon: 10.45, lat: 51.17 },
-  { country: 'Vietnam',       students: 1,   lon: 108.28, lat: 14.06 }
-];
-
-function getBubbleSizeInternal(stu) {
-  if (stu >= 96) return {d: 72, f: 19};
-  if (stu >= 15) return {d: 50, f: 16};
-  if (stu >= 8)  return {d: 42, f: 14};
-  if (stu >= 7)  return {d: 38, f: 13};
-  if (stu >= 6)  return {d: 34, f: 13};
-  if (stu >= 3)  return {d: 29, f: 12};
-  if (stu === 2) return {d: 25, f: 11};
-  return {d: 21, f: 10};
-}
-
-function initMap3() {
-  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-    .then(r => r.json())
-    .then(world => {
-      const container = document.getElementById('map3-container');
-      if (!container) return;
-      const w = container.clientWidth, h = container.clientHeight;
-      const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
-      const projection = d3.geoEquirectangular().fitSize([w, h], {type: 'Sphere'});
-      const path = d3.geoPath(projection);
-
-      // Ocean background
-      svg.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
-
-      // Graticule
-      const graticule = d3.geoGraticule().step([20, 20]);
-      svg.append('path').datum(graticule()).attr('d', path)
-        .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
-
-      // Land
-      const land = topojson.feature(world, world.objects.countries);
-      svg.selectAll('.land').data(land.features).enter().append('path')
-        .attr('class', 'land')
-        .attr('d', path)
-        .attr('fill', '#007a76')
-        .attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
-
-      // Ireland highlight (id 372)
-      const ireland = land.features.find(f => +f.id === 372);
-      if (ireland) {
-        svg.append('path').datum(ireland).attr('d', path)
-          .attr('fill', 'rgba(200,255,8,0.20)')
-          .attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
-        const ic = projection([-8, 53]);
-        const pulseIE = svg.append('circle').attr('cx', ic[0]).attr('cy', ic[1]).attr('r', 8)
-          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.9)').attr('stroke-width', 2);
-        (function animateIE() {
-          pulseIE.attr('r', 6).attr('opacity', 0.9)
-            .transition().duration(1400).ease(d3.easeCubicOut)
-            .attr('r', 20).attr('opacity', 0)
-            .on('end', animateIE);
-        })();
-      }
-
-      // Prepare node data with initial projected positions
-      const nodes = INTERNAL_STUDENTS.map(d => {
-        const [px, py] = projection([d.lon, d.lat]);
-        const sz = getBubbleSizeInternal(d.students);
-        return Object.assign({}, d, { x: px, y: py, ox: px, oy: py, r: sz.d / 2, fs: sz.f });
-      });
-
-      // Force simulation — use d.x, d.y (not re-project each tick)
-      const sim = d3.forceSimulation(nodes)
-        .force('collide', d3.forceCollide(d => d.r + 5).strength(0.85))
-        .force('x', d3.forceX(d => d.ox).strength(0.12))
-        .force('y', d3.forceY(d => d.oy).strength(0.12))
-        .stop();
-      for (let i = 0; i < 120; i++) sim.tick();
-
-      // Pulse ring group (behind bubbles)
-      const pulseGroup = svg.append('g').attr('class', 'pulse-rings');
-      nodes.filter(d => d.students >= 6).forEach(d => {
-        const ring = pulseGroup.append('circle')
-          .attr('cx', d.x).attr('cy', d.y).attr('r', d.r)
-          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.55)').attr('stroke-width', 1.5);
-        (function anim() {
-          ring.attr('r', d.r).attr('opacity', 0.7)
-            .transition().duration(1800).ease(d3.easeCubicOut)
-            .attr('r', d.r + 14).attr('opacity', 0)
-            .on('end', anim);
-        })();
-      });
-
-      // Bubble circles
-      svg.selectAll('.bub').data(nodes).enter().append('circle')
-        .attr('class', 'bub')
-        .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', d => d.r)
-        .attr('fill', '#c8ff08').attr('stroke', 'none')
-        .style('filter', 'drop-shadow(0 2px 8px rgba(200,255,8,0.5))')
-        .on('mouseover', function(e, d) {
-          const tt = document.getElementById('tooltip4');
-          tt.textContent = d.country + ' — ' + d.students + ' students';
-          tt.style.display = 'block'; tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
-        })
-        .on('mousemove', function(e) {
-          const tt = document.getElementById('tooltip4');
-          tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
-        })
-        .on('mouseout', () => { document.getElementById('tooltip4').style.display = 'none'; });
-
-      // Student COUNT number INSIDE each bubble
-      svg.selectAll('.bub-num').data(nodes).enter().append('text')
-        .attr('class', 'bub-num')
-        .attr('x', d => d.x).attr('y', d => d.y)
-        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-        .attr('fill', '#003d3e').attr('font-weight', 900)
-        .attr('font-size', d => d.fs + 'px')
-        .attr('pointer-events', 'none')
-        .text(d => d.students);
-
-      // Country label BELOW each bubble
-      svg.selectAll('.bub-lbl').data(nodes).enter().append('text')
-        .attr('class', 'bub-lbl')
-        .attr('x', d => d.x).attr('y', d => d.y + d.r + 11)
-        .attr('text-anchor', 'middle')
-        .attr('fill', '#fff')
-        .attr('font-size', 'clamp(7px, 0.58vw, 9px)')
-        .attr('font-weight', 600)
-        .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
-        .attr('pointer-events', 'none')
-        .text(d => d.country);
-    });
-}
-
-// ============================================================================
-// SLIDE 4: CUSTOMER TRAINING MAP
-// ============================================================================
-const TRAINING_LOCS = [
-  { loc: 'Cancun',  country: 'Mexico', stu: 12, cls: 1, lon: -86.85, lat: 21.16 },
-  { loc: 'Taiwan',  country: 'Taiwan', stu: 12, cls: 1, lon: 121.00, lat: 24.00 }
-];
-
-function getBubbleSize(stu) {
-  if (stu >= 96) return {d: 72, f: 19};
-  if (stu >= 15) return {d: 50, f: 16};
-  if (stu >= 8)  return {d: 42, f: 14};
-  if (stu >= 7)  return {d: 38, f: 13};
-  if (stu >= 6)  return {d: 34, f: 13};
-  if (stu >= 3)  return {d: 29, f: 12};
-  if (stu === 2) return {d: 25, f: 11};
-  return {d: 21, f: 10};
-}
-
-function initMap4() {
-  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-    .then(r => r.json())
-    .then(world => {
-      const container = document.getElementById('map4-container');
-      if (!container) return;
-      const w = container.clientWidth, h = container.clientHeight;
-      const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
-      const projection = d3.geoEquirectangular().fitSize([w, h], {type: 'Sphere'});
-      const path = d3.geoPath(projection);
-
-      // Ocean background
-      svg.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
-
-      // Graticule
-      const graticule = d3.geoGraticule().step([20, 20]);
-      svg.append('path').datum(graticule()).attr('d', path)
-        .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
-
-      // Land
-      const land = topojson.feature(world, world.objects.countries);
-      svg.selectAll('.land4').data(land.features).enter().append('path')
-        .attr('class', 'land4')
-        .attr('d', path)
-        .attr('fill', '#007a76')
-        .attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
-
-      // Ireland highlight
-      const ireland = land.features.find(f => +f.id === 372);
-      if (ireland) {
-        svg.append('path').datum(ireland).attr('d', path)
-          .attr('fill', 'rgba(200,255,8,0.20)')
-          .attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
-        const ic = projection([-8, 53]);
-        const pulseIE = svg.append('circle').attr('cx', ic[0]).attr('cy', ic[1]).attr('r', 8)
-          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.9)').attr('stroke-width', 2);
-        (function animateIE4() {
-          pulseIE.attr('r', 6).attr('opacity', 0.9)
-            .transition().duration(1400).ease(d3.easeCubicOut)
-            .attr('r', 20).attr('opacity', 0)
-            .on('end', animateIE4);
-        })();
-      }
-
-      // Prepare nodes with projected positions
-      const nodes4 = TRAINING_LOCS.map(d => {
-        const [px, py] = projection([d.lon, d.lat]);
-        const sz = getBubbleSize(d.stu);
-        return Object.assign({}, d, { x: px, y: py, ox: px, oy: py, r: sz.d / 2, fs: sz.f });
-      });
-
-      // Force simulation for collision avoidance
-      const sim4 = d3.forceSimulation(nodes4)
-        .force('collide', d3.forceCollide(d => d.r + 5).strength(0.85))
-        .force('x', d3.forceX(d => d.ox).strength(0.12))
-        .force('y', d3.forceY(d => d.oy).strength(0.12))
-        .stop();
-      for (let i = 0; i < 120; i++) sim4.tick();
-
-      // Pulse rings
-      const pulseGroup4 = svg.append('g').attr('class', 'pulse-rings4');
-      nodes4.filter(d => d.stu >= 6).forEach(d => {
-        const ring = pulseGroup4.append('circle')
-          .attr('cx', d.x).attr('cy', d.y).attr('r', d.r)
-          .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.55)').attr('stroke-width', 1.5);
-        (function anim4() {
-          ring.attr('r', d.r).attr('opacity', 0.7)
-            .transition().duration(1800).ease(d3.easeCubicOut)
-            .attr('r', d.r + 14).attr('opacity', 0)
-            .on('end', anim4);
-        })();
-      });
-
-      // Bubble circles
-      svg.selectAll('.bub4').data(nodes4).enter().append('circle')
-        .attr('class', 'bub4')
-        .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', d => d.r)
-        .attr('fill', '#c8ff08').attr('stroke', 'none')
-        .style('filter', 'drop-shadow(0 2px 8px rgba(200,255,8,0.5))')
-        .on('mouseover', function(e, d) {
-          const tt = document.getElementById('tooltip4');
-          tt.textContent = d.loc + ', ' + d.country + ' — ' + d.stu + ' students, ' + d.cls + ' class(es)';
-          tt.style.display = 'block'; tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
-        })
-        .on('mousemove', function(e) {
-          const tt = document.getElementById('tooltip4');
-          tt.style.left = (e.pageX+10)+'px'; tt.style.top = (e.pageY+10)+'px';
-        })
-        .on('mouseout', () => { document.getElementById('tooltip4').style.display = 'none'; });
-
-      // Student COUNT number INSIDE each bubble
-      svg.selectAll('.bub4-num').data(nodes4).enter().append('text')
-        .attr('class', 'bub4-num')
-        .attr('x', d => d.x).attr('y', d => d.y)
-        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-        .attr('fill', '#003d3e').attr('font-weight', 900)
-        .attr('font-size', d => d.fs + 'px')
-        .attr('pointer-events', 'none')
-        .text(d => d.stu);
-
-      // City/Country label BELOW each bubble
-      svg.selectAll('.bub4-lbl').data(nodes4).enter().append('text')
-        .attr('class', 'bub4-lbl')
-        .attr('x', d => d.x).attr('y', d => d.y + d.r + 11)
-        .attr('text-anchor', 'middle')
-        .attr('fill', '#fff')
-        .attr('font-size', 'clamp(7px, 0.58vw, 9px)')
-        .attr('font-weight', 600)
-        .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
-        .attr('pointer-events', 'none')
-        .text(d => d.loc + ', ' + d.country);
-    });
-}
-
-// Initialize maps when slides become active
-let map3Init = false, map4Init = false;
-const observer = new MutationObserver(() => {
-  const s2 = document.getElementById('slide-2');
-  const s3 = document.getElementById('slide-3');
-  if (s2 && s2.classList.contains('active') && !map3Init) {
-    map3Init = true;
-    setTimeout(initMap3, 50);
-  }
-  if (s3 && s3.classList.contains('active') && !map4Init) {
-    map4Init = true;
-    setTimeout(initMap4, 50);
-  }
-});
-observer.observe(document.getElementById('sc'), {attributes: true, subtree: true, attributeFilter: ['class']});
+const DATA={"meta":{"buildDate":"2026-05-29","weekOf":"Jun 1 - 5, 2026","specVersion":"v5.1","minorIncidents":0,"safetyRag":"green"},"slide1":{"weekOf":"Jun 1 - 5, 2026","internalStudents":268,"oeStudents":96,"weeklyTotal":364,"internalCourses":21,"oeCourses":8,"safetyRag":"red","minorIncidents":0,"ragReason":"Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan)","kpis":{"ptsi":{"label":"Post-Training Skill Improvement","ytdValue":83,"ytdRag":"green","monthValue":83,"monthLabel":"MAR","monthRag":"green","plan":70,"greenThreshold":70,"redThreshold":63},"timecard":{"label":"Timecard OTD","ytdValue":72,"ytdRag":"red","monthValue":85,"monthLabel":"APR","monthRag":"amber","plan":92,"greenThreshold":92,"redThreshold":82},"instUtil":{"label":"Instructor Util (Borrowed)","ytdValue":29,"ytdRag":"red","monthValue":19,"monthLabel":"APR","monthRag":"red","plan":15,"greenThreshold":15,"reverse":true}},"locationBreakdown":{"HLC":164,"BLC":37,"KLC":0,"Other":67},"overallRAGs":{"bowler":{"rag":"red","label":"BOWLER","reason":"TC OTD & Inst. Util. off plan"},"safety":{"rag":"green","label":"SAFETY","reason":"0 incidents, KPIs on plan"},"ap":{"rag":"amber","label":"ACTION PLANS","reason":"4 delayed items"},"capex":{"rag":"amber","label":"CAPEX","reason":"15 high-priority active"}},"safetyKPIs":{"incidents":0,"liveStop":{"label":"Live Save Compliance","value":92,"plan":90,"rag":"green"},"readAcross":{"label":"Read Across Rate","value":90,"plan":90,"rag":"green"}}},"slide2":{"weekOf":"Jun 1 - 5, 2026","unmatchedStudents":30,"plls":[{"name":"Sherif Khalifa","totalClasses":4,"totalStudents":47,"internalClasses":3,"internalStudents":35,"oeClasses":1,"oeStudents":12,"courses":[{"name":"HA FE Tasks & Tools - Combustion Inspection 26-3","program":"Advanced Level","technology":"Gas Turbine","locCat":"HLC","capacity":9,"enrolled":9,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level Gas Turbine 26-1","program":"Entry Level","technology":"Gas Turbine","locCat":"HLC","capacity":24,"enrolled":18,"enrollPct":75,"barColor":"#F5A623","overEnrolled":false},{"name":"GE Gas Turbine to Alstom GT x-over 26-1","program":"Advanced Level","technology":"Gas Turbine","locCat":"BLC","capacity":12,"enrolled":8,"enrollPct":67,"barColor":"#F5A623","overEnrolled":false}],"oeCourses":[{"title":"Gas Turbine - Operation","tech":"Gas Turbine","country":"United States","city":"Louisville","students":12,"location":"Customer Site"}],"lookAhead30":{"intClasses":8,"intStudents":96,"oeClasses":9,"oeStudents":111,"totalClasses":17,"totalStudents":207}},{"name":"Pablo Schibli","totalClasses":5,"totalStudents":72,"internalClasses":1,"internalStudents":24,"oeClasses":4,"oeStudents":48,"courses":[{"name":"Entry Level Steam Turbine 26-1","program":"Entry Level","technology":"Steam Turbine","locCat":"HLC","capacity":24,"enrolled":24,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false}],"oeCourses":[{"title":"HRSG - Operation & Maintenance","tech":"HRSG","country":"Taiwan","city":"Hsinta","students":12,"location":"Distance Learning"},{"title":"Steam Turbine Operation","tech":"Steam Turbine","country":"United States","city":"Houston","students":12,"location":"HLC"},{"title":"Combined Cycle - Fundamentals","tech":"Combined Cycle","country":"Taiwan","city":"-","students":12,"location":"Distance Learning"},{"title":"Combined Cycle Fundamentals / extended","tech":"Combined Cycle","country":"Taiwan","city":"-","students":12,"location":"Distance Learning"}],"lookAhead30":{"intClasses":3,"intStudents":48,"oeClasses":6,"oeStudents":72,"totalClasses":9,"totalStudents":120}},{"name":"Michele Alcantar","totalClasses":4,"totalStudents":44,"internalClasses":3,"internalStudents":32,"oeClasses":1,"oeStudents":12,"courses":[{"name":"GE to Alstom Generator Mechanical Crossover 26-2","program":"Advanced Level","technology":"Generator Mechanical","locCat":"BLC","capacity":12,"enrolled":11,"enrollPct":92,"barColor":"#3AAA35","overEnrolled":false},{"name":"Generator Specialist Training 26-1","program":"Entry Level","technology":"Generator","locCat":"HLC","capacity":16,"enrolled":16,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level Electrical Excitation 26-1","program":"Entry Level","technology":"Excitation","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#D0021B","overEnrolled":false}],"oeCourses":[{"title":"Excitation - Generator Excitation Intro","tech":"Excitation","country":"United States","city":"Houston","students":12,"location":"HLC"}],"lookAhead30":{"intClasses":4,"intStudents":48,"oeClasses":10,"oeStudents":120,"totalClasses":14,"totalStudents":168}},{"name":"Mohammed Nizami","totalClasses":6,"totalStudents":43,"internalClasses":6,"internalStudents":43,"oeClasses":0,"oeStudents":0,"courses":[{"name":"Expert Steam Turbine WSC/HRSG/CCPP 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":10,"enrolled":10,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level GT MkVIe 26-1","program":"Entry Level","technology":"Controls","locCat":"HLC","capacity":17,"enrolled":6,"enrollPct":35,"barColor":"#D0021B","overEnrolled":false},{"name":"Foundation Fieldbus Advanced 26-3","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":6,"enrolled":6,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Mk VI 26-1","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":12,"enrolled":12,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Site Manager Level 2 26-1","program":"Advanced Level","technology":"GIC Mechanical","locCat":"HLC","capacity":15,"enrolled":5,"enrollPct":33,"barColor":"#D0021B","overEnrolled":false},{"name":"GE Control to Alstom Control (ADVANT x-over) 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":6,"enrolled":4,"enrollPct":67,"barColor":"#F5A623","overEnrolled":false}],"oeCourses":[],"lookAhead30":{"intClasses":10,"intStudents":81,"oeClasses":8,"oeStudents":88,"totalClasses":18,"totalStudents":169}},{"name":"Harry Hanson","totalClasses":5,"totalStudents":60,"internalClasses":5,"internalStudents":60,"oeClasses":0,"oeStudents":0,"courses":[{"name":"Craft Entry Level ST 26-3","program":"Craft","technology":"Steam Turbine","locCat":"HLC","capacity":10,"enrolled":2,"enrollPct":20,"barColor":"#D0021B","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Steam Turbine 101 26-1","program":"Repairs","technology":"Steam Turbine","locCat":"HLC","capacity":8,"enrolled":8,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"ELT Gas Turbine OSR Boot Camp 26-2","program":"Repairs","technology":"Gas Turbine","locCat":"HLC","capacity":12,"enrolled":12,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Craft GE to Alstom GT Crossover 26-7","program":"Craft","technology":"Gas Turbine","locCat":"Other","capacity":15,"enrolled":15,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Craft Entry Level GT Accelerated 26-5","program":"Craft","technology":"Gas Turbine","locCat":"HLC","capacity":20,"enrolled":23,"enrollPct":115,"barColor":"#C8FF08","overEnrolled":true,"sitespecific":null,"openenrollment":null}],"oeCourses":[],"lookAhead30":{"intClasses":23,"intStudents":206,"oeClasses":0,"oeStudents":0,"totalClasses":23,"totalStudents":206}},{"name":"Greg Walker","totalClasses":4,"totalStudents":38,"internalClasses":2,"internalStudents":14,"oeClasses":2,"oeStudents":24,"courses":[{"name":"Aero Controls Fundamentals 26-1","program":"Advanced Level","technology":"Aeroderivative","locCat":"HLC","capacity":10,"enrolled":6,"enrollPct":60,"barColor":"#F5A623","overEnrolled":false},{"name":"Gas Turbine - Rotalign Touch 26-2","program":"Advanced Level","technology":"Aeroderivative","locCat":"Other","capacity":8,"enrolled":8,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false}],"oeCourses":[{"title":"GT LM6000 Aero Package Operation","tech":"Aeroderivative","country":"United States","city":"NYC","students":12,"location":"Customer Site"},{"title":"GT Aero Package Operation & Maintenance (OJT)","tech":"Aeroderivative","country":"Mexico","city":"Cancun","students":12,"location":"Customer Site"}],"lookAhead30":{"intClasses":15,"intStudents":83,"oeClasses":3,"oeStudents":36,"totalClasses":18,"totalStudents":119}},{"name":"Linda","totalClasses":0,"totalStudents":0,"internalClasses":0,"internalStudents":0,"oeClasses":0,"oeStudents":0,"courses":[],"oeCourses":[],"lookAhead30":{"intClasses":0,"intStudents":0,"oeClasses":0,"oeStudents":0,"totalClasses":0,"totalStudents":0}}]},"slide3":{"title":"Internal Training — Student Country of Origin","totalCountries":23,"totalStudents":256,"pins":[{"country":"United States","count":165,"lat":39.5,"lon":-98.35},{"country":"Mexico","count":19,"lat":23.6,"lon":-102.5},{"country":"Argentina","count":16,"lat":-34.6,"lon":-58.4},{"country":"Spain","count":9,"lat":40.4,"lon":-3.7},{"country":"Saudi Arabia","count":7,"lat":23.9,"lon":45.1},{"country":"India","count":6,"lat":20.6,"lon":78.9},{"country":"Indonesia","count":4,"lat":-0.8,"lon":113.9},{"country":"Egypt","count":4,"lat":26.8,"lon":30.8},{"country":"Brazil","count":3,"lat":-14.2,"lon":-51.9},{"country":"United Kingdom","count":3,"lat":55.4,"lon":-3.4},{"country":"China","count":2,"lat":35.9,"lon":104.2},{"country":"Malaysia","count":2,"lat":4.2,"lon":108},{"country":"Canada","count":2,"lat":56.1,"lon":-106.3},{"country":"Algeria","count":2,"lat":28,"lon":1.7},{"country":"Chile","count":2,"lat":-35.7,"lon":-71.5},{"country":"Colombia","count":1,"lat":4.6,"lon":-74.1},{"country":"Kazakhstan","count":1,"lat":48,"lon":66.9},{"country":"Peru","count":1,"lat":-9.2,"lon":-75},{"country":"Philippines","count":1,"lat":12.9,"lon":121.8},{"country":"South Africa","count":1,"lat":-28.5,"lon":24.7},{"country":"Thailand","count":1,"lat":15.9,"lon":100.9},{"country":"Vietnam","count":1,"lat":14.1,"lon":108.3},{"country":"Italy","count":1,"lat":41.9,"lon":12.6}],"learningCenters":[{"name":"HLC — Houston","lat":29.7604,"lon":-95.3698,"students":164,"type":"HLC","color":"#C8FF08"},{"name":"BLC — Birr, Switzerland","lat":47.359,"lon":8.043,"students":37,"type":"BLC","color":"#C8FF08"},{"name":"KLC — Kuwait","lat":29.3,"lon":47.5,"students":0,"type":"KLC","color":"#C8FF08"}]},"slide4":{"title":"Customer Training — Global Delivery","weekDelivery":[{"country":"Taiwan","lat":23.7,"lon":120.96,"classes":3,"students":36},{"country":"United States","lat":39.5,"lon":-98.35,"classes":4,"students":48},{"country":"Mexico","lat":23.6,"lon":-102.5,"classes":1,"students":12}],"allDelivery":[{"country":"United States","lat":39.5,"lon":-98.35,"classes":543,"students":6150},{"country":"Switzerland","lat":46.8,"lon":8.2,"classes":45,"students":530},{"country":"Germany","lat":51.2,"lon":10.5,"classes":27,"students":288},{"country":"Taiwan","lat":23.7,"lon":120.96,"classes":31,"students":360},{"country":"Mexico","lat":23.6,"lon":-102.5,"classes":21,"students":252},{"country":"Turkey","lat":38.9,"lon":35.2,"classes":18,"students":216},{"country":"Saudi Arabia","lat":23.9,"lon":45.1,"classes":15,"students":180},{"country":"Australia","lat":-25.3,"lon":133.8,"classes":12,"students":144},{"country":"France","lat":46.2,"lon":2.2,"classes":10,"students":120},{"country":"Brazil","lat":-14.2,"lon":-51.9,"classes":9,"students":108},{"country":"Greece","lat":39.1,"lon":21.8,"classes":12,"students":144},{"country":"South Korea","lat":36,"lon":127.8,"classes":4,"students":48},{"country":"Singapore","lat":1.35,"lon":103.8,"classes":5,"students":60},{"country":"Poland","lat":51.9,"lon":19.1,"classes":6,"students":72},{"country":"Nigeria","lat":9.1,"lon":8.7,"classes":5,"students":60},{"country":"Hungary","lat":47.2,"lon":19.5,"classes":3,"students":36},{"country":"Kuwait","lat":29.3,"lon":47.5,"classes":4,"students":48},{"country":"Algeria","lat":28,"lon":1.7,"classes":3,"students":36},{"country":"Ireland","lat":53,"lon":-8,"classes":12,"students":154},{"country":"Canada","lat":56.1,"lon":-106.3,"classes":4,"students":48}],"totalCountries":20,"weekStudents":96,"weekClasses":8},"actionPlans":{"total":648,"deliveryTotal":42,"inProgress":30,"notStarted":11,"onHold":1,"delayed":4,"byBucket":{"Content Dev":8,"Content Quality":9,"Operational":6,"Competitiveness":5,"Other":12},"inProgressItems":[{"title":"Improve Controls ELT-A Program","lead":"Mohammed Nizami","bucket":"Content Dev","status":"In Progress","currentStatus":"Delayed"},{"title":"Catching HA Turbine","lead":"Sherif Khalifa","bucket":"Content Quality","status":"In Progress","currentStatus":"Delayed"},{"title":"ER Cases Reduction","lead":"Mohammed Nizami","bucket":"Content Quality","status":"In Progress","currentStatus":"Delayed"},{"title":"Update OE MkVIe Labs","lead":"Mohammed Nizami","bucket":"Content Quality","status":"In Progress","currentStatus":"Delayed"},{"title":"Work Force Readiness Program Phase 4","lead":"Linda Nelson","bucket":"Competitiveness","status":"In Progress","currentStatus":""},{"title":"Improve ST ELT-A Program","lead":"Pablo Schibli","bucket":"Content Dev","status":"In Progress","currentStatus":""},{"title":"Gen Spec Program Changes","lead":"Michele Alcantar","bucket":"Content Quality","status":"In Progress","currentStatus":""},{"title":"Space & Infrastructure Optimize","lead":"Jim Rosen","bucket":"Operational","status":"In Progress","currentStatus":""}]},"capex":{"totalProjects":46,"activeProjects":42,"highPriorityCount":15,"totalBudget":3836520,"byCategory":{"Equipment":{"count":36,"highPri":7,"cost":3152520},"Modernization":{"count":3,"highPri":3,"cost":275000},"Safety":{"count":2,"highPri":2,"cost":40000},"Capability":{"count":1,"highPri":1,"cost":16000}},"inProgressItems":[{"project":"FFB Hardware for Additional Carts","priority":"High","status":"PO Opened","cost":300000,"category":"Equipment"},{"project":"Replace HMIs","priority":"High","status":"PO Opened","cost":150000,"category":"Modernization"},{"project":"Aero MKVIe Modernization","priority":"High","status":"With Sourcing","cost":100000,"category":"Modernization"},{"project":"LM2500+ Air Seal Puller","priority":"High","status":"PO Opened","cost":21000,"category":"Equipment"},{"project":"HA Tooling","priority":"High","status":"In Progress","cost":85000,"category":"Equipment"},{"project":"ITS Platform","priority":"","status":"With Sourcing","cost":40000,"category":"Equipment"},{"project":"ITS Laser Alignment Tool","priority":"","status":"With Sourcing","cost":60000,"category":"Equipment"}]}};
+const SLIDES=[{id:"s1",dur:30000},{id:"s2",dur:30000},{id:"s3",dur:35000},{id:"s4",dur:35000}];let cur=0,timer=null;const pb=document.getElementById("pb");const sc=document.getElementById("sc");function showSlide(i){SLIDES.forEach((s,j)=>{const el=document.getElementById(s.id);if(el)el.classList.toggle("active",j===i);});cur=i;sc.textContent=(i+1)+"/"+SLIDES.length;startProgress(SLIDES[i].dur);}function startProgress(ms){clearInterval(timer);pb.style.transition="none";pb.style.width="0%";requestAnimationFrame(()=>{requestAnimationFrame(()=>{pb.style.transition="width "+ms+"ms linear";pb.style.width="100%";});});timer=setInterval(()=>{showSlide((cur+1)%SLIDES.length);},ms);}window.addEventListener("load",()=>{showSlide(0);initMaps();[["s3","map3-container"],["s4","map4-container"]].forEach(([sid])=>{const obs=new MutationObserver(()=>{if(document.getElementById(sid).classList.contains("active"))initMaps();});obs.observe(document.getElementById(sid),{attributes:true,attributeFilter:["class"]});});});
+async function loadWorld(){if(window._wld)return window._wld;const r=await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");window._wld=await r.json();return window._wld;}
+function buildMap(cid,pins,opts){const ct=document.getElementById(cid);if(!ct)return;const W=ct.clientWidth||1400,H=ct.clientHeight||520;d3.select(ct).selectAll("*").remove();const svg=d3.select(ct).append("svg").attr("width",W).attr("height",H);svg.append("rect").attr("width",W).attr("height",H).attr("fill","#E6F2F2");const proj=d3.geoNaturalEarth1().scale(W/6.1).translate([W/2,H/2]);const path=d3.geoPath().projection(proj);svg.append("path").datum(d3.geoGraticule()()).attr("d",path).attr("fill","none").attr("stroke","rgba(0,94,96,.1)").attr("stroke-width",.5);const cntrs=topojson.feature(window._wld,window._wld.objects.countries);svg.selectAll(".c").data(cntrs.features).enter().append("path").attr("class","c").attr("d",path).attr("fill","#C5DFE0").attr("stroke","white").attr("stroke-width",.5);const allC=(pins.week||pins.origin||[]).map(p=>p.count||p.students||0).filter(n=>n>0);const rS=d3.scaleSqrt().domain([0,Math.max(...allC,1)]).range([0,opts.maxR||45]);const pArr=pins.week||pins.origin||[];const pG=svg.append("g");for(const p of pArr){const c=proj([p.lon,p.lat]);if(!c)continue;const cnt=p.count||p.students||0;const r=Math.max(18,rS(cnt));const wk=!!pins.week;pG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r).attr("fill",wk?"rgba(200,255,8,.88)":"rgba(0,94,96,.78)").attr("stroke","white").attr("stroke-width",2);pG.append("text").attr("x",c[0]).attr("y",c[1]).attr("text-anchor","middle").attr("dominant-baseline","central").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",r>26?14:r>19?11:9).attr("fill",wk?"#005E60":"#C8FF08").text(cnt);pG.append("text").attr("x",c[0]).attr("y",c[1]+r+9).attr("text-anchor","middle").attr("font-family","Inter,'Segoe UI',Arial,sans-serif").attr("font-size",8).attr("fill","#212121").attr("font-weight","600").text(p.country);}if(pins.lcs){const lG=svg.append("g");for(const lc of pins.lcs){const c=proj([lc.lon,lc.lat]);if(!c)continue;const r2=lc.students>0?Math.max(10,rS(lc.students)*.4):7;lG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r2+4).attr("fill","none").attr("stroke","#C8FF08").attr("stroke-width",2.5).attr("stroke-dasharray","4,2");lG.append("text").attr("x",c[0]).attr("y",c[1]-r2-10).attr("text-anchor","middle").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",10).attr("fill","#005E60").text(lc.name.split("—")[0].trim());}}const leg=d3.select(ct).append("div").style("position","absolute").style("bottom","18px").style("left","14px").style("display","flex").style("gap","14px").style("background","rgba(0,94,96,.88)").style("padding","6px 14px").style("border-radius","6px");if(opts.li){for(const li of opts.li){const it=leg.append("div").style("display","flex").style("align-items","center").style("gap","5px");it.append("div").style("width","10px").style("height","10px").style("border-radius","50%").style("background",li.c);it.append("div").style("font-size","9px").style("color","rgba(255,255,255,.85)").text(li.l);}}}
+async function initMaps(){await loadWorld();const s3=document.getElementById("map3-container");if(s3)buildMap("map3-container",{origin:DATA.slide3.pins,lcs:DATA.slide3.learningCenters},{maxR:50,li:[{c:"rgba(0,94,96,.78)",l:"Student Origin — bubble = student count"},{c:"#C8FF08",l:"Learning Center"}]});const s4=document.getElementById("map4-container");if(s4)buildMap("map4-container",{week:DATA.slide4.weekDelivery},{maxR:55,li:[{c:"rgba(200,255,8,.88)",l:"This Week — customer training delivery locations"}]});}
 </script>
 </body>
-</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </html>
