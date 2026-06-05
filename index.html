@@ -149,7 +149,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .el span{display:flex;align-items:center;gap:2px}
 .eldot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
 .mb{flex:1;position:relative;overflow:hidden;background:var(--evl)}
-
 .sh-title-big{font-family:var(--fh);font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:2px;line-height:1;display:flex;align-items:center}
 .sh-title-big.green{color:#4ADE80}
 .sh-title-big.amber{color:#FCD34D}
@@ -170,7 +169,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .kfi-item.ev{background:rgba(200,255,8,0.12);border:1px solid rgba(200,255,8,0.3)}
 .kfi-val{font-size:18px;font-weight:900;color:#fff;line-height:1}
 .kfi-lbl{font-size:7px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
-
 .wag-card{background:var(--night);overflow:hidden}
 .wag-card .pn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1px;background:var(--ev);display:flex;align-items:center;gap:7px}
 .wag-body{padding:10px;display:flex;flex-direction:column;gap:9px;height:calc(100% - 38px);box-sizing:border-box}
@@ -193,24 +191,394 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .wag-safety-status{font-family:var(--fh);font-size:18px;font-weight:900;color:#4ADE80;text-transform:uppercase;letter-spacing:2px;line-height:1}
 .wag-safety-sub{font-size:9px;color:rgba(255,255,255,0.7);margin-top:3px;font-weight:600}
 .wag-safety-incidents{font-size:7.5px;color:rgba(255,255,255,0.45);margin-top:3px}
+#loading{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--ev);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
+#loading .lt{font-family:var(--fh);font-size:24px;font-weight:900;color:var(--acc);text-transform:uppercase;letter-spacing:2px}
+#loading .ls{font-size:12px;color:rgba(255,255,255,0.6)}
 </style>
 </head>
 <body>
+<div id="loading">
+  <div class="lt">OFS Training Command Board</div>
+  <div class="ls">Loading board data...</div>
+</div>
 <!-- SLIDE 1 -->
-<div class="slide active" id="s1"><div class="gh"><div><div class="ht">OFS Training Delivery Command Board</div><div class="hs">v5.1 Build 2026-05-29</div></div><div class="hw">Jun 1 - 5, 2026</div><div class="hl">GE Vernova<br>Houston Learning Center</div></div><div class="s1b"><div class="ms"><div class="mc hero"><div class="mv">364</div><div class="ml">Students This Week</div></div><div class="mc"><div class="mv">268</div><div class="ml">Internal Students</div></div><div class="mc"><div class="mv">96</div><div class="ml">OE + SS Students</div></div><div class="mc loc"><div class="mv">164</div><div class="ml">HLC Houston</div></div><div class="mc loc"><div class="mv">37</div><div class="ml">BLC Birr</div></div><div class="mc loc"><div class="mv">0</div><div class="ml">KLC Kuwait</div></div><div class="mc loc"><div class="mv">67</div><div class="ml">Distance/Other</div></div></div><div class="rag-strip"><div class="rag-tile red"><div class="rag-icon">✗</div><div><div class="rag-label">BOWLER</div><div class="rag-reason">TC OTD & Inst. Util. off plan</div></div></div><div class="rag-tile green"><div class="rag-icon">✓</div><div><div class="rag-label">SAFETY</div><div class="rag-reason">0 incidents, KPIs on plan</div></div></div><div class="rag-tile amber"><div class="rag-icon">!</div><div><div class="rag-label">ACTION PLANS</div><div class="rag-reason">4 delayed items</div></div></div><div class="rag-tile amber"><div class="rag-icon">!</div><div><div class="rag-label">CAPEX</div><div class="rag-reason">15 high-priority active</div></div></div></div><div class="s1-main"><div class="kpip"><div class="kpit">&#128200; Bowler KPI &mdash; YTD &amp; Latest Month</div><div class="kpi-row"><div class="kpi-badge" style="background:#2D7A45;color:white">83%</div><div class="kpi-info"><div class="kpi-name">Post-Training Skill Improvement</div><div class="kpi-dual"><span class="kpi-tag gry">YTD: 83%</span><span class="kpi-tag green">MAR: 83%</span><span class="kpi-tag gry">Plan: 70%</span></div></div></div><div class="kpi-row"><div class="kpi-badge" style="background:#C0392B;color:white">72%</div><div class="kpi-info"><div class="kpi-name">Timecard OTD</div><div class="kpi-dual"><span class="kpi-tag gry">YTD: 72%</span><span class="kpi-tag amber">APR: 85%</span><span class="kpi-tag gry">Plan: 92%</span></div></div></div><div class="kpi-row"><div class="kpi-badge" style="background:#C0392B;color:white">29%</div><div class="kpi-info"><div class="kpi-name">Instructor Util (Borrowed)</div><div class="kpi-dual"><span class="kpi-tag gry">YTD: 29%</span><span class="kpi-tag red">APR: 19%</span><span class="kpi-tag gry">Reverse ≤15%</span></div></div></div><div class="kpi-filler"><div class="kfi-title">&#9889; WEEK HIGHLIGHT</div><div class="kfi-grid"><div class="kfi-item"><div class="kfi-val">364</div><div class="kfi-lbl">Students</div></div><div class="kfi-item"><div class="kfi-val">29</div><div class="kfi-lbl">Classes</div></div><div class="kfi-item ev"><div class="kfi-val">83%</div><div class="kfi-lbl">PTSI</div></div></div></div></div><div class="safety-hero green"><div class="sh-top"><div class="sh-circle green" style="font-size:26px">&#128737;</div><div style="flex:1"><div class="sh-title-big green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#4ADE80"/><path d="M9 12l2 2 4-4" stroke="#005E60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>SAFETY</div><div class="sh-reason" style="color:#4ADE80;font-size:9px;margin:2px 0">All KPIs on plan &mdash; 0 incidents this week</div><span class="sh-incident green" style="display:inline-block;margin-top:2px">&#9679; 0 Minor Incidents This Week</span></div></div><div class="sh-kpis"><div class="sh-kpi"><div class="sv green-val">0</div><div class="sl">Incidents &amp; Injuries</div></div><div class="sh-kpi"><div class="sv green-val">92%</div><div class="sl">Live Save Compliance</div></div><div class="sh-kpi"><div class="sv green-val">90%</div><div class="sl">Read Across Rate</div></div></div><div class="sh-log"><div class="sh-log-title">&#128197; Historical Incident Log</div><div class="sh-log-item"><span class="sh-log-dot"></span><div><span class="sh-log-date">Mar 14, 2026</span><span class="sh-log-desc">Slip on wet floor near lab entrance &mdash; no injury, area secured</span></div></div><div class="sh-log-item"><span class="sh-log-dot"></span><div><span class="sh-log-date">Apr 3, 2026</span><span class="sh-log-desc">Lube oil spill during maintenance exercise &mdash; contained, cleaned, no injury</span></div></div></div></div><div style="display:flex;flex-direction:column;gap:5px;overflow:hidden;min-height:0"><div class="ap-panel" style="flex:1;min-height:0"><div class="panel-title">&#9989; Action Plans &mdash; Delivery Team (42 items)</div><div class="ap-stats"><div class="ap-stat amber"><div class="asn">30</div><div class="asl">In Progress</div></div><div class="ap-stat red"><div class="asn">4</div><div class="asl">Delayed</div></div><div class="ap-stat on-deck"><div class="asn">11</div><div class="asl">On Deck</div></div></div><div class="ap-list"><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">Improve Controls ELT-A Program</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">Catching HA Turbine</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">ER Cases Reduction</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#C0392B"></div><div class="ap-text">Update OE MkVIe Labs</div><div class="ap-badge delayed">Delayed</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Work Force Readiness Program Phase 4</div><div class="ap-badge in-prog">In Progress</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Improve ST ELT-A Program</div><div class="ap-badge in-prog">In Progress</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Gen Spec Program Changes</div><div class="ap-badge in-prog">In Progress</div></div><div class="ap-item"><div class="ap-dot" style="background:#1D4ED8"></div><div class="ap-text">Space & Infrastructure Optimize</div><div class="ap-badge in-prog">In Progress</div></div></div></div><div class="cx-panel" style="flex:1;min-height:0"><div class="panel-title">&#128176; CapEx 2026 &mdash; 42 Active Projects</div><div class="cx-stats"><div class="cx-stat hi"><div class="csn">15</div><div class="csl">High Pri</div></div><div class="cx-stat"><div class="csn">$3.8M</div><div class="csl">Budget</div></div><div class="cx-stat"><div class="csn">42</div><div class="csl">Active</div></div></div><div class="cx-bars"><div class="cx-bar-row"><div class="cx-bar-label">Equipment</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:86%;background:#0891B2"><span class="cx-bar-val">$3153K</span></div></div><div class="cx-bar-count">36</div></div><div class="cx-bar-row"><div class="cx-bar-label">Modernization</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:7%;background:#7C3AED"><span class="cx-bar-val">$275K</span></div></div><div class="cx-bar-count">3</div></div><div class="cx-bar-row"><div class="cx-bar-label">Safety</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:5%;background:#DC2626"><span class="cx-bar-val">$40K</span></div></div><div class="cx-bar-count">2</div></div><div class="cx-bar-row"><div class="cx-bar-label">Capability</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:2%;background:#059669"><span class="cx-bar-val">$16K</span></div></div><div class="cx-bar-count">1</div></div></div><div class="cx-item-list"><div class="cx-item"><div class="cx-cat-dot" style="background:#0891B2"></div><div class="cx-item-text">FFB Hardware for Additiona…</div><div class="cx-item-cost">$300K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#7C3AED"></div><div class="cx-item-text">Replace HMIs</div><div class="cx-item-cost">$150K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#7C3AED"></div><div class="cx-item-text">Aero MKVIe Modernization</div><div class="cx-item-cost">$100K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#0891B2"></div><div class="cx-item-text">LM2500+ Air Seal Puller</div><div class="cx-item-cost">$21K</div><div class="cx-item-badge">HIGH</div></div><div class="cx-item"><div class="cx-cat-dot" style="background:#0891B2"></div><div class="cx-item-text">HA Tooling</div><div class="cx-item-cost">$85K</div><div class="cx-item-badge">HIGH</div></div></div></div></div></div></div></div>
+<div class="slide" id="s1"></div>
 <!-- SLIDE 2 -->
-<div class="slide" id="s2"><div class="gh"><div><div class="ht">Internal Training Roster &mdash; PLL Assignments</div><div class="hs">Week of Jun 1 - 5, 2026 | Internal + OE/SS</div></div><div class="hw">364 Students Total This Week</div><div class="hl">GE Vernova<br>HLC Command Board</div></div><div class="s2b"><div class="pg"><div class="pll-card"><div class="ph"><div class="pn">Sherif Khalifa</div><div class="ph-hero"><div class="ph-big"><span class="pnum">4</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">47</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">35</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">12</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">17</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">207</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">8I/9O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">HA FE Tasks & Tools - Combustion Inspection 26-3</div><div class="cm">9/9-HLC</div></div><div class="cr"><div class="ew"><div class="eb mid" style="width:75%"></div></div><div class="cn">Entry Level Gas Turbine 26-1</div><div class="cm">18/24-HLC</div></div><div class="cr"><div class="ew"><div class="eb mid" style="width:67%"></div></div><div class="cn">GE Gas Turbine to Alstom GT x-over 26-1</div><div class="cm">8/12-BLC</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Gas Turbine - Operation</div><div class="cm">12-United States</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Pablo Schibli</div><div class="ph-hero"><div class="ph-big"><span class="pnum">5</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">72</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">24</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">48</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">9</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">120</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">3I/6O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Entry Level Steam Turbine 26-1</div><div class="cm">24/24-HLC</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">HRSG - Operation & Maintenance</div><div class="cm">12-Taiwan</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Steam Turbine Operation</div><div class="cm">12-United States</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Combined Cycle - Fundamentals</div><div class="cm">12-Taiwan</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Combined Cycle Fundamentals / extended</div><div class="cm">12-Taiwan</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Michele Alcantar</div><div class="ph-hero"><div class="ph-big"><span class="pnum">4</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">44</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">32</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">12</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">14</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">168</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">4I/10O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:92%"></div></div><div class="cn">GE to Alstom Generator Mechanical Crossover 26-2</div><div class="cm">11/12-BLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Generator Specialist Training 26-1</div><div class="cm">16/16-HLC</div></div><div class="cr"><div class="ew"><div class="eb low" style="width:42%"></div></div><div class="cn">Entry Level Electrical Excitation 26-1</div><div class="cm">5/12-HLC</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">Excitation - Generator Excitation Intro</div><div class="cm">12-United States</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Mohammed Nizami</div><div class="ph-hero"><div class="ph-big"><span class="pnum">6</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">43</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">43</span><span class="tl">INT</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">18</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">169</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">10I/8O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Expert Steam Turbine WSC/HRSG/CCPP 26-1</div><div class="cm">10/10-BLC</div></div><div class="cr"><div class="ew"><div class="eb low" style="width:35%"></div></div><div class="cn">Entry Level GT MkVIe 26-1</div><div class="cm">6/17-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Foundation Fieldbus Advanced 26-3</div><div class="cm">6/6-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Mk VI 26-1</div><div class="cm">12/12-HLC</div></div><div class="cr"><div class="ew"><div class="eb low" style="width:33%"></div></div><div class="cn">Site Manager Level 2 26-1</div><div class="cm">5/15-HLC</div></div><div class="cr"><div class="ew"><div class="eb mid" style="width:67%"></div></div><div class="cn">GE Control to Alstom Control (ADVANT x-over) 26-1</div><div class="cm">4/6-BLC</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Harry Hanson</div><div class="ph-hero"><div class="ph-big"><span class="pnum">5</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">60</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">60</span><span class="tl">INT</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">23</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">206</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">23I/0O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb low" style="width:20%"></div></div><div class="cn">Craft Entry Level ST 26-3</div><div class="cm">2/10-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Steam Turbine 101 26-1</div><div class="cm">8/8-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">ELT Gas Turbine OSR Boot Camp 26-2</div><div class="cm">12/12-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Craft GE to Alstom GT Crossover 26-7</div><div class="cm">15/15-Other</div></div><div class="cr"><div class="ew"><div class="eb over" style="width:100%"></div></div><div class="cn">Craft Entry Level GT Accelerated 26-5</div><div class="cm">23/20-HLC</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Greg Walker</div><div class="ph-hero"><div class="ph-big"><span class="pnum">4</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">38</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">14</span><span class="tl">INT</span></div><div class="ph-type oe-t"><span class="tn">24</span><span class="tl">OE/SS</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">18</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">119</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">15I/3O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb mid" style="width:60%"></div></div><div class="cn">Aero Controls Fundamentals 26-1</div><div class="cm">6/10-HLC</div></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><div class="cn">Gas Turbine - Rotalign Touch 26-2</div><div class="cm">8/8-Other</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">GT LM6000 Aero Package Operation</div><div class="cm">12-United States</div></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">GT Aero Package Operation & Maintenance (OJT)</div><div class="cm">12-Mexico</div></div></div></div><div class="pll-card"><div class="ph"><div class="pn">Linda</div><div class="ph-hero"><div class="ph-big"><span class="pnum">0</span><span class="plbl">Total Classes</span></div><div class="ph-hdiv"></div><div class="ph-big"><span class="pnum">0</span><span class="plbl">Total Students</span></div></div><div class="ph-breakdown"><div class="ph-type int-t"><span class="tn">0</span><span class="tl">INT</span></div></div></div><div class="la-section"><div class="la-title">30-Day Look Ahead — Jun 8–Jul 7</div><div class="la-row"><div class="la-item"><span class="ln">0</span><span class="ll">Classes</span></div><div class="la-item"><span class="ln">0</span><span class="ll">Students</span></div><div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">0I/0O</span><span class="ll">INT/OE</span></div></div></div><div class="pc"><div class="nc">No classes this week</div></div></div><div class="pll-card wag-card"><div class="pn" style="border-bottom:1px solid rgba(0,94,96,0.15);padding:8px 10px;display:flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#C8FF08" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>WEEK AT A GLANCE<span style="margin-left:auto;font-size:9px;font-weight:500;color:var(--gry);text-transform:none">Jun 1 &ndash; 5, 2026</span></div><div class="wag-body"><div class="wag-stats"><div class="wag-stat-big"><div class="wag-val">364</div><div class="wag-lbl">Total Students</div></div><div class="wag-stat-big"><div class="wag-val" style="color:var(--lim)">29</div><div class="wag-lbl">Active Classes</div></div></div><div class="wag-locs"><div class="wag-loc-title">&#128205; LOCATIONS THIS WEEK</div><div class="wag-loc-grid"><div class="wag-loc-item hlc"><div class="wag-loc-num">164</div><div class="wag-loc-name">HLC<br>Houston</div></div><div class="wag-loc-item blc"><div class="wag-loc-num">37</div><div class="wag-loc-name">BLC<br>Birr</div></div><div class="wag-loc-item klc"><div class="wag-loc-num">0</div><div class="wag-loc-name">KLC<br>Kuwait</div></div><div class="wag-loc-item oth"><div class="wag-loc-num">67</div><div class="wag-loc-name">OE/SS<br>Remote</div></div></div></div><div class="wag-safety"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#C8FF08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="wag-safety-text"><div class="wag-safety-status">ALL CLEAR</div><div class="wag-safety-sub">0 incidents &bull; All KPIs on plan</div><div class="wag-safety-incidents">&#128197; Mar 14: Slip &bull; Apr 3: Lube oil spill (historical)</div></div></div></div></div></div><div class="el"><span><div class="eldot" style="background:var(--acc)"></div>Over-enrolled</span><span><div class="eldot" style="background:var(--grn)"></div>&ge;80%</span><span><div class="eldot" style="background:var(--amb)"></div>50&ndash;79%</span><span><div class="eldot" style="background:var(--red)"></div>&lt;50%</span><span><div class="eldot" style="background:var(--evm);opacity:.7"></div>OE/SS Contracted</span></div></div></div>
+<div class="slide" id="s2"></div>
 <!-- SLIDE 3 -->
-<div class="slide" id="s3"><div class="gh"><div><div class="ht">Internal Training — Student Country of Origin</div><div class="hs">Where this week's students are coming from</div></div><div class="hw">23 Countries &middot; 256 Students</div><div class="hl">GE Vernova<br>HLC Command Board</div></div><div class="mb" id="map3-container"></div></div>
+<div class="slide" id="s3">
+  <div class="gh">
+    <div><div class="ht">Internal Training — Student Country of Origin</div><div class="hs">Where this week's students are coming from</div></div>
+    <div class="hw" id="s3-hw"></div>
+    <div class="hl">GE Vernova<br>HLC Command Board</div>
+  </div>
+  <div class="mb" id="map3-container"></div>
+</div>
 <!-- SLIDE 4 -->
-<div class="slide" id="s4"><div class="gh"><div><div class="ht">Customer Training — Global Delivery</div><div class="hs">Site-Specific &amp; Open Enrollment delivery locations</div></div><div class="hw">96 Students &middot; 8 Classes This Week</div><div class="hl">GE Vernova<br>HLC Command Board</div></div><div class="mb" id="map4-container"></div></div>
+<div class="slide" id="s4">
+  <div class="gh">
+    <div><div class="ht">Customer Training — Global Delivery</div><div class="hs">Site-Specific &amp; Open Enrollment delivery locations</div></div>
+    <div class="hw" id="s4-hw"></div>
+    <div class="hl">GE Vernova<br>HLC Command Board</div>
+  </div>
+  <div class="mb" id="map4-container"></div>
+</div>
 <div id="pb"></div><div id="sc">1/4</div>
+
 <script>
-const DATA={"meta":{"buildDate":"2026-05-29","weekOf":"Jun 1 - 5, 2026","specVersion":"v5.1","minorIncidents":0,"safetyRag":"green"},"slide1":{"weekOf":"Jun 1 - 5, 2026","internalStudents":268,"oeStudents":96,"weeklyTotal":364,"internalCourses":21,"oeCourses":8,"safetyRag":"red","minorIncidents":0,"ragReason":"Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan)","kpis":{"ptsi":{"label":"Post-Training Skill Improvement","ytdValue":83,"ytdRag":"green","monthValue":83,"monthLabel":"MAR","monthRag":"green","plan":70,"greenThreshold":70,"redThreshold":63},"timecard":{"label":"Timecard OTD","ytdValue":72,"ytdRag":"red","monthValue":85,"monthLabel":"APR","monthRag":"amber","plan":92,"greenThreshold":92,"redThreshold":82},"instUtil":{"label":"Instructor Util (Borrowed)","ytdValue":29,"ytdRag":"red","monthValue":19,"monthLabel":"APR","monthRag":"red","plan":15,"greenThreshold":15,"reverse":true}},"locationBreakdown":{"HLC":164,"BLC":37,"KLC":0,"Other":67},"overallRAGs":{"bowler":{"rag":"red","label":"BOWLER","reason":"TC OTD & Inst. Util. off plan"},"safety":{"rag":"green","label":"SAFETY","reason":"0 incidents, KPIs on plan"},"ap":{"rag":"amber","label":"ACTION PLANS","reason":"4 delayed items"},"capex":{"rag":"amber","label":"CAPEX","reason":"15 high-priority active"}},"safetyKPIs":{"incidents":0,"liveStop":{"label":"Live Save Compliance","value":92,"plan":90,"rag":"green"},"readAcross":{"label":"Read Across Rate","value":90,"plan":90,"rag":"green"}}},"slide2":{"weekOf":"Jun 1 - 5, 2026","unmatchedStudents":30,"plls":[{"name":"Sherif Khalifa","totalClasses":4,"totalStudents":47,"internalClasses":3,"internalStudents":35,"oeClasses":1,"oeStudents":12,"courses":[{"name":"HA FE Tasks & Tools - Combustion Inspection 26-3","program":"Advanced Level","technology":"Gas Turbine","locCat":"HLC","capacity":9,"enrolled":9,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level Gas Turbine 26-1","program":"Entry Level","technology":"Gas Turbine","locCat":"HLC","capacity":24,"enrolled":18,"enrollPct":75,"barColor":"#F5A623","overEnrolled":false},{"name":"GE Gas Turbine to Alstom GT x-over 26-1","program":"Advanced Level","technology":"Gas Turbine","locCat":"BLC","capacity":12,"enrolled":8,"enrollPct":67,"barColor":"#F5A623","overEnrolled":false}],"oeCourses":[{"title":"Gas Turbine - Operation","tech":"Gas Turbine","country":"United States","city":"Louisville","students":12,"location":"Customer Site"}],"lookAhead30":{"intClasses":8,"intStudents":96,"oeClasses":9,"oeStudents":111,"totalClasses":17,"totalStudents":207}},{"name":"Pablo Schibli","totalClasses":5,"totalStudents":72,"internalClasses":1,"internalStudents":24,"oeClasses":4,"oeStudents":48,"courses":[{"name":"Entry Level Steam Turbine 26-1","program":"Entry Level","technology":"Steam Turbine","locCat":"HLC","capacity":24,"enrolled":24,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false}],"oeCourses":[{"title":"HRSG - Operation & Maintenance","tech":"HRSG","country":"Taiwan","city":"Hsinta","students":12,"location":"Distance Learning"},{"title":"Steam Turbine Operation","tech":"Steam Turbine","country":"United States","city":"Houston","students":12,"location":"HLC"},{"title":"Combined Cycle - Fundamentals","tech":"Combined Cycle","country":"Taiwan","city":"-","students":12,"location":"Distance Learning"},{"title":"Combined Cycle Fundamentals / extended","tech":"Combined Cycle","country":"Taiwan","city":"-","students":12,"location":"Distance Learning"}],"lookAhead30":{"intClasses":3,"intStudents":48,"oeClasses":6,"oeStudents":72,"totalClasses":9,"totalStudents":120}},{"name":"Michele Alcantar","totalClasses":4,"totalStudents":44,"internalClasses":3,"internalStudents":32,"oeClasses":1,"oeStudents":12,"courses":[{"name":"GE to Alstom Generator Mechanical Crossover 26-2","program":"Advanced Level","technology":"Generator Mechanical","locCat":"BLC","capacity":12,"enrolled":11,"enrollPct":92,"barColor":"#3AAA35","overEnrolled":false},{"name":"Generator Specialist Training 26-1","program":"Entry Level","technology":"Generator","locCat":"HLC","capacity":16,"enrolled":16,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level Electrical Excitation 26-1","program":"Entry Level","technology":"Excitation","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#D0021B","overEnrolled":false}],"oeCourses":[{"title":"Excitation - Generator Excitation Intro","tech":"Excitation","country":"United States","city":"Houston","students":12,"location":"HLC"}],"lookAhead30":{"intClasses":4,"intStudents":48,"oeClasses":10,"oeStudents":120,"totalClasses":14,"totalStudents":168}},{"name":"Mohammed Nizami","totalClasses":6,"totalStudents":43,"internalClasses":6,"internalStudents":43,"oeClasses":0,"oeStudents":0,"courses":[{"name":"Expert Steam Turbine WSC/HRSG/CCPP 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":10,"enrolled":10,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level GT MkVIe 26-1","program":"Entry Level","technology":"Controls","locCat":"HLC","capacity":17,"enrolled":6,"enrollPct":35,"barColor":"#D0021B","overEnrolled":false},{"name":"Foundation Fieldbus Advanced 26-3","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":6,"enrolled":6,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Mk VI 26-1","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":12,"enrolled":12,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Site Manager Level 2 26-1","program":"Advanced Level","technology":"GIC Mechanical","locCat":"HLC","capacity":15,"enrolled":5,"enrollPct":33,"barColor":"#D0021B","overEnrolled":false},{"name":"GE Control to Alstom Control (ADVANT x-over) 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":6,"enrolled":4,"enrollPct":67,"barColor":"#F5A623","overEnrolled":false}],"oeCourses":[],"lookAhead30":{"intClasses":10,"intStudents":81,"oeClasses":8,"oeStudents":88,"totalClasses":18,"totalStudents":169}},{"name":"Harry Hanson","totalClasses":5,"totalStudents":60,"internalClasses":5,"internalStudents":60,"oeClasses":0,"oeStudents":0,"courses":[{"name":"Craft Entry Level ST 26-3","program":"Craft","technology":"Steam Turbine","locCat":"HLC","capacity":10,"enrolled":2,"enrollPct":20,"barColor":"#D0021B","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Steam Turbine 101 26-1","program":"Repairs","technology":"Steam Turbine","locCat":"HLC","capacity":8,"enrolled":8,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"ELT Gas Turbine OSR Boot Camp 26-2","program":"Repairs","technology":"Gas Turbine","locCat":"HLC","capacity":12,"enrolled":12,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Craft GE to Alstom GT Crossover 26-7","program":"Craft","technology":"Gas Turbine","locCat":"Other","capacity":15,"enrolled":15,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Craft Entry Level GT Accelerated 26-5","program":"Craft","technology":"Gas Turbine","locCat":"HLC","capacity":20,"enrolled":23,"enrollPct":115,"barColor":"#C8FF08","overEnrolled":true,"sitespecific":null,"openenrollment":null}],"oeCourses":[],"lookAhead30":{"intClasses":23,"intStudents":206,"oeClasses":0,"oeStudents":0,"totalClasses":23,"totalStudents":206}},{"name":"Greg Walker","totalClasses":4,"totalStudents":38,"internalClasses":2,"internalStudents":14,"oeClasses":2,"oeStudents":24,"courses":[{"name":"Aero Controls Fundamentals 26-1","program":"Advanced Level","technology":"Aeroderivative","locCat":"HLC","capacity":10,"enrolled":6,"enrollPct":60,"barColor":"#F5A623","overEnrolled":false},{"name":"Gas Turbine - Rotalign Touch 26-2","program":"Advanced Level","technology":"Aeroderivative","locCat":"Other","capacity":8,"enrolled":8,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false}],"oeCourses":[{"title":"GT LM6000 Aero Package Operation","tech":"Aeroderivative","country":"United States","city":"NYC","students":12,"location":"Customer Site"},{"title":"GT Aero Package Operation & Maintenance (OJT)","tech":"Aeroderivative","country":"Mexico","city":"Cancun","students":12,"location":"Customer Site"}],"lookAhead30":{"intClasses":15,"intStudents":83,"oeClasses":3,"oeStudents":36,"totalClasses":18,"totalStudents":119}},{"name":"Linda","totalClasses":0,"totalStudents":0,"internalClasses":0,"internalStudents":0,"oeClasses":0,"oeStudents":0,"courses":[],"oeCourses":[],"lookAhead30":{"intClasses":0,"intStudents":0,"oeClasses":0,"oeStudents":0,"totalClasses":0,"totalStudents":0}}]},"slide3":{"title":"Internal Training — Student Country of Origin","totalCountries":23,"totalStudents":256,"pins":[{"country":"United States","count":165,"lat":39.5,"lon":-98.35},{"country":"Mexico","count":19,"lat":23.6,"lon":-102.5},{"country":"Argentina","count":16,"lat":-34.6,"lon":-58.4},{"country":"Spain","count":9,"lat":40.4,"lon":-3.7},{"country":"Saudi Arabia","count":7,"lat":23.9,"lon":45.1},{"country":"India","count":6,"lat":20.6,"lon":78.9},{"country":"Indonesia","count":4,"lat":-0.8,"lon":113.9},{"country":"Egypt","count":4,"lat":26.8,"lon":30.8},{"country":"Brazil","count":3,"lat":-14.2,"lon":-51.9},{"country":"United Kingdom","count":3,"lat":55.4,"lon":-3.4},{"country":"China","count":2,"lat":35.9,"lon":104.2},{"country":"Malaysia","count":2,"lat":4.2,"lon":108},{"country":"Canada","count":2,"lat":56.1,"lon":-106.3},{"country":"Algeria","count":2,"lat":28,"lon":1.7},{"country":"Chile","count":2,"lat":-35.7,"lon":-71.5},{"country":"Colombia","count":1,"lat":4.6,"lon":-74.1},{"country":"Kazakhstan","count":1,"lat":48,"lon":66.9},{"country":"Peru","count":1,"lat":-9.2,"lon":-75},{"country":"Philippines","count":1,"lat":12.9,"lon":121.8},{"country":"South Africa","count":1,"lat":-28.5,"lon":24.7},{"country":"Thailand","count":1,"lat":15.9,"lon":100.9},{"country":"Vietnam","count":1,"lat":14.1,"lon":108.3},{"country":"Italy","count":1,"lat":41.9,"lon":12.6}],"learningCenters":[{"name":"HLC — Houston","lat":29.7604,"lon":-95.3698,"students":164,"type":"HLC","color":"#C8FF08"},{"name":"BLC — Birr, Switzerland","lat":47.359,"lon":8.043,"students":37,"type":"BLC","color":"#C8FF08"},{"name":"KLC — Kuwait","lat":29.3,"lon":47.5,"students":0,"type":"KLC","color":"#C8FF08"}]},"slide4":{"title":"Customer Training — Global Delivery","weekDelivery":[{"country":"Taiwan","lat":23.7,"lon":120.96,"classes":3,"students":36},{"country":"United States","lat":39.5,"lon":-98.35,"classes":4,"students":48},{"country":"Mexico","lat":23.6,"lon":-102.5,"classes":1,"students":12}],"allDelivery":[{"country":"United States","lat":39.5,"lon":-98.35,"classes":543,"students":6150},{"country":"Switzerland","lat":46.8,"lon":8.2,"classes":45,"students":530},{"country":"Germany","lat":51.2,"lon":10.5,"classes":27,"students":288},{"country":"Taiwan","lat":23.7,"lon":120.96,"classes":31,"students":360},{"country":"Mexico","lat":23.6,"lon":-102.5,"classes":21,"students":252},{"country":"Turkey","lat":38.9,"lon":35.2,"classes":18,"students":216},{"country":"Saudi Arabia","lat":23.9,"lon":45.1,"classes":15,"students":180},{"country":"Australia","lat":-25.3,"lon":133.8,"classes":12,"students":144},{"country":"France","lat":46.2,"lon":2.2,"classes":10,"students":120},{"country":"Brazil","lat":-14.2,"lon":-51.9,"classes":9,"students":108},{"country":"Greece","lat":39.1,"lon":21.8,"classes":12,"students":144},{"country":"South Korea","lat":36,"lon":127.8,"classes":4,"students":48},{"country":"Singapore","lat":1.35,"lon":103.8,"classes":5,"students":60},{"country":"Poland","lat":51.9,"lon":19.1,"classes":6,"students":72},{"country":"Nigeria","lat":9.1,"lon":8.7,"classes":5,"students":60},{"country":"Hungary","lat":47.2,"lon":19.5,"classes":3,"students":36},{"country":"Kuwait","lat":29.3,"lon":47.5,"classes":4,"students":48},{"country":"Algeria","lat":28,"lon":1.7,"classes":3,"students":36},{"country":"Ireland","lat":53,"lon":-8,"classes":12,"students":154},{"country":"Canada","lat":56.1,"lon":-106.3,"classes":4,"students":48}],"totalCountries":20,"weekStudents":96,"weekClasses":8},"actionPlans":{"total":648,"deliveryTotal":42,"inProgress":30,"notStarted":11,"onHold":1,"delayed":4,"byBucket":{"Content Dev":8,"Content Quality":9,"Operational":6,"Competitiveness":5,"Other":12},"inProgressItems":[{"title":"Improve Controls ELT-A Program","lead":"Mohammed Nizami","bucket":"Content Dev","status":"In Progress","currentStatus":"Delayed"},{"title":"Catching HA Turbine","lead":"Sherif Khalifa","bucket":"Content Quality","status":"In Progress","currentStatus":"Delayed"},{"title":"ER Cases Reduction","lead":"Mohammed Nizami","bucket":"Content Quality","status":"In Progress","currentStatus":"Delayed"},{"title":"Update OE MkVIe Labs","lead":"Mohammed Nizami","bucket":"Content Quality","status":"In Progress","currentStatus":"Delayed"},{"title":"Work Force Readiness Program Phase 4","lead":"Linda Nelson","bucket":"Competitiveness","status":"In Progress","currentStatus":""},{"title":"Improve ST ELT-A Program","lead":"Pablo Schibli","bucket":"Content Dev","status":"In Progress","currentStatus":""},{"title":"Gen Spec Program Changes","lead":"Michele Alcantar","bucket":"Content Quality","status":"In Progress","currentStatus":""},{"title":"Space & Infrastructure Optimize","lead":"Jim Rosen","bucket":"Operational","status":"In Progress","currentStatus":""}]},"capex":{"totalProjects":46,"activeProjects":42,"highPriorityCount":15,"totalBudget":3836520,"byCategory":{"Equipment":{"count":36,"highPri":7,"cost":3152520},"Modernization":{"count":3,"highPri":3,"cost":275000},"Safety":{"count":2,"highPri":2,"cost":40000},"Capability":{"count":1,"highPri":1,"cost":16000}},"inProgressItems":[{"project":"FFB Hardware for Additional Carts","priority":"High","status":"PO Opened","cost":300000,"category":"Equipment"},{"project":"Replace HMIs","priority":"High","status":"PO Opened","cost":150000,"category":"Modernization"},{"project":"Aero MKVIe Modernization","priority":"High","status":"With Sourcing","cost":100000,"category":"Modernization"},{"project":"LM2500+ Air Seal Puller","priority":"High","status":"PO Opened","cost":21000,"category":"Equipment"},{"project":"HA Tooling","priority":"High","status":"In Progress","cost":85000,"category":"Equipment"},{"project":"ITS Platform","priority":"","status":"With Sourcing","cost":40000,"category":"Equipment"},{"project":"ITS Laser Alignment Tool","priority":"","status":"With Sourcing","cost":60000,"category":"Equipment"}]}};
-const SLIDES=[{id:"s1",dur:30000},{id:"s2",dur:30000},{id:"s3",dur:35000},{id:"s4",dur:35000}];let cur=0,timer=null;const pb=document.getElementById("pb");const sc=document.getElementById("sc");function showSlide(i){SLIDES.forEach((s,j)=>{const el=document.getElementById(s.id);if(el)el.classList.toggle("active",j===i);});cur=i;sc.textContent=(i+1)+"/"+SLIDES.length;startProgress(SLIDES[i].dur);}function startProgress(ms){clearInterval(timer);pb.style.transition="none";pb.style.width="0%";requestAnimationFrame(()=>{requestAnimationFrame(()=>{pb.style.transition="width "+ms+"ms linear";pb.style.width="100%";});});timer=setInterval(()=>{showSlide((cur+1)%SLIDES.length);},ms);}window.addEventListener("load",()=>{showSlide(0);initMaps();[["s3","map3-container"],["s4","map4-container"]].forEach(([sid])=>{const obs=new MutationObserver(()=>{if(document.getElementById(sid).classList.contains("active"))initMaps();});obs.observe(document.getElementById(sid),{attributes:true,attributeFilter:["class"]});});});
-async function loadWorld(){if(window._wld)return window._wld;const r=await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");window._wld=await r.json();return window._wld;}
-function buildMap(cid,pins,opts){const ct=document.getElementById(cid);if(!ct)return;const W=ct.clientWidth||1400,H=ct.clientHeight||520;d3.select(ct).selectAll("*").remove();const svg=d3.select(ct).append("svg").attr("width",W).attr("height",H);svg.append("rect").attr("width",W).attr("height",H).attr("fill","#E6F2F2");const proj=d3.geoNaturalEarth1().scale(W/6.1).translate([W/2,H/2]);const path=d3.geoPath().projection(proj);svg.append("path").datum(d3.geoGraticule()()).attr("d",path).attr("fill","none").attr("stroke","rgba(0,94,96,.1)").attr("stroke-width",.5);const cntrs=topojson.feature(window._wld,window._wld.objects.countries);svg.selectAll(".c").data(cntrs.features).enter().append("path").attr("class","c").attr("d",path).attr("fill","#C5DFE0").attr("stroke","white").attr("stroke-width",.5);const allC=(pins.week||pins.origin||[]).map(p=>p.count||p.students||0).filter(n=>n>0);const rS=d3.scaleSqrt().domain([0,Math.max(...allC,1)]).range([0,opts.maxR||45]);const pArr=pins.week||pins.origin||[];const pG=svg.append("g");for(const p of pArr){const c=proj([p.lon,p.lat]);if(!c)continue;const cnt=p.count||p.students||0;const r=Math.max(18,rS(cnt));const wk=!!pins.week;pG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r).attr("fill",wk?"rgba(200,255,8,.88)":"rgba(0,94,96,.78)").attr("stroke","white").attr("stroke-width",2);pG.append("text").attr("x",c[0]).attr("y",c[1]).attr("text-anchor","middle").attr("dominant-baseline","central").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",r>26?14:r>19?11:9).attr("fill",wk?"#005E60":"#C8FF08").text(cnt);pG.append("text").attr("x",c[0]).attr("y",c[1]+r+9).attr("text-anchor","middle").attr("font-family","Inter,'Segoe UI',Arial,sans-serif").attr("font-size",8).attr("fill","#212121").attr("font-weight","600").text(p.country);}if(pins.lcs){const lG=svg.append("g");for(const lc of pins.lcs){const c=proj([lc.lon,lc.lat]);if(!c)continue;const r2=lc.students>0?Math.max(10,rS(lc.students)*.4):7;lG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r2+4).attr("fill","none").attr("stroke","#C8FF08").attr("stroke-width",2.5).attr("stroke-dasharray","4,2");lG.append("text").attr("x",c[0]).attr("y",c[1]-r2-10).attr("text-anchor","middle").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",10).attr("fill","#005E60").text(lc.name.split("—")[0].trim());}}const leg=d3.select(ct).append("div").style("position","absolute").style("bottom","18px").style("left","14px").style("display","flex").style("gap","14px").style("background","rgba(0,94,96,.88)").style("padding","6px 14px").style("border-radius","6px");if(opts.li){for(const li of opts.li){const it=leg.append("div").style("display","flex").style("align-items","center").style("gap","5px");it.append("div").style("width","10px").style("height","10px").style("border-radius","50%").style("background",li.c);it.append("div").style("font-size","9px").style("color","rgba(255,255,255,.85)").text(li.l);}}}
-async function initMaps(){await loadWorld();const s3=document.getElementById("map3-container");if(s3)buildMap("map3-container",{origin:DATA.slide3.pins,lcs:DATA.slide3.learningCenters},{maxR:50,li:[{c:"rgba(0,94,96,.78)",l:"Student Origin — bubble = student count"},{c:"#C8FF08",l:"Learning Center"}]});const s4=document.getElementById("map4-container");if(s4)buildMap("map4-container",{week:DATA.slide4.weekDelivery},{maxR:55,li:[{c:"rgba(200,255,8,.88)",l:"This Week — customer training delivery locations"}]});}
+// ── RENDER FUNCTIONS ─────────────────────────────────────────────────────────
+
+function ragIcon(rag){return rag==='green'?'✓':rag==='red'?'✗':'!';}
+
+function renderSlide1(D){
+  const s1=D.slide1,ap=D.actionPlans,cx=D.capex;
+  const safetyClass=s1.safetyRag||'green';
+  const rags=s1.overallRAGs;
+
+  // build KPI rows
+  const kpiKeys=['ptsi','timecard','instUtil'];
+  let kpiRows='';
+  for(const k of kpiKeys){
+    const kpi=s1.kpis[k];
+    const badgeBg=kpi.ytdRag==='green'?'#2D7A45':kpi.ytdRag==='red'?'#C0392B':'#E67E22';
+    const mTag=`<span class="kpi-tag ${kpi.monthRag}">${kpi.monthLabel}: ${kpi.monthValue}%</span>`;
+    const reverse=kpi.reverse?`<span class="kpi-tag gry">Reverse ≤${kpi.plan}%</span>`:`<span class="kpi-tag gry">Plan: ${kpi.plan}%</span>`;
+    kpiRows+=`<div class="kpi-row">
+      <div class="kpi-badge" style="background:${badgeBg};color:white">${kpi.ytdValue}%</div>
+      <div class="kpi-info">
+        <div class="kpi-name">${kpi.label}</div>
+        <div class="kpi-dual"><span class="kpi-tag gry">YTD: ${kpi.ytdValue}%</span>${mTag}${reverse}</div>
+      </div></div>`;
+  }
+
+  // safety log
+  let logHtml='';
+  if(D.safetyLog&&D.safetyLog.length){
+    logHtml=`<div class="sh-log"><div class="sh-log-title">📅 Historical Incident Log</div>`;
+    for(const ev of D.safetyLog){
+      logHtml+=`<div class="sh-log-item"><span class="sh-log-dot"></span><div><span class="sh-log-date">${ev.date}</span><span class="sh-log-desc">${ev.desc}</span></div></div>`;
+    }
+    logHtml+='</div>';
+  }
+
+  // rag strip
+  let ragHtml='';
+  for(const[,r] of Object.entries(rags)){
+    ragHtml+=`<div class="rag-tile ${r.rag}"><div class="rag-icon">${ragIcon(r.rag)}</div><div><div class="rag-label">${r.label}</div><div class="rag-reason">${r.reason}</div></div></div>`;
+  }
+
+  // AP items
+  let apItems='';
+  for(const item of (ap.inProgressItems||[]).slice(0,8)){
+    const st=item.currentStatus==='Delayed'?'delayed':'in-prog';
+    const lb=item.currentStatus==='Delayed'?'Delayed':'In Progress';
+    apItems+=`<div class="ap-item"><div class="ap-dot" style="background:${st==='delayed'?'#C0392B':'#1D4ED8'}"></div><div class="ap-text">${item.title}</div><div class="ap-badge ${st}">${lb}</div></div>`;
+  }
+
+  // CapEx bars
+  const cats=cx.byCategory||{};
+  const maxCost=Math.max(...Object.values(cats).map(c=>c.cost||0),1);
+  let cxBars='',cxItems='';
+  const catColors={Equipment:'#0891B2',Modernization:'#7C3AED',Safety:'#DC2626',Capability:'#059669'};
+  for(const[name,cat] of Object.entries(cats)){
+    const pct=Math.round((cat.cost/maxCost)*100);
+    const cost=cat.cost>=1000000?`$${(cat.cost/1000000).toFixed(1)}M`:cat.cost>=1000?`$${Math.round(cat.cost/1000)}K`:`$${cat.cost}`;
+    cxBars+=`<div class="cx-bar-row"><div class="cx-bar-label">${name}</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:${pct}%;background:${catColors[name]||'#6B7280'}"><span class="cx-bar-val">${cost}</span></div></div><div class="cx-bar-count">${cat.count}</div></div>`;
+  }
+  for(const item of (cx.inProgressItems||[]).slice(0,5)){
+    const cost=item.cost>=1000000?`$${(item.cost/1000000).toFixed(1)}M`:item.cost>=1000?`$${Math.round(item.cost/1000)}K`:`$${item.cost}`;
+    cxItems+=`<div class="cx-item"><div class="cx-cat-dot" style="background:${catColors[item.category]||'#6B7280'}"></div><div class="cx-item-text">${item.project}</div><div class="cx-item-cost">${cost}</div>${item.priority==='High'?'<div class="cx-item-badge">HIGH</div>':''}</div>`;
+  }
+
+  const totalBudget=cx.totalBudget>=1000000?`$${(cx.totalBudget/1000000).toFixed(1)}M`:cx.totalBudget>=1000?`$${Math.round(cx.totalBudget/1000)}K`:`$${cx.totalBudget}`;
+
+  document.getElementById('s1').innerHTML=`
+  <div class="gh">
+    <div><div class="ht">OFS Training Delivery Command Board</div><div class="hs">${D.meta.specVersion} Build ${D.meta.buildDate}</div></div>
+    <div class="hw">${s1.weekOf}</div>
+    <div class="hl">GE Vernova<br>Houston Learning Center</div>
+  </div>
+  <div class="s1b">
+    <div class="ms">
+      <div class="mc hero"><div class="mv">${s1.weeklyTotal}</div><div class="ml">Students This Week</div></div>
+      <div class="mc"><div class="mv">${s1.internalStudents}</div><div class="ml">Internal Students</div></div>
+      <div class="mc"><div class="mv">${s1.oeStudents}</div><div class="ml">OE + SS Students</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.HLC}</div><div class="ml">HLC Houston</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.BLC}</div><div class="ml">BLC Birr</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.KLC}</div><div class="ml">KLC Kuwait</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.Other}</div><div class="ml">Distance/Other</div></div>
+    </div>
+    <div class="rag-strip">${ragHtml}</div>
+    <div class="s1-main">
+      <div class="kpip">
+        <div class="kpit">📈 Bowler KPI — YTD &amp; Latest Month</div>
+        ${kpiRows}
+        <div class="kpi-filler">
+          <div class="kfi-title">⚡ WEEK HIGHLIGHT</div>
+          <div class="kfi-grid">
+            <div class="kfi-item"><div class="kfi-val">${s1.weeklyTotal}</div><div class="kfi-lbl">Students</div></div>
+            <div class="kfi-item"><div class="kfi-val">${s1.internalCourses+s1.oeCourses}</div><div class="kfi-lbl">Classes</div></div>
+            <div class="kfi-item ev"><div class="kfi-val">${s1.kpis.ptsi.ytdValue}%</div><div class="kfi-lbl">PTSI</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="safety-hero ${safetyClass}">
+        <div class="sh-top">
+          <div class="sh-circle ${safetyClass}" style="font-size:26px">🛡</div>
+          <div style="flex:1">
+            <div class="sh-title-big ${safetyClass}">SAFETY</div>
+            <div class="sh-reason" style="color:${safetyClass==='green'?'#4ADE80':safetyClass==='amber'?'#FCD34D':'#F87171'};font-size:9px;margin:2px 0">
+              ${s1.minorIncidents===0?'All KPIs on plan — 0 incidents this week':s1.ragReason||''}
+            </div>
+            <span class="sh-incident ${safetyClass}">● ${s1.minorIncidents} Minor Incidents This Week</span>
+          </div>
+        </div>
+        <div class="sh-kpis">
+          <div class="sh-kpi"><div class="sv green-val">${s1.minorIncidents}</div><div class="sl">Incidents &amp; Injuries</div></div>
+          <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.liveStop?.value||'—'}%</div><div class="sl">Live Save Compliance</div></div>
+          <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.readAcross?.value||'—'}%</div><div class="sl">Read Across Rate</div></div>
+        </div>
+        ${logHtml}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;overflow:hidden;min-height:0">
+        <div class="ap-panel" style="flex:1;min-height:0">
+          <div class="panel-title">✅ Action Plans — Delivery Team (${ap.deliveryTotal} items)</div>
+          <div class="ap-stats">
+            <div class="ap-stat amber"><div class="asn">${ap.inProgress}</div><div class="asl">In Progress</div></div>
+            <div class="ap-stat red"><div class="asn">${ap.delayed}</div><div class="asl">Delayed</div></div>
+            <div class="ap-stat on-deck"><div class="asn">${ap.notStarted}</div><div class="asl">On Deck</div></div>
+          </div>
+          <div class="ap-list">${apItems}</div>
+        </div>
+        <div class="cx-panel" style="flex:1;min-height:0">
+          <div class="panel-title">💰 CapEx 2026 — ${cx.activeProjects} Active Projects</div>
+          <div class="cx-stats">
+            <div class="cx-stat hi"><div class="csn">${cx.highPriorityCount}</div><div class="csl">High Pri</div></div>
+            <div class="cx-stat"><div class="csn">${totalBudget}</div><div class="csl">Budget</div></div>
+            <div class="cx-stat"><div class="csn">${cx.activeProjects}</div><div class="csl">Active</div></div>
+          </div>
+          <div class="cx-bars">${cxBars}</div>
+          <div class="cx-item-list">${cxItems}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function getBarClass(pct,over){
+  if(over)return'over';
+  if(pct>=80)return'full';
+  if(pct>=50)return'mid';
+  return'low';
+}
+
+function renderSlide2(D){
+  const s2=D.slide2;
+  let cards='';
+  for(const pll of s2.plls){
+    let courseRows='';
+    for(const c of (pll.courses||[])){
+      const bc=getBarClass(c.enrollPct,c.overEnrolled);
+      const w=Math.min(c.enrollPct,115);
+      courseRows+=`<div class="cr"><div class="ew"><div class="eb ${bc}" style="width:${w}%"></div></div><div class="cn">${c.name}</div><div class="cm">${c.enrolled}/${c.capacity}-${c.locCat}</div></div>`;
+    }
+    for(const oe of (pll.oeCourses||[])){
+      courseRows+=`<div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">${oe.title}</div><div class="cm">${oe.students}-${oe.country}</div></div>`;
+    }
+    if(!courseRows)courseRows='<div class="nc">No classes this week</div>';
+
+    const la=pll.lookAhead30||{};
+    const intOe=`${la.intClasses||0}I/${la.oeClasses||0}O`;
+    const oeBlock=pll.oeClasses>0?`<div class="ph-type oe-t"><span class="tn">${pll.oeStudents}</span><span class="tl">OE/SS</span></div>`:'';
+    const isWag=pll.name==='__WAG__';
+
+    if(!isWag){
+      cards+=`<div class="pll-card">
+        <div class="ph">
+          <div class="pn">${pll.name}</div>
+          <div class="ph-hero">
+            <div class="ph-big"><span class="pnum">${pll.totalClasses}</span><span class="plbl">Total Classes</span></div>
+            <div class="ph-hdiv"></div>
+            <div class="ph-big"><span class="pnum">${pll.totalStudents}</span><span class="plbl">Total Students</span></div>
+          </div>
+          <div class="ph-breakdown">
+            <div class="ph-type int-t"><span class="tn">${pll.internalStudents}</span><span class="tl">INT</span></div>
+            ${oeBlock}
+          </div>
+        </div>
+        <div class="la-section">
+          <div class="la-title">30-Day Look Ahead — ${la.label||'Next 30 Days'}</div>
+          <div class="la-row">
+            <div class="la-item"><span class="ln">${la.totalClasses||0}</span><span class="ll">Classes</span></div>
+            <div class="la-item"><span class="ln">${la.totalStudents||0}</span><span class="ll">Students</span></div>
+            <div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">${intOe}</span><span class="ll">INT/OE</span></div>
+          </div>
+        </div>
+        <div class="pc">${courseRows}</div>
+      </div>`;
+    }
+  }
+
+  // Week at a Glance card (always last)
+  const s1=D.slide1;
+  const sl=D.safetyLog||[];
+  const histStr=sl.map(e=>`📅 ${e.date}: ${e.shortDesc||e.desc}`).join(' • ');
+  cards+=`<div class="pll-card wag-card">
+    <div class="pn" style="border-bottom:1px solid rgba(0,94,96,0.15);padding:8px 10px;display:flex;align-items:center;gap:7px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#C8FF08" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      WEEK AT A GLANCE<span style="margin-left:auto;font-size:9px;font-weight:500;color:var(--gry);text-transform:none">${s1.weekOf}</span>
+    </div>
+    <div class="wag-body">
+      <div class="wag-stats">
+        <div class="wag-stat-big"><div class="wag-val">${s1.weeklyTotal}</div><div class="wag-lbl">Total Students</div></div>
+        <div class="wag-stat-big"><div class="wag-val" style="color:var(--lim)">${s1.internalCourses+s1.oeCourses}</div><div class="wag-lbl">Active Classes</div></div>
+      </div>
+      <div class="wag-locs">
+        <div class="wag-loc-title">📍 LOCATIONS THIS WEEK</div>
+        <div class="wag-loc-grid">
+          <div class="wag-loc-item hlc"><div class="wag-loc-num">${s1.locationBreakdown.HLC}</div><div class="wag-loc-name">HLC<br>Houston</div></div>
+          <div class="wag-loc-item blc"><div class="wag-loc-num">${s1.locationBreakdown.BLC}</div><div class="wag-loc-name">BLC<br>Birr</div></div>
+          <div class="wag-loc-item klc"><div class="wag-loc-num">${s1.locationBreakdown.KLC}</div><div class="wag-loc-name">KLC<br>Kuwait</div></div>
+          <div class="wag-loc-item oth"><div class="wag-loc-num">${s1.locationBreakdown.Other}</div><div class="wag-loc-name">OE/SS<br>Remote</div></div>
+        </div>
+      </div>
+      <div class="wag-safety">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#C8FF08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="wag-safety-text">
+          <div class="wag-safety-status">${s1.minorIncidents===0?'ALL CLEAR':'ATTENTION'}</div>
+          <div class="wag-safety-sub">${s1.minorIncidents} incidents • ${s1.minorIncidents===0?'All KPIs on plan':'Review safety section'}</div>
+          ${histStr?`<div class="wag-safety-incidents">${histStr}</div>`:''}
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('s2').innerHTML=`
+  <div class="gh">
+    <div><div class="ht">Internal Training Roster — PLL Assignments</div><div class="hs">Week of ${s1.weekOf} | Internal + OE/SS</div></div>
+    <div class="hw">${s1.weeklyTotal} Students Total This Week</div>
+    <div class="hl">GE Vernova<br>HLC Command Board</div>
+  </div>
+  <div class="s2b">
+    <div class="pg">${cards}</div>
+    <div class="el">
+      <span><div class="eldot" style="background:var(--acc)"></div>Over-enrolled</span>
+      <span><div class="eldot" style="background:var(--grn)"></div>≥80%</span>
+      <span><div class="eldot" style="background:var(--amb)"></div>50–79%</span>
+      <span><div class="eldot" style="background:var(--red)"></div>&lt;50%</span>
+      <span><div class="eldot" style="background:var(--evm);opacity:.7"></div>OE/SS Contracted</span>
+    </div>
+  </div>`;
+}
+
+// ── SLIDE CONTROLLER ─────────────────────────────────────────────────────────
+const SLIDES=[{id:"s1",dur:30000},{id:"s2",dur:30000},{id:"s3",dur:35000},{id:"s4",dur:35000}];
+let cur=0,timer=null;
+const pb=document.getElementById("pb");
+const sc=document.getElementById("sc");
+
+function showSlide(i){
+  SLIDES.forEach((s,j)=>{
+    const el=document.getElementById(s.id);
+    if(el)el.classList.toggle("active",j===i);
+  });
+  cur=i;sc.textContent=(i+1)+"/"+SLIDES.length;
+  startProgress(SLIDES[i].dur);
+}
+
+function startProgress(ms){
+  clearInterval(timer);
+  pb.style.transition="none";pb.style.width="0%";
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+    pb.style.transition="width "+ms+"ms linear";pb.style.width="100%";
+  });});
+  timer=setInterval(()=>{showSlide((cur+1)%SLIDES.length);},ms);
+}
+
+// ── MAP FUNCTIONS (unchanged) ─────────────────────────────────────────────────
+async function loadWorld(){
+  if(window._wld)return window._wld;
+  const r=await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");
+  window._wld=await r.json();return window._wld;
+}
+
+function buildMap(cid,pins,opts){
+  const ct=document.getElementById(cid);if(!ct)return;
+  const W=ct.clientWidth||1400,H=ct.clientHeight||520;
+  d3.select(ct).selectAll("*").remove();
+  const svg=d3.select(ct).append("svg").attr("width",W).attr("height",H);
+  svg.append("rect").attr("width",W).attr("height",H).attr("fill","#E6F2F2");
+  const proj=d3.geoNaturalEarth1().scale(W/6.1).translate([W/2,H/2]);
+  const path=d3.geoPath().projection(proj);
+  svg.append("path").datum(d3.geoGraticule()()).attr("d",path).attr("fill","none").attr("stroke","rgba(0,94,96,.1)").attr("stroke-width",.5);
+  const cntrs=topojson.feature(window._wld,window._wld.objects.countries);
+  svg.selectAll(".c").data(cntrs.features).enter().append("path").attr("class","c").attr("d",path).attr("fill","#C5DFE0").attr("stroke","white").attr("stroke-width",.5);
+  const allC=(pins.week||pins.origin||[]).map(p=>p.count||p.students||0).filter(n=>n>0);
+  const rS=d3.scaleSqrt().domain([0,Math.max(...allC,1)]).range([0,opts.maxR||45]);
+  const pArr=pins.week||pins.origin||[];
+  const pG=svg.append("g");
+  for(const p of pArr){
+    const c=proj([p.lon,p.lat]);if(!c)continue;
+    const cnt=p.count||p.students||0;
+    const r=Math.max(18,rS(cnt));
+    const wk=!!pins.week;
+    pG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r).attr("fill",wk?"rgba(200,255,8,.88)":"rgba(0,94,96,.78)").attr("stroke","white").attr("stroke-width",2);
+    pG.append("text").attr("x",c[0]).attr("y",c[1]).attr("text-anchor","middle").attr("dominant-baseline","central").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",r>26?14:r>19?11:9).attr("fill",wk?"#005E60":"#C8FF08").text(cnt);
+    pG.append("text").attr("x",c[0]).attr("y",c[1]+r+9).attr("text-anchor","middle").attr("font-family","Inter,'Segoe UI',Arial,sans-serif").attr("font-size",8).attr("fill","#212121").attr("font-weight","600").text(p.country);
+  }
+  if(pins.lcs){
+    const lG=svg.append("g");
+    for(const lc of pins.lcs){
+      const c=proj([lc.lon,lc.lat]);if(!c)continue;
+      const r2=lc.students>0?Math.max(10,rS(lc.students)*.4):7;
+      lG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r2+4).attr("fill","none").attr("stroke","#C8FF08").attr("stroke-width",2.5).attr("stroke-dasharray","4,2");
+      lG.append("text").attr("x",c[0]).attr("y",c[1]-r2-10).attr("text-anchor","middle").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",10).attr("fill","#005E60").text(lc.name.split("—")[0].trim());
+    }
+  }
+  const leg=d3.select(ct).append("div").style("position","absolute").style("bottom","18px").style("left","14px").style("display","flex").style("gap","14px").style("background","rgba(0,94,96,.88)").style("padding","6px 14px").style("border-radius","6px");
+  if(opts.li){
+    for(const li of opts.li){
+      const it=leg.append("div").style("display","flex").style("align-items","center").style("gap","5px");
+      it.append("div").style("width","10px").style("height","10px").style("border-radius","50%").style("background",li.c);
+      it.append("div").style("font-size","9px").style("color","rgba(255,255,255,.85)").text(li.l);
+    }
+  }
+}
+
+async function initMaps(DATA){
+  await loadWorld();
+  document.getElementById('s3-hw').textContent=`${DATA.slide3.totalCountries} Countries · ${DATA.slide3.totalStudents} Students`;
+  document.getElementById('s4-hw').textContent=`${DATA.slide4.weekStudents} Students · ${DATA.slide4.weekClasses} Classes This Week`;
+  const s3=document.getElementById("map3-container");
+  if(s3)buildMap("map3-container",{origin:DATA.slide3.pins,lcs:DATA.slide3.learningCenters},{maxR:50,li:[{c:"rgba(0,94,96,.78)",l:"Student Origin — bubble = student count"},{c:"#C8FF08",l:"Learning Center"}]});
+  const s4=document.getElementById("map4-container");
+  if(s4)buildMap("map4-container",{week:DATA.slide4.weekDelivery},{maxR:55,li:[{c:"rgba(200,255,8,.88)",l:"This Week — customer training delivery locations"}]});
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  try {
+    const resp = await fetch('board-data.json?v=' + Date.now());
+    if (!resp.ok) throw new Error('board-data.json not found');
+    const DATA = await resp.json();
+    renderSlide1(DATA);
+    renderSlide2(DATA);
+    document.getElementById('loading').style.display = 'none';
+    showSlide(0);
+    await initMaps(DATA);
+    [["s3","map3-container"],["s4","map4-container"]].forEach(([sid])=>{
+      const obs=new MutationObserver(()=>{
+        if(document.getElementById(sid).classList.contains("active"))initMaps(DATA);
+      });
+      obs.observe(document.getElementById(sid),{attributes:true,attributeFilter:["class"]});
+    });
+  } catch(err) {
+    document.getElementById('loading').innerHTML =
+      '<div class="lt" style="color:#F87171">Board Data Error</div>' +
+      '<div class="ls">' + err.message + '</div>' +
+      '<div class="ls" style="margin-top:8px;opacity:.6">Upload board-data.json to the repository</div>';
+  }
+});
 </script>
 </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </html>
+</html>
