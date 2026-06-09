@@ -7,7 +7,7 @@
   "slide1": {
     "weekOf": "Jun 8 – 12, 2026",
     "weeklyTotal": 258,
-    "internalStudents": 210,
+    "internalStudents": 242,
     "oeStudents": 16,
     "internalCourses": 27,
     "oeCourses": 4,
@@ -471,7 +471,7 @@
   },
   "slide3": {
     "totalCountries": 36,
-    "totalStudents": 278,
+    "totalStudents": 258,
     "learningCenters": [
       {
         "name": "HLC — Houston",
