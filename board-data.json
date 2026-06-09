@@ -6,16 +6,16 @@
   },
   "slide1": {
     "weekOf": "Jun 8 – 12, 2026",
-    "weeklyTotal": 226,
+    "weeklyTotal": 258,
     "internalStudents": 210,
     "oeStudents": 16,
-    "internalCourses": 22,
+    "internalCourses": 27,
     "oeCourses": 4,
     "locationBreakdown": {
-      "HLC": 210,
-      "BLC": 0,
-      "KLC": 0,
-      "Other": 16
+      "HLC": 186,
+      "BLC": 32,
+      "KLC": 12,
+      "Other": 28
     },
     "safetyRag": "green",
     "minorIncidents": 0,
@@ -101,9 +101,9 @@
     "plls": [
       {
         "name": "Sherif Khalifa",
-        "totalClasses": 3,
-        "totalStudents": 35,
-        "internalStudents": 27,
+        "totalClasses": 5,
+        "totalStudents": 54,
+        "internalStudents": 46,
         "oeStudents": 8,
         "oeClasses": 1,
         "courses": [
@@ -122,6 +122,22 @@
             "enrollPct": 75,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "GE GT to Alstom GT Crossover 26-1",
+            "capacity": 12,
+            "enrolled": 8,
+            "enrollPct": 67,
+            "overEnrolled": false,
+            "locCat": "BLC"
+          },
+          {
+            "name": "GE to Alstom Generator Mechanical Crossover 26-2",
+            "capacity": 12,
+            "enrolled": 11,
+            "enrollPct": 92,
+            "overEnrolled": false,
+            "locCat": "BLC"
           }
         ],
         "oeCourses": [
@@ -141,9 +157,9 @@
       },
       {
         "name": "Pablo Schibli",
-        "totalClasses": 3,
-        "totalStudents": 20,
-        "internalStudents": 19,
+        "totalClasses": 4,
+        "totalStudents": 30,
+        "internalStudents": 29,
         "oeStudents": 1,
         "oeClasses": 1,
         "courses": [
@@ -162,6 +178,14 @@
             "enrollPct": 92,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "Expert Steam Turbine WSC/HRSG/CCPP 26-1",
+            "capacity": 10,
+            "enrolled": 10,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "BLC"
           }
         ],
         "oeCourses": [
@@ -221,9 +245,9 @@
       },
       {
         "name": "Mohammed Nizami",
-        "totalClasses": 5,
-        "totalStudents": 33,
-        "internalStudents": 28,
+        "totalClasses": 6,
+        "totalStudents": 36,
+        "internalStudents": 31,
         "oeStudents": 5,
         "oeClasses": 1,
         "courses": [
@@ -258,6 +282,14 @@
             "enrollPct": 63,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "GE Control to Alstom Control ADVANT Crossover 26-1",
+            "capacity": 6,
+            "enrolled": 3,
+            "enrollPct": 50,
+            "overEnrolled": false,
+            "locCat": "BLC"
           }
         ],
         "oeCourses": [
@@ -277,9 +309,9 @@
       },
       {
         "name": "Harry Hanson",
-        "totalClasses": 11,
-        "totalStudents": 109,
-        "internalStudents": 109,
+        "totalClasses": 12,
+        "totalStudents": 121,
+        "internalStudents": 121,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
@@ -370,6 +402,14 @@
             "enrollPct": 67,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "Craft Entry Level ST 26-4",
+            "capacity": 12,
+            "enrolled": 12,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "KLC"
           }
         ],
         "oeCourses": [],
@@ -443,13 +483,13 @@
         "name": "BLC — Birr",
         "lat": 47.36,
         "lon": 8.04,
-        "students": 0
+        "students": 32
       },
       {
         "name": "KLC — Kuwait",
         "lat": 29.3117,
         "lon": 47.4818,
-        "students": 0
+        "students": 12
       }
     ],
     "pins": [
