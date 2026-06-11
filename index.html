@@ -495,6 +495,26 @@ function startProgress(ms){
   timer=setInterval(()=>{showSlide((cur+1)%SLIDES.length);},ms);
 }
 
+// ── INTERACTION PAUSE ─────────────────────────────────────────────────────────
+// Mouse movement / mouse click / keypress pauses the auto-cycle; it auto-resumes
+// from the CURRENT slide after 60s of inactivity. Touch input is intentionally
+// ignored (pointerType !== "mouse"), so Clevertouch kiosk behavior is unchanged.
+let idleTimer=null,paused=false;
+const IDLE_MS=60000;
+function pauseCycle(){
+  if(!paused){
+    paused=true;
+    clearInterval(timer);
+    const w=getComputedStyle(pb).width;        // freeze progress bar where it is
+    pb.style.transition="none";pb.style.width=w;
+  }
+  clearTimeout(idleTimer);
+  idleTimer=setTimeout(()=>{paused=false;showSlide(cur);},IDLE_MS);
+}
+window.addEventListener("pointermove",e=>{if(e.pointerType==="mouse")pauseCycle();});
+window.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse")pauseCycle();});
+window.addEventListener("keydown",pauseCycle);
+
 // ── MAP FUNCTIONS (unchanged) ─────────────────────────────────────────────────
 async function loadWorld(){
   if(window._wld)return window._wld;
