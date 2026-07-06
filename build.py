@@ -77,15 +77,25 @@ INTERNAL_RULES = [
                   "eht", "frame 7", "frame 9", "osr", "combustion",
                   "mechanical crossover"]),
     ("pablo",    ["steam turbine", "hrsg", "ccpp", "wsc", "combined cycle",
-                  "steam power", " st "]),
+                  "steam power", " st ", "blading"]),
     ("mohammed", ["controls", "control", "mkvi", "mk vi", "mkvie",
                   "fieldbus", "advant", "i&c", "gic", "simulator",
                   "site manager"]),
     ("ben",      ["excitation", "generator", "winding", "rso",
                   "surge oscillograph", "retaining ring", "end winding",
-                  "biscuit"]),
-    ("greg",     ["aeroderivative", "aero", "lm2500", "lm6000", "lm500"]),
+                  "biscuit", "ex2100"]),
+    ("greg",     ["aeroderivative", "aero", "lm2500", "lm6000", "lm500",
+                  "lms100"]),
     ("linda",    ["cte", "workforce", "readiness", "achieving customer"]),
+]
+
+# Vendor-led / non-technical classes — count in weekly totals only, never
+# attributed to a PLL card (per Jim, Jul 2026). Matched as substrings of the
+# lowercased class name.
+VENDOR_LED_KEYWORDS = [
+    "achieving customer success",
+    "field engineer - onboarding",
+    "train the trainer",
 ]
 
 # ── Customer (OE / SS) routing — by the TECHNOLOGY column only (per CLAUDE.md) ─
@@ -371,7 +381,18 @@ def route_pll(class_name):
     """
     name = " " + class_name.lower() + " "
 
-    # Craft classes always route to Harry (he owns all craft training).
+    # Vendor-led / non-technical classes: totals only, no PLL attribution.
+    for kw in VENDOR_LED_KEYWORDS:
+        if kw in name:
+            return "__vendor__", False
+
+    # CTE check MUST precede the craft rule — CTE-program classes
+    # (e.g. "Craft Entry Level CTE Program") belong to Linda, not Harry.
+    for kw in (" cte ", "cte program", "workforce", "readiness"):
+        if kw in name:
+            return "linda", False
+
+    # Craft classes otherwise always route to Harry (he owns all craft training).
     if "craft" in name:
         return "harry", False
 
@@ -555,6 +576,7 @@ def process_enrollment(path, week_start, week_end):
     location_counts  = {"HLC": 0, "BLC": 0, "KLC": 0, "Other": 0}
     pll_classes      = {k: [] for k in PLL_NAMES}
     flags            = []
+    vendor_only      = []
     total_internal   = 0
     total_oe         = 0
     internal_courses = 0
@@ -577,6 +599,13 @@ def process_enrollment(path, week_start, week_end):
             country_counts[country] = country_counts.get(country, 0) + count
 
         pll_key, flagged = route_pll(course)
+
+        if pll_key == "__vendor__":
+            vendor_only.append(
+                f"'{course}' ({loc_cat}, {students} students) "
+                f"— vendor-led, counted in totals only"
+            )
+            continue
 
         if flagged:
             flags.append(
@@ -601,6 +630,7 @@ def process_enrollment(path, week_start, week_end):
         "location_counts":  location_counts,
         "pll_classes":      pll_classes,
         "flags":            flags,
+        "vendor_only":      vendor_only,
         "total_internal":   total_internal,
         "total_oe":         total_oe,
         "internal_courses": internal_courses,
@@ -1306,6 +1336,13 @@ def build(week_override=None):
         print(f"      → counted: {ap['inProgress']} inProg + {ap['delayed']} delayed "
               f"+ {ap['notStarted']} notStarted = {ap['deliveryTotal']} "
               f"(prior board: 11 / 32 / 48 = 91)")
+        print()
+
+    if enr.get("vendor_only"):
+        print(f"  ℹ️   VENDOR-LED — {len(enr['vendor_only'])} class(es) counted "
+              "in totals only (no PLL card):")
+        for note in enr["vendor_only"]:
+            print(f"      → {note}")
         print()
 
     if all_flags:
