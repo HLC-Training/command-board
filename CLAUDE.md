@@ -10,59 +10,65 @@ Read it fully before taking any action.
 
 - **Repo:** HLC-Training/command-board (GitHub Pages, root/main)
 - **Live:** https://hlc-training.github.io/command-board/
-- **Template:** index.html — NEVER MODIFY THIS FILE
-- **Data file:** board-data.json — updated every Monday
+- **Template:** index.html — do not restructure. Content changes (like the
+  slide-1 Xyleme card) happen only when Jim explicitly briefs them.
+- **Data file:** board-data.json — built weekly on the `preview` branch
 - **Build tool:** build.py — the ONLY way board-data.json gets built
-- **Source files:** data/ folder (7 xlsx files)
+- **Source files:** 5 Smartsheet sheets (live API) + 3 xlsx files in data/
 
 ---
 
-## Monday Workflow — Trigger: "Build this week's board"
+## Friday Workflow — GitHub Actions (no local build needed)
 
-1. **`git pull` first** — Jim uploads weekly data files (and sometimes edits)
-   via GitHub web, so the local clone may be far behind origin
-2. Confirm all 7 source files are present in data/
-3. If any are missing — STOP and notify Jim. Do not proceed.
-4. Run the canonical build tool:
+1. Jim uploads 3 files to data/ on `main` via GitHub web UI
+   (Bowler + 2 UDCs — see Required Sources below)
+2. Jim triggers **Build Command Board** workflow with `week_of`
+   (the Monday, YYYY-MM-DD) → builds board-data.json on `preview`
+3. Jim reviews: Settings → Pages → branch `preview` → check live URL
+4. Jim triggers **Promote Preview to Main** → board goes live
+5. Jim switches Pages branch back to `main`
+
+Resolve every UNMATCHED flag in the build summary (workflow run log)
+before promoting — routing fixes go in build.py, never one-off JSON edits.
+
+A local build still works when needed:
 
    ```
-   PYTHONUTF8=1 python build.py --week YYYY-MM-DD
+   SMARTSHEET_API_TOKEN=... PYTHONUTF8=1 python build.py --week YYYY-MM-DD
    ```
 
-   (Monday of the target week. Python 3.12 lives at
-   `C:\Users\Jim\AppData\Local\Programs\Python\Python312\python.exe` —
-   not on PATH. `PYTHONUTF8=1` is required or the script crashes on
-   box-drawing characters.)
-
-   Never hand-build board-data.json — hand-built boards have produced
-   missing `totalClasses`, a malformed Week at a Glance entry, wrong
-   slide 3 data, and inflated student counts (counted Withdrawals).
-5. Present the build summary for Jim's review — resolve every
-   UNMATCHED flag before committing (routing fixes go in build.py)
-6. Wait for approval ("approved" or "commit it")
-7. Commit board-data.json to repo root
-8. Report completion and produce Cowork archive prompt
+   (`PYTHONUTF8=1` is required or the script crashes on box-drawing
+   characters. Never hand-build board-data.json — hand-built boards have
+   produced missing `totalClasses`, a malformed Week at a Glance entry,
+   wrong slide 3 data, and inflated student counts.)
 
 ---
 
-## Required Source Files (data/ folder)
+## Required Sources
 
-Confirm all 7 are present before building.
+**Live from the Smartsheet API** (SMARTSHEET_API_TOKEN; sheet IDs in build.py):
+
+| Sheet | Feeds |
+|------|-------|
+| Enrollment Database | Slides 1–3 student/class counts, PLL cards |
+| OFS Training Action Plan Tracker | Action Plans RAG + panel |
+| CapEx | CapEx RAG + panel |
+| Xyleme Modernization Tracker | Xyleme card (modules ring + recently published) |
+| Xyleme Exams Transfer Tracker | Xyleme card (exams pipeline) |
+
+**Manual xlsx uploads to data/** — confirm all 3 before building.
 File names include date stamps that change weekly — match by pattern:
 
 | File | Pattern to match |
 |------|-----------------|
-| Enrollment Database | contains `Enrollment Database` |
 | CM Customer Demand List | contains `CMCustomerDemandList` or `CM Customer` |
 | Open Enrollment Class List | contains `ClassList` |
 | 2026 Bowler Chart | contains `Bowler Chart` |
-| OFS Training Action Plan Tracker | contains `Action Plan Tracker` |
-| CapEx | contains `Capex` or `CapEx` |
-| Weekly Report | contains `Weekly Report` |
 
 Ignore any placeholder `.txt` file (`placeholder.txt`, `placehilder.txt`, …) — not a source file.
-Weekly uploads often carry `(N)` suffixes (e.g. `Enrollment Database (5).xlsx`) — the patterns above still match.
-If any of the 7 patterns go unmatched — STOP and notify Jim.
+Weekly uploads often carry `(N)` suffixes — the patterns above still match.
+If any of the 3 patterns go unmatched — STOP and notify Jim.
+The Weekly Report is retired — do not reference or request it.
 
 ---
 
@@ -249,12 +255,14 @@ build.py preserves these from the existing board-data.json instead of
 recomputing (no reliable weekly source). The build summary flags them
 under "VERIFY MANUALLY":
 
-- **CapEx** ($6.07M / 26 projects as of Jul 6, 2026 — Capex.xlsx has no
-  clean summary source)
 - **Bowler KPIs + Bowler RAG** (see Bowler KPI Rules)
 - **safetyKPIs** and **safetyLog**
 - **Per-PLL lookAhead30** (currently all zeros — the Jul 6 hand-built
   board dropped them; needs manual re-entry if Jim wants them back)
+
+CapEx is NO LONGER carried forward — it is computed live from the CapEx
+Smartsheet (Year 2026, Order ≥ 3 line items, Cancelled excluded; budget
+totals from the Order-1 summary row).
 
 Because preservation reads the CURRENT board-data.json, never delete or
 hand-strip that file — a bad board propagates into the next build.
@@ -272,12 +280,16 @@ hand-strip that file — a bad board propagates into the next build.
 
 ## Commit Format
 
-After Jim approves:
+Weekly board data is committed by the **Build Command Board** workflow to
+the `preview` branch and reaches `main` via **Promote Preview to Main** —
+never push board-data.json straight to `main`.
+
+For a local build committed manually (rare):
 
 ```
 git add board-data.json
 git commit -m "Week of [DATE] — [N] students, [N] classes"
-git push origin main
+git push origin preview
 ```
 
 ---
@@ -308,11 +320,13 @@ Commit: [commit hash]
 
 ## File Protection
 
-- **index.html** — NEVER TOUCH. Ever.
+- **index.html** — do not touch during a build run; structural changes
+  only on Jim's explicit brief (last change: Xyleme card, Jul 2026)
 - **CLAUDE.md** — Do not modify during a build run
 - **board-data.json** — The only file written during a build
 - **build.py** — routing/logic fixes are allowed but go in a SEPARATE
   commit from the weekly board-data.json commit
+- **main branch** — weekly data reaches it only via Promote Preview to Main
 
 ---
 

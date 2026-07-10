@@ -1,0 +1,53 @@
+name: Build Command Board
+
+on:
+  workflow_dispatch:          # Manual trigger (Jim runs this Friday morning)
+    inputs:
+      week_of:
+        description: 'Week of date (YYYY-MM-DD, the Monday)'
+        required: true
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: preview
+          token: ${{ secrets.COMMAND_BOARD_TOKEN }}
+
+      # Jim uploads the weekly xlsx files to data/ on main via the GitHub web
+      # UI — pull them onto preview so the build always uses the latest files.
+      - name: Sync data files from main
+        run: |
+          git fetch origin main
+          git checkout origin/main -- data/
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install smartsheet-python-sdk openpyxl
+
+      - name: Build board-data.json
+        env:
+          SMARTSHEET_API_TOKEN: ${{ secrets.SMARTSHEET_API_TOKEN }}
+          WEEK_OF: ${{ github.event.inputs.week_of }}
+          PYTHONUTF8: '1'
+        run: python build.py
+
+      - name: Commit to preview branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add board-data.json data/
+          if git diff --staged --quiet; then
+            echo "No changes to commit — board-data.json is already current."
+          else
+            git commit -m "Preview: Week of ${{ github.event.inputs.week_of }} — built $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git push origin preview
+          fi
