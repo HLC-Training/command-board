@@ -1,0 +1,27 @@
+name: Promote Preview to Main
+
+on:
+  workflow_dispatch:          # Jim triggers this after reviewing preview
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.COMMAND_BOARD_TOKEN }}
+          fetch-depth: 0
+
+      # A plain merge (not --ff-only) because main routinely has commits
+      # preview lacks — the weekly data-file uploads land on main first.
+      # Content conflicts can't happen in practice: the build workflow syncs
+      # data/ from main before committing, so both sides carry identical files.
+      - name: Merge preview into main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin preview
+          git merge origin/preview -m "Promote preview to main — $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push origin main

@@ -6,18 +6,27 @@ GE Vernova | Houston Learning Center
 Usage:
   python build.py                     # auto-detect current week (Mon–Fri)
   python build.py --week 2026-06-08   # specify Monday of target week
+  WEEK_OF=2026-06-08 python build.py  # same, via env (GitHub Actions)
 
-Reads 7 xlsx files from data/, generates board-data.json in repo root.
-Claude Code reviews the build summary with Jim before committing.
+Data sources:
+  • Smartsheet API (SMARTSHEET_API_TOKEN env var required):
+    Enrollment Database, Action Plan Tracker, CapEx,
+    Xyleme Modernization Tracker, Exams Transfer Tracker
+  • data/ xlsx files (manual upload, 3 files):
+    Bowler Chart, CM Customer Demand List (OE), Class List (SS)
+
+Generates board-data.json in repo root. Run locally or via the
+"Build Command Board" GitHub Actions workflow (commits to preview).
 """
 
 import json
+import os
 import sys
 import argparse
 from datetime import date, timedelta
 from pathlib import Path
 
-# ── auto-install openpyxl if needed ────────────────────────────────────────
+# ── auto-install dependencies if needed ────────────────────────────────────
 try:
     import openpyxl
 except ImportError:
@@ -30,11 +39,32 @@ except ImportError:
     )
     import openpyxl
 
+try:
+    import smartsheet
+except ImportError:
+    import subprocess
+    print("Installing smartsheet-python-sdk…")
+    subprocess.run(
+        [sys.executable, "-m", "pip", "install", "smartsheet-python-sdk",
+         "--break-system-packages", "--quiet"],
+        check=True
+    )
+    import smartsheet
+
 
 # ══════════════════════════════════════════════════════════════════════════
 # CONFIGURATION
 # Update this section when PLLs, rules, or thresholds change.
 # ══════════════════════════════════════════════════════════════════════════
+
+# ── Smartsheet sheet IDs (pulled live at build time) ───────────────────────
+SMARTSHEET_SHEETS = {
+    "enrollment":    6967870172909444,   # Enrollment Database
+    "actionplans":   1362792971980676,   # OFS Training Action Plan Tracker
+    "capex":         3961523206573956,   # CapEx
+    "modernization": 3204043720576900,   # Xyleme Training Modernization Tracker
+    "exams":         8868469282918276,   # Xyleme Exams Transfer Tracker
+}
 
 # Student statuses that count as active / in-seat
 ACTIVE_STATUSES = {"registered", "in progress", "completed", "auditor"}
@@ -303,6 +333,83 @@ def load_sheet(path, sheet_index=0):
     return list(rows[0]), rows[1:]
 
 
+# ══════════════════════════════════════════════════════════════════════════
+# SMARTSHEET API ACCESS
+# ══════════════════════════════════════════════════════════════════════════
+
+def smartsheet_client():
+    """Create the Smartsheet client from the SMARTSHEET_API_TOKEN env var."""
+    token = os.environ.get("SMARTSHEET_API_TOKEN", "").strip()
+    if not token:
+        print("⛔  SMARTSHEET_API_TOKEN is not set — cannot pull live data.")
+        print("    Locally: set the env var. In GitHub Actions: the workflow")
+        print("    passes it from repo secrets automatically.")
+        sys.exit(1)
+    client = smartsheet.Smartsheet(token)
+    client.errors_as_exceptions(True)
+    return client
+
+
+def _cell_value(cell):
+    """
+    Extract a plain Python value from a Smartsheet cell.
+    MULTI_PICKLIST / MULTI_CONTACT cells carry their values in object_value —
+    join them with ", " so downstream string matching works like the old
+    xlsx exports did.
+    """
+    ov = getattr(cell, "object_value", None)
+    if ov is not None:
+        vals = getattr(ov, "values", None)
+        if vals:
+            try:
+                return ", ".join(
+                    str(getattr(v, "name", None) or getattr(v, "email", None) or v)
+                    for v in vals
+                )
+            except TypeError:
+                pass
+    if cell.value is not None:
+        return cell.value
+    return cell.display_value
+
+
+def fetch_sheet_table(ss, sheet_key, label):
+    """
+    Fetch a Smartsheet sheet → (headers, rows, depths).
+
+    headers: column titles (same strings as the old xlsx export headers,
+             so find_col()-based processing works unchanged)
+    rows:    list of tuples of cell values in column order
+    depths:  per-row hierarchy depth computed from the API's native
+             parent-row links (0 = top level, 1 = child, …). This replaces
+             the sheets' formula-based Hierarchy/Level columns, which go
+             blank on rows without children.
+    """
+    print(f"  Fetching {label} from Smartsheet…")
+    sheet = ss.Sheets.get_sheet(
+        SMARTSHEET_SHEETS[sheet_key], level=2, include="objectValue"
+    )
+    headers = [c.title for c in sheet.columns]
+    col_pos = {c.id: c.index for c in sheet.columns}
+    n = len(headers)
+
+    rows, depths = [], []
+    depth_by_id = {}
+    for row in sheet.rows:
+        parent = getattr(row, "parent_id", None)
+        d = depth_by_id.get(parent, -1) + 1 if parent else 0
+        depth_by_id[row.id] = d
+        vals = [None] * n
+        for cell in row.cells:
+            i = col_pos.get(cell.column_id)
+            if i is not None:
+                vals[i] = _cell_value(cell)
+        rows.append(tuple(vals))
+        depths.append(d)
+    print(f"    → {len(rows)} rows")
+    return headers, rows, depths
+
+
 def find_col(headers, *candidates):
     """
     Find 0-based column index by header name. EXACT matches win over substring
@@ -335,9 +442,12 @@ def to_date(val):
         return val
     if isinstance(val, str):
         from datetime import datetime
+        s = val.strip()
+        if "T" in s:               # ISO datetime from the Smartsheet API
+            s = s.split("T")[0]
         for fmt in ("%Y-%m-%d", "%m/%d/%Y", "%d/%m/%Y", "%Y/%m/%d"):
             try:
-                return datetime.strptime(val.strip(), fmt).date()
+                return datetime.strptime(s, fmt).date()
             except ValueError:
                 continue
     return None
@@ -469,19 +579,16 @@ def format_week_label(ws, we):
 # FILE DISCOVERY
 # ══════════════════════════════════════════════════════════════════════════
 
+# Manual xlsx uploads — everything else comes live from the Smartsheet API.
 SOURCE_FILES = {
-    "enrollment":  ["enrollment database"],
-    "demand":      ["cmcustomerdemandlist", "cm customer"],
-    "classlist":   ["classlist"],
-    "bowler":      ["bowler chart"],
-    "actionplans": ["action plan tracker"],
-    "capex":       ["capex"],
-    "weekly":      ["weekly report"],
+    "demand":    ["cmcustomerdemandlist", "cm customer"],
+    "classlist": ["classlist"],
+    "bowler":    ["bowler chart"],
 }
 
 
 def discover_files():
-    """Find all 7 source files. Returns (found dict, missing list)."""
+    """Find the 3 manual source files. Returns (found dict, missing list)."""
     found, missing = {}, []
     for key, patterns in SOURCE_FILES.items():
         f = find_file(patterns)
@@ -496,17 +603,19 @@ def discover_files():
 # ENROLLMENT PROCESSING
 # ══════════════════════════════════════════════════════════════════════════
 
-def process_enrollment(path, week_start, week_end):
+def process_enrollment(headers, rows, week_start, week_end):
     """
-    Read Enrollment Database and return all data needed for the board.
+    Process the Enrollment Database (live Smartsheet pull) and return all
+    data needed for the board. Counting rules are unchanged from the xlsx
+    era: in-session window (Start <= week_end AND Finish >= week_start) and
+    per-student active-status filtering — see CLAUDE.md.
 
     Returns dict with:
       location_counts, pll_classes, flags,
       total_internal, total_oe, internal_courses, oe_courses,
       country_counts
     """
-    print("  Reading Enrollment Database…")
-    headers, rows = load_sheet(path)
+    print("  Processing Enrollment Database…")
 
     # Detect columns by header name
     c = {
@@ -809,28 +918,28 @@ def process_bowler(path):
 # ACTION PLANS PROCESSING
 # ══════════════════════════════════════════════════════════════════════════
 
-def process_action_plans(path):
+def process_action_plans(headers, rows):
     """
-    Extract action plan status counts from TOP-LEVEL PARENT rows only.
+    Extract action plan status counts from TOP-LEVEL PARENT rows only
+    (live Smartsheet pull).
 
     The tracker is hierarchical (parent + child rows). Child rows are sub-tasks
-    and must be excluded from the rollup — only parent rows (Is Parent = 1)
+    and must be excluded from the rollup — only top-level rows (Parent_Level 0)
     are reportable action plans.
 
     Status comes from TWO columns, both required:
-      • 'Overall Status'  → Complete / In Progress / Not Started / Cancelled / On Hold
-      • 'Current Status'  → On Track / Delayed / At Risk / …  (drives "delayed")
+      • 'Overall Status'  → Not Started / In Progress / On Hold / Complete / Cancelled
+      • 'Current Status'  → Not Started / On Track / At Risk / Delayed
 
-    An item is 'delayed' if its Current Status is Delayed or At Risk (regardless
-    of Overall Status). Complete / Cancelled / On Hold / blank Overall Status are
-    excluded from the active total.
+    Plus the 'At Risk' checkbox column and 'Current Finish' (drives overdue
+    detection and the slide sort order).
 
-    NOTE: this does not exactly reproduce the prior curated 91/32/48 — the build
-    summary prints the distinct status values + counts so Jim can confirm the
-    filter. See CLAUDE.md.
+    RAG:
+      • red    — 2+ active APs Delayed or overdue
+      • amber  — any active AP Delayed, overdue, or At Risk
+      • green  — everything on track
     """
-    print("  Reading Action Plan Tracker (parent rows only)…")
-    headers, rows = load_sheet(path)
+    print("  Processing Action Plan Tracker (parent rows only)…")
 
     col_plevel   = find_col(headers, "parent_level", "parent level")
     col_parentid = find_col(headers, "parentid", "parent id")
@@ -838,6 +947,8 @@ def process_action_plans(path):
     col_overall  = find_col(headers, "overall status")
     col_current  = find_col(headers, "current status")
     col_title    = find_col(headers, "improvement", "description", "title")
+    col_atrisk   = find_col(headers, "at risk")
+    col_finish   = find_col(headers, "current finish")
 
     def get(row, idx):
         return row[idx] if idx is not None and idx < len(row) else None
@@ -871,6 +982,9 @@ def process_action_plans(path):
     items        = []
     overall_seen = {}
     current_seen = {}
+    today        = date.today()
+    n_delayed_or_overdue = 0      # drives red
+    n_at_risk            = 0      # drives amber
 
     for row in rows:
         if not is_top_level(row):
@@ -883,6 +997,15 @@ def process_action_plans(path):
         ol, cl = overall.lower(), current.lower()
         if ol in EXCLUDE_OVERALL:
             continue  # not an active reportable item
+
+        finish  = to_date(get(row, col_finish))
+        overdue = finish is not None and finish < today
+        at_risk = bool(get(row, col_atrisk)) or cl == "at risk"
+
+        if cl == "delayed" or overdue:
+            n_delayed_or_overdue += 1
+        if at_risk:
+            n_at_risk += 1
 
         if cl in DELAYED_VOCAB:
             counts["delayed"] += 1
@@ -899,17 +1022,32 @@ def process_action_plans(path):
         if bucket in ("inProgress", "delayed"):
             title = str(get(row, col_title) or "").strip()
             if title:
-                items.append({"title": title, "currentStatus": current or overall})
+                items.append({
+                    "title":         title,
+                    "currentStatus": current or overall,
+                    "_finish":       finish,
+                })
+
+    # Slide content: active APs sorted by Current Finish ascending
+    # (blank finish dates sort last).
+    items.sort(key=lambda i: (i["_finish"] is None, i["_finish"] or today))
+    for i in items:
+        del i["_finish"]
 
     total = sum(counts.values())
-    ap_rag = "green" if counts["delayed"] == 0 else \
-             "amber" if counts["delayed"] <= 5 else "red"
+    if n_delayed_or_overdue >= 2:
+        ap_rag = "red"
+    elif n_delayed_or_overdue or n_at_risk:
+        ap_rag = "amber"
+    else:
+        ap_rag = "green"
 
     return {
         "deliveryTotal":    total,
         "inProgress":       counts["inProgress"],
         "delayed":          counts["delayed"],
         "notStarted":       counts["notStarted"],
+        "atRisk":           n_at_risk,
         "inProgressItems":  items[:12],
         "rag":              ap_rag,
         "statusValues":     {"overall": overall_seen, "current": current_seen},
@@ -920,34 +1058,195 @@ def process_action_plans(path):
 # CAPEX PROCESSING
 # ══════════════════════════════════════════════════════════════════════════
 
-def process_capex(path, existing):
+def process_capex(headers, rows):
     """
-    PRESERVE the curated CapEx values from the existing board.
+    Compute CapEx from the live Smartsheet (no longer carried forward).
 
-    The board's CapEx figures ($5.12M / 20 projects, with a clean Equipment /
-    Modernization category split) are a curated subset that maps to NO clean
-    filter of Capex.xlsx — the raw file mixes multiple years, rollup/summary
-    rows ("CAPEX 2025 Overall"), mostly-blank statuses, and multi-line category
-    cells. Summing it yields ~$40M / 153 rows, which is wrong.
+    Row structure (hierarchy encoded in the 'Order' column = ancestors + 1):
+      • Order 1  — year summary row ("CAPEX 2026 Overall") → budget totals
+      • Order 2  — category subtotal rows                  → skipped
+      • Order 3+ — actual line items                        → project list
 
-    Per direction: rather than recompute from raw data, carry the existing
-    board-data.json CapEx section forward unchanged and flag it in the build
-    summary for manual verification each week. Update data/Capex.xlsx handling
-    here only once a reliable summary source is identified.
+    Filters: Year == 2026, Status != Cancelled.
+    Budget total / spend come from the Order-1 summary row (Cost Estimate
+    vs Spend = Actual + Projected). RAG stays amber per existing board logic.
     """
-    print("  CapEx — preserving curated values from existing board (not recomputed)…")
-    if existing and "capex" in existing:
-        cx = dict(existing["capex"])
-        cx["rag"] = "amber"          # for overallRAGs; not written into the section
-        cx["_preserved"] = True
-        return cx
+    print("  Processing CapEx (live Smartsheet)…")
 
-    print("  ⚠️  No existing board-data.json to preserve — CapEx left empty; "
-          "populate manually.")
+    col_year     = find_col(headers, "year")
+    col_order    = find_col(headers, "order")
+    col_project  = find_col(headers, "project")
+    col_cost     = find_col(headers, "cost estimate")
+    col_priority = find_col(headers, "priority")
+    col_category = find_col(headers, "category")
+    col_status   = find_col(headers, "status")
+    col_spend    = find_col(headers, "spend")
+
+    def get(row, idx):
+        return row[idx] if idx is not None and idx < len(row) else None
+
+    def fnum(v):
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return None
+
+    CURRENT_YEAR = 2026.0
+    DONE_STATUS  = "po received - all done"
+
+    total_budget = 0.0
+    total_spend  = 0.0
+    items        = []
+    by_category  = {}
+    high_pri     = 0
+
+    for row in rows:
+        if fnum(get(row, col_year)) != CURRENT_YEAR:
+            continue
+        order = fnum(get(row, col_order))
+        if order is None:
+            continue
+
+        if order == 1:                      # year summary row → budget totals
+            total_budget += fnum(get(row, col_cost)) or 0
+            total_spend  += fnum(get(row, col_spend)) or 0
+            continue
+        if order < 3:                       # category subtotal rows
+            continue
+
+        status = str(get(row, col_status) or "").strip()
+        if status.lower() == "cancelled":
+            continue
+
+        project  = str(get(row, col_project) or "").strip()
+        if not project:
+            continue
+        cost     = fnum(get(row, col_cost)) or 0
+        priority = str(get(row, col_priority) or "").strip()
+        # MULTIPICKLIST — attribute to the first listed category so category
+        # bars never double-count a project.
+        category = str(get(row, col_category) or "").split(",")[0].strip() or "Other"
+
+        if priority == "High":
+            high_pri += 1
+        cat = by_category.setdefault(category, {"cost": 0, "count": 0})
+        cat["cost"]  += cost
+        cat["count"] += 1
+
+        items.append({
+            "project":  project,
+            "cost":     cost,
+            "category": category,
+            "priority": priority,
+            "_active":  bool(status) and status.lower() != DONE_STATUS,
+        })
+
+    if total_budget == 0:                   # no summary row → fall back to items
+        total_budget = sum(i["cost"] for i in items)
+
+    # Slide list: in-flight items (status set, not done), biggest cost first
+    in_progress = sorted(
+        (dict(i) for i in items if i["_active"]),
+        key=lambda i: -i["cost"]
+    )
+    for i in in_progress:
+        del i["_active"]
+
     return {
-        "totalBudget": 0, "activeProjects": 0, "highPriorityCount": 0,
-        "byCategory": {}, "inProgressItems": [], "rag": "amber",
-        "_preserved": False,
+        "totalBudget":       round(total_budget),
+        "totalSpend":        round(total_spend),
+        "activeProjects":    len(items),
+        "highPriorityCount": high_pri,
+        "byCategory":        {k: {"cost": round(v["cost"]), "count": v["count"]}
+                              for k, v in sorted(by_category.items(),
+                                                 key=lambda kv: -kv[1]["cost"])},
+        "inProgressItems":   in_progress[:12],
+        "rag":               "amber",
+    }
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# XYLEME MODERNIZATION (Slide 1 card)
+# ══════════════════════════════════════════════════════════════════════════
+
+# Exam pipeline display buckets ← raw Exams Transfer Tracker statuses.
+# Raw statuses not listed here (N/A, On Hold, blank) count toward the total
+# only; the build summary prints them so drift is visible.
+EXAM_STATUS_BUCKETS = {
+    "not received":              "notReceived",
+    "not started":               "notStarted",
+    "in progress":               "inProgress",
+    "sent for sme review":       "underReview",
+    "sent for internal review":  "underReview",
+    "internal review completed": "approved",
+    "sme review completed":      "approved",
+    "published":                 "published",
+}
+
+
+def process_xyleme(ss):
+    """
+    Build the slide-1 Xyleme card data from two Smartsheet trackers.
+
+    • Modernization Tracker — depth-1 rows are modules ("Hierarchy 1.0");
+      ring chart = Completed vs total, scroller = 10 most recently
+      completed by End Date.
+    • Exams Transfer Tracker — depth-1 rows are individual exams
+      ("Level 1.0"); counted by status into pipeline buckets.
+    """
+    # ── Modernization Tracker ────────────────────────────────────────────
+    headers, rows, depths = fetch_sheet_table(ss, "modernization",
+                                              "Xyleme Modernization Tracker")
+    col_project = find_col(headers, "project")
+    col_status  = find_col(headers, "status")
+    col_end     = find_col(headers, "end date")
+    col_pl      = find_col(headers, "product line")
+
+    def get(row, idx):
+        return row[idx] if idx is not None and idx < len(row) else None
+
+    modules = [r for r, d in zip(rows, depths) if d == 1]
+    completed = [r for r in modules
+                 if str(get(r, col_status) or "").strip().lower() == "completed"]
+
+    def end_key(r):
+        d = to_date(get(r, col_end))
+        return d.isoformat() if d else ""
+
+    recently = sorted(completed, key=end_key, reverse=True)[:10]
+    recently_published = []
+    for r in recently:
+        d = to_date(get(r, col_end))
+        recently_published.append({
+            "name": str(get(r, col_project) or "").strip(),
+            "pl":   str(get(r, col_pl) or "").strip(),
+            "date": d.isoformat() if d else "",
+        })
+
+    # ── Exams Transfer Tracker ───────────────────────────────────────────
+    eh, erows, edepths = fetch_sheet_table(ss, "exams",
+                                           "Xyleme Exams Transfer Tracker")
+    col_estatus = find_col(eh, "status")
+
+    exams = [r for r, d in zip(erows, edepths) if d == 1]
+    counts = {"notReceived": 0, "notStarted": 0, "inProgress": 0,
+              "underReview": 0, "approved": 0, "published": 0}
+    unbucketed = {}
+    for r in exams:
+        raw = str(get(r, col_estatus) or "").strip()
+        bucket = EXAM_STATUS_BUCKETS.get(raw.lower())
+        if bucket:
+            counts[bucket] += 1
+        else:
+            unbucketed[raw or "(blank)"] = unbucketed.get(raw or "(blank)", 0) + 1
+    counts["total"] = len(exams)
+
+    return {
+        "modulesComplete":   len(completed),
+        "modulesTotal":      len(modules),
+        "exams":             counts,
+        "recentlyPublished": recently_published,
+        "_unbucketed":       unbucketed,   # build-summary diagnostics only
     }
 
 
@@ -1101,8 +1400,8 @@ def build(week_override=None):
     week_label = format_week_label(week_start, week_end)
     print(f"  Week: {week_label}\n")
 
-    # ── File discovery ───────────────────────────────────────────────────
-    print("Checking source files…")
+    # ── File discovery (3 manual uploads) ────────────────────────────────
+    print("Checking manual source files (data/)…")
     files, missing = discover_files()
     for key, path in files.items():
         print(f"  ✅  {key:<12}  {path.name}")
@@ -1119,12 +1418,23 @@ def build(week_override=None):
     # ── Load existing board (for preserving curated sections) ────────────
     existing = load_existing_board()
 
+    # ── Pull live Smartsheet data ────────────────────────────────────────
+    print("Pulling live Smartsheet data…")
+    client = smartsheet_client()
+    enr_headers, enr_rows, _ = fetch_sheet_table(client, "enrollment",
+                                                 "Enrollment Database")
+    ap_headers, ap_rows, _   = fetch_sheet_table(client, "actionplans",
+                                                 "Action Plan Tracker")
+    cx_headers, cx_rows, _   = fetch_sheet_table(client, "capex", "CapEx")
+    xyleme = process_xyleme(client)
+    print()
+
     # ── Process ──────────────────────────────────────────────────────────
-    enr  = process_enrollment(files["enrollment"], week_start, week_end)     # Internal
+    enr  = process_enrollment(enr_headers, enr_rows, week_start, week_end)   # Internal
     oe   = process_customer_classes(files["demand"],    "OE", week_start, week_end)  # Open Enrollment
     ss   = process_customer_classes(files["classlist"], "SS", week_start, week_end)  # Site Specific
-    ap   = process_action_plans(files["actionplans"])
-    cx   = process_capex(files["capex"], existing)
+    ap   = process_action_plans(ap_headers, ap_rows)
+    cx   = process_capex(cx_headers, cx_rows)
 
     # KPIs / Bowler — preserve curated values from the existing board if present
     # (the Bowler Chart parse is unreliable; Jim maintains these manually).
@@ -1193,7 +1503,7 @@ def build(week_override=None):
     # ── Assemble JSON ────────────────────────────────────────────────────
     board = {
         "meta": {
-            "specVersion": "v2.1",
+            "specVersion": "v2.2",
             "buildDate":   date.today().isoformat(),
             "weekOf":      week_label,
         },
@@ -1261,10 +1571,17 @@ def build(week_override=None):
         },
         "capex": {
             "totalBudget":        cx["totalBudget"],
+            "totalSpend":         cx.get("totalSpend", 0),
             "activeProjects":     cx["activeProjects"],
             "highPriorityCount":  cx["highPriorityCount"],
             "byCategory":         cx["byCategory"],
             "inProgressItems":    cx["inProgressItems"],
+        },
+        "xyleme": {
+            "modulesComplete":   xyleme["modulesComplete"],
+            "modulesTotal":      xyleme["modulesTotal"],
+            "exams":             xyleme["exams"],
+            "recentlyPublished": xyleme["recentlyPublished"],
         },
     }
 
@@ -1306,19 +1623,22 @@ def build(week_override=None):
     print()
     print(f"  Safety RAG:    {safety_rag.upper():<8} — {safety_reason}")
     print(f"  Bowler RAG:    {bowler_overall.upper()}")
-    print(f"  Action Plans:  {ap['deliveryTotal']} active "
+    print(f"  Action Plans:  {ap['rag'].upper():<8} — {ap['deliveryTotal']} active "
           f"({ap['inProgress']} in progress / {ap['delayed']} delayed / "
-          f"{ap['notStarted']} not started)  [parent rows only]")
-    print(f"  CapEx:         {cx['activeProjects']} projects / ${cx['totalBudget']:,.0f}")
+          f"{ap['notStarted']} not started / {ap.get('atRisk', 0)} at risk)  "
+          f"[parent rows only]")
+    print(f"  CapEx:         {cx['activeProjects']} projects / "
+          f"${cx['totalBudget']:,.0f} budget / ${cx.get('totalSpend', 0):,.0f} spend "
+          f"[live Smartsheet]")
+    print(f"  Xyleme:        {xyleme['modulesComplete']}/{xyleme['modulesTotal']} "
+          f"modules complete / {xyleme['exams']['total']} exams in pipeline")
+    if xyleme.get("_unbucketed"):
+        ub = ", ".join(f"{k}={v}" for k, v in sorted(xyleme["_unbucketed"].items()))
+        print(f"      ℹ️  exam statuses outside pipeline buckets (total-only): {ub}")
     print()
 
     # ── Preserved / verify-manually flags ────────────────────────────────
     print("  ⚠️   VERIFY MANUALLY — sections carried forward, not derived from source:")
-    if cx.get("_preserved"):
-        print(f"      → CapEx: preserved ${cx['totalBudget']:,.0f} / "
-              f"{cx['activeProjects']} projects (no clean source in Capex.xlsx)")
-    else:
-        print("      → CapEx: NO existing board to preserve — section is empty!")
     if kpis_preserved:
         print("      → Bowler KPIs + safetyKPIs: preserved from previous board")
     print("      → PLL lookAhead30: preserved from previous board (not yet computed)")
@@ -1372,7 +1692,9 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--week", metavar="YYYY-MM-DD",
-        help="Monday of the target week (default: current week)"
+        help="Monday of the target week (default: WEEK_OF env var, "
+             "else current week)"
     )
     args = parser.parse_args()
-    build(week_override=args.week)
+    week = args.week or os.environ.get("WEEK_OF", "").strip() or None
+    build(week_override=week)

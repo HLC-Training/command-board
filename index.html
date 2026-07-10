@@ -192,6 +192,38 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .wag-safety-status{font-family:var(--fh);font-size:18px;font-weight:900;color:#4ADE80;text-transform:uppercase;letter-spacing:2px;line-height:1}
 .wag-safety-sub{font-size:9px;color:rgba(255,255,255,0.7);margin-top:3px;font-weight:600}
 .wag-safety-incidents{font-size:7.5px;color:rgba(255,255,255,0.45);margin-top:3px}
+.xy-card{background:var(--night);border-radius:8px;padding:7px 10px;flex:0 0 25%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.xy-head{display:flex;align-items:baseline;gap:9px;border-bottom:2px solid var(--acc);padding-bottom:3px;margin-bottom:5px;flex-shrink:0}
+.xy-title{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--acc);text-transform:uppercase;letter-spacing:1.2px}
+.xy-sub{font-size:8px;color:rgba(255,255,255,.45)}
+.xy-body{flex:1;display:grid;grid-template-columns:1fr 1.15fr 1.6fr;gap:8px;min-height:0}
+.xy-panel{background:rgba(255,255,255,.05);border-radius:6px;padding:5px 8px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.xy-panel-title{font-size:7.5px;font-weight:700;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;flex-shrink:0}
+.xy-ring-wrap{flex:1;display:flex;align-items:center;justify-content:center;gap:12px;min-height:0}
+.xy-ring{height:100%;max-height:96px}
+.xy-ring-caption{text-align:left}
+.xy-ring-caption .n{font-family:var(--fh);font-size:17px;font-weight:900;color:#4ADE80;line-height:1}
+.xy-ring-caption .l{font-size:7.5px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.xy-pipe{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;min-height:0}
+.xy-pipe-row{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:1px 0}
+.xy-pipe-label{font-size:8.5px;color:#D1D5DB;white-space:nowrap}
+.xy-pill{font-family:var(--fh);font-size:10px;font-weight:900;padding:1px 8px;border-radius:8px;min-width:24px;text-align:center}
+.xy-pill.gry{background:rgba(156,163,175,.16);color:#9CA3AF}
+.xy-pill.amb{background:rgba(230,126,34,.2);color:#FCD34D}
+.xy-pill.blu{background:rgba(125,211,252,.15);color:#7DD3FC}
+.xy-pill.grn{background:rgba(45,122,69,.35);color:#4ADE80}
+.xy-pipe-total{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.15);margin-top:2px;padding-top:3px}
+.xy-pipe-total .tl{font-size:8px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.6px}
+.xy-pipe-total .tn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--acc)}
+.xy-scroll{flex:1;overflow:hidden;position:relative;min-height:0}
+.xy-scroll-inner{display:flex;flex-direction:column}
+.xy-scroll-inner.anim{animation:xyScroll var(--xy-dur,40s) linear infinite}
+@keyframes xyScroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.xy-pub-row{padding:2px 0 3px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.xy-pub-name{font-size:8.5px;color:#E5E7EB;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xy-pub-meta{font-size:7.5px;color:#9CA3AF;margin-top:1px}
+.xy-pub-meta .pl{color:#4ADE80;font-weight:700}
+.xy-none{font-size:8.5px;color:#9CA3AF;font-style:italic;padding:4px 0}
 #loading{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--ev);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
 #loading .lt{font-family:var(--fh);font-size:24px;font-weight:900;color:var(--acc);text-transform:uppercase;letter-spacing:2px}
 #loading .ls{font-size:12px;color:rgba(255,255,255,0.6)}
@@ -230,6 +262,73 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 // ── RENDER FUNCTIONS ─────────────────────────────────────────────────────────
 
 function ragIcon(rag){return rag==='green'?'✓':rag==='red'?'✗':'!';}
+
+function xyDate(iso){
+  if(!iso)return'';
+  const[m,d]=[+iso.slice(5,7),+iso.slice(8,10)];
+  const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return`${MON[m-1]} ${d}, ${iso.slice(0,4)}`;
+}
+
+function buildXylemeCard(xy){
+  if(!xy)return'';
+  // Sub-panel 1 — modules ring chart
+  const pct=xy.modulesTotal?Math.round(xy.modulesComplete/xy.modulesTotal*100):0;
+  const C=2*Math.PI*34;
+  const ring=`<svg class="xy-ring" viewBox="0 0 84 84">
+    <circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="9"/>
+    <circle cx="42" cy="42" r="34" fill="none" stroke="#4ADE80" stroke-width="9" stroke-linecap="round"
+      stroke-dasharray="${Math.max(pct/100*C,0.01).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 42 42)"/>
+    <text x="42" y="41" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="900" fill="#FFFFFF">${pct}%</text>
+    <text x="42" y="53" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="6.5" fill="rgba(255,255,255,.5)">COMPLETE</text>
+  </svg>`;
+
+  // Sub-panel 2 — exams pipeline (condensed statuses)
+  const e=xy.exams||{};
+  const underReview=(e.inProgress||0)+(e.underReview||0);
+  const pipeRows=[
+    ['Not Received','gry',e.notReceived||0],
+    ['Not Started','gry',e.notStarted||0],
+    ['Under Review','amb',underReview],
+    ['Approved','blu',e.approved||0],
+    ['Published ✓','grn',e.published||0],
+  ].map(([lb,cl,n])=>`<div class="xy-pipe-row"><span class="xy-pipe-label">${lb}</span><span class="xy-pill ${cl}">${n}</span></div>`).join('');
+
+  // Sub-panel 3 — recently published auto-scroll list
+  const pubs=xy.recentlyPublished||[];
+  const pubRow=p=>`<div class="xy-pub-row"><div class="xy-pub-name">${p.name}</div><div class="xy-pub-meta"><span class="pl">${p.pl||'—'}</span>${p.date?' · '+xyDate(p.date):''}</div></div>`;
+  let pubHtml,anim='',dur='';
+  if(!pubs.length){
+    pubHtml='<div class="xy-none">Nothing published yet</div>';
+  }else if(pubs.length<=4){
+    pubHtml=pubs.map(pubRow).join('');
+  }else{
+    pubHtml=pubs.map(pubRow).join('')+pubs.map(pubRow).join('');  // duplicated for seamless loop
+    anim=' anim';dur=`style="--xy-dur:${pubs.length*4}s"`;
+  }
+
+  return`<div class="xy-card">
+    <div class="xy-head"><span class="xy-title">Xyleme Modernization</span><span class="xy-sub">Training content modernization — live from Smartsheet</span></div>
+    <div class="xy-body">
+      <div class="xy-panel">
+        <div class="xy-panel-title">Modules in Xyleme</div>
+        <div class="xy-ring-wrap">${ring}
+          <div class="xy-ring-caption"><div class="n">${xy.modulesComplete} of ${xy.modulesTotal}</div><div class="l">modules complete</div></div>
+        </div>
+      </div>
+      <div class="xy-panel">
+        <div class="xy-panel-title">Exams Pipeline</div>
+        <div class="xy-pipe">${pipeRows}
+          <div class="xy-pipe-total"><span class="tl">Total</span><span class="tn">${e.total||0} exams</span></div>
+        </div>
+      </div>
+      <div class="xy-panel">
+        <div class="xy-panel-title">Recently Published</div>
+        <div class="xy-scroll"><div class="xy-scroll-inner${anim}" ${dur}>${pubHtml}</div></div>
+      </div>
+    </div>
+  </div>`;
+}
 
 function renderSlide1(D){
   const s1=D.slide1,ap=D.actionPlans,cx=D.capex;
@@ -363,6 +462,7 @@ function renderSlide1(D){
         </div>
       </div>
     </div>
+    ${buildXylemeCard(D.xyleme)}
   </div>`;
 }
 
