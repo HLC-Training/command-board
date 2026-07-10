@@ -102,7 +102,8 @@ PLL_ORDER = ["sherif", "pablo", "ben", "mohammed", "harry", "greg", "linda"]
 # Keywords are checked as substrings of the lowercased class name.
 # First match wins — do not reorder without updating CLAUDE.md.
 INTERNAL_RULES = [
-    ("harry",    ["craft", "repairs", "repair", "iles", "compressor"]),
+    ("harry",    ["craft", "repairs", "repair", "iles", "compressor",
+                  "stator"]),
     ("sherif",   ["gas turbine", " gt ", "gt-", "ha ", "7fa", "9fa", "7ha", "9ha",
                   "eht", "frame 7", "frame 9", "osr", "combustion",
                   "mechanical crossover"]),
@@ -110,22 +111,24 @@ INTERNAL_RULES = [
                   "steam power", " st ", "blading"]),
     ("mohammed", ["controls", "control", "mkvi", "mk vi", "mkvie",
                   "fieldbus", "advant", "i&c", "gic", "simulator",
-                  "site manager"]),
+                  "site manager", "comet"]),
     ("ben",      ["excitation", "generator", "winding", "rso",
                   "surge oscillograph", "retaining ring", "end winding",
                   "biscuit", "ex2100"]),
     ("greg",     ["aeroderivative", "aero", "lm2500", "lm6000", "lm500",
-                  "lms100"]),
+                  "lms100", "aet mi"]),
     ("linda",    ["cte", "workforce", "readiness", "achieving customer"]),
 ]
 
 # Vendor-led / non-technical classes — count in weekly totals only, never
-# attributed to a PLL card (per Jim, Jul 2026). Matched as substrings of the
-# lowercased class name.
+# attributed to a PLL card and never flagged as unmatched (per Jim, Jul 2026).
+# Matched as substrings of the lowercased class name.
 VENDOR_LED_KEYWORDS = [
     "achieving customer success",
     "field engineer - onboarding",
     "train the trainer",
+    "project management",
+    "leadership",
 ]
 
 # ── Customer (OE / SS) routing — by the TECHNOLOGY column only (per CLAUDE.md) ─
