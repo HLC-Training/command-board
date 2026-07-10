@@ -310,9 +310,9 @@
       },
       {
         "name": "Mohammed Nizami",
-        "totalClasses": 5,
-        "totalStudents": 33,
-        "internalStudents": 21,
+        "totalClasses": 6,
+        "totalStudents": 42,
+        "internalStudents": 30,
         "oeStudents": 12,
         "oeClasses": 1,
         "courses": [
@@ -331,6 +331,14 @@
             "enrollPct": 100,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "COMET Commissioning Engineers Training Program 26-1",
+            "capacity": 12,
+            "enrolled": 9,
+            "enrollPct": 75,
+            "overEnrolled": false,
+            "locCat": "BLC"
           },
           {
             "name": "Site Manager Level 3 26-1",
@@ -366,12 +374,20 @@
       },
       {
         "name": "Harry Hanson",
-        "totalClasses": 5,
-        "totalStudents": 39,
-        "internalStudents": 39,
+        "totalClasses": 7,
+        "totalStudents": 54,
+        "internalStudents": 54,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
+          {
+            "name": "Stator Advanced: Partial Stator Rewind / Bar Replacement 26-1",
+            "capacity": 6,
+            "enrolled": 6,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
           {
             "name": "Craft Intermediate Level ST 26-4",
             "capacity": 12,
@@ -385,6 +401,14 @@
             "capacity": 6,
             "enrolled": 5,
             "enrollPct": 83,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Stator Basics: Blocking & Ties 26-1",
+            "capacity": 10,
+            "enrolled": 9,
+            "enrollPct": 90,
             "overEnrolled": false,
             "locCat": "HLC"
           },
@@ -424,9 +448,9 @@
       },
       {
         "name": "Greg Walker",
-        "totalClasses": 5,
-        "totalStudents": 41,
-        "internalStudents": 29,
+        "totalClasses": 6,
+        "totalStudents": 49,
+        "internalStudents": 37,
         "oeStudents": 12,
         "oeClasses": 1,
         "courses": [
@@ -453,6 +477,14 @@
             "enrollPct": 88,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "GE to Alstom Assessment Engineer - Major Inspection (AET MI) 26-1",
+            "capacity": 7,
+            "enrolled": 8,
+            "enrollPct": 114,
+            "overEnrolled": true,
+            "locCat": "BLC"
           },
           {
             "name": "LM6000 Package Operations/Familiarization 26-3",
@@ -964,8 +996,8 @@
     "modulesTotal": 405,
     "exams": {
       "notReceived": 81,
-      "notStarted": 29,
-      "inProgress": 2,
+      "notStarted": 26,
+      "inProgress": 5,
       "underReview": 10,
       "approved": 2,
       "published": 60,

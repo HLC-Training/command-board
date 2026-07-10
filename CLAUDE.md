@@ -89,15 +89,16 @@ Apply in this exact order:
 ### Internal Training — program-first:
 
 1. **Vendor-led / non-technical** (Achieving Customer Success,
-   Field Engineer - Onboarding, Train the Trainer) → **totals only, no PLL**
+   Field Engineer - Onboarding, Train the Trainer, Project Management,
+   Leadership) → **totals only, no PLL, never flagged**
 2. **CTE / Workforce Readiness → Linda Nelson** — this check MUST precede
    the Craft rule ("Craft Entry Level CTE Program" is Linda's, not Harry's)
-3. Program = Craft, Repairs, or ILES → **Harry Hanson**
+3. Program = Craft, Repairs, ILES, or Stator → **Harry Hanson**
 4. Gas Turbine (incl. 7FA/9FA/7HA/9HA, Live Outage TTT) → **Sherif Khalifa**
 5. Steam Turbine (incl. blading) → **Pablo Schibli**
-6. Controls / GIC → **Mohammed Nizami**
+6. Controls / GIC (incl. COMET Commissioning) → **Mohammed Nizami**
 7. Excitation / Generator (incl. EX2100) → **Ben Smith**
-8. Aeroderivative (incl. LM2500/LM6000/LMS100) → **Greg Walker**
+8. Aeroderivative (incl. LM2500/LM6000/LMS100, AET MI) → **Greg Walker**
 9. Unmatched → **FLAG TO JIM — never route silently**
 
 This order is implemented in build.py (`route_pll`, `INTERNAL_RULES`,
