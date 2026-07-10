@@ -224,6 +224,10 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .xy-pub-meta{font-size:7.5px;color:#9CA3AF;margin-top:1px}
 .xy-pub-meta .pl{color:#4ADE80;font-weight:700}
 .xy-none{font-size:8.5px;color:#9CA3AF;font-style:italic;padding:4px 0}
+.as-inner{display:flex;flex-direction:column;gap:inherit;animation:asScroll var(--as-dur,40s) linear infinite}
+.as-copy{display:flex;flex-direction:column;gap:inherit;flex-shrink:0}
+.as-outer:hover .as-inner{animation-play-state:paused}
+@keyframes asScroll{from{transform:translateY(0)}to{transform:translateY(calc(-1 * var(--as-shift,50%)))}}
 #loading{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--ev);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
 #loading .lt{font-family:var(--fh);font-size:24px;font-weight:900;color:var(--acc);text-transform:uppercase;letter-spacing:2px}
 #loading .ls{font-size:12px;color:rgba(255,255,255,0.6)}
@@ -385,7 +389,7 @@ function renderSlide1(D){
     const cost=cat.cost>=1000000?`$${(cat.cost/1000000).toFixed(1)}M`:cat.cost>=1000?`$${Math.round(cat.cost/1000)}K`:`$${cat.cost}`;
     cxBars+=`<div class="cx-bar-row"><div class="cx-bar-label">${name}</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:${pct}%;background:${catColors[name]||'#6B7280'}"><span class="cx-bar-val">${cost}</span></div></div><div class="cx-bar-count">${cat.count}</div></div>`;
   }
-  for(const item of (cx.inProgressItems||[]).slice(0,5)){
+  for(const item of (cx.inProgressItems||[])){   // overflow auto-scrolls
     const cost=item.cost>=1000000?`$${(item.cost/1000000).toFixed(1)}M`:item.cost>=1000?`$${Math.round(item.cost/1000)}K`:`$${item.cost}`;
     cxItems+=`<div class="cx-item"><div class="cx-cat-dot" style="background:${catColors[item.category]||'#6B7280'}"></div><div class="cx-item-text">${item.project}</div><div class="cx-item-cost">${cost}</div>${item.priority==='High'?'<div class="cx-item-badge">HIGH</div>':''}</div>`;
   }
@@ -572,6 +576,33 @@ function renderSlide2(D){
   </div>`;
 }
 
+// ── OVERFLOW AUTO-SCROLL ─────────────────────────────────────────────────────
+// Any list marked with initAutoScrolls() gets a slow seamless ticker, but only
+// when its content is taller than its container. JS does the overflow check
+// (CSS can't) and duplicates the content; CSS animates and pauses on hover.
+const AS_SPEED=35; // px per second — slow and readable on the wall display
+
+function enableAutoScroll(el){
+  if(!el||el.dataset.as)return;
+  if(el.scrollHeight<=el.clientHeight+2)return;   // fits — no scroll
+  el.dataset.as='1';
+  const html=el.innerHTML;
+  const gap=parseFloat(getComputedStyle(el).rowGap)||0;
+  el.innerHTML=`<div class="as-inner"><div class="as-copy">${html}</div><div class="as-copy">${html}</div></div>`;
+  const inner=el.querySelector('.as-inner');
+  const shift=el.querySelector('.as-copy').offsetHeight+gap;  // one full copy
+  inner.style.setProperty('--as-shift',shift+'px');
+  inner.style.setProperty('--as-dur',(shift/AS_SPEED).toFixed(1)+'s');
+  el.classList.add('as-outer');
+}
+
+function initAutoScrolls(root){
+  // Measured only while the slide is visible (hidden elements report height 0);
+  // each element is processed once (data-as guard).
+  if(!root)return;
+  root.querySelectorAll('.pc,.cx-item-list').forEach(enableAutoScroll);
+}
+
 // ── SLIDE CONTROLLER ─────────────────────────────────────────────────────────
 const SLIDES=[{id:"s1",dur:30000},{id:"s2",dur:30000},{id:"s3",dur:35000},{id:"s4",dur:35000}];
 let cur=0,timer=null;
@@ -584,6 +615,7 @@ function showSlide(i){
     if(el)el.classList.toggle("active",j===i);
   });
   cur=i;sc.textContent=(i+1)+"/"+SLIDES.length;
+  requestAnimationFrame(()=>initAutoScrolls(document.getElementById(SLIDES[i].id)));
   startProgress(SLIDES[i].dur);
 }
 
