@@ -89,7 +89,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .ap-stat.amber{background:#FFF7ED}.ap-stat.amber .asn{color:#E67E22}
 .ap-stat.red{background:#FEF2F2}.ap-stat.red .asn{color:#C0392B}
 .ap-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px}
-.ap-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px}
+.ap-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px;flex-shrink:0}
 .ap-item:last-child{border-bottom:none}
 .ap-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .ap-text{font-size:8px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -110,7 +110,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .cx-bar-val{position:absolute;right:3px;top:50%;transform:translateY(-50%);font-size:6.5px;font-weight:700;color:white;white-space:nowrap}
 .cx-bar-count{font-size:7px;color:var(--gry);width:18px;text-align:right;flex-shrink:0}
 .cx-item-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px}
-.cx-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px}
+.cx-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px;flex-shrink:0}
 .cx-item:last-child{border-bottom:none}
 .cx-cat-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
 .cx-item-text{font-size:8px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -139,7 +139,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .la-item .ln{font-family:var(--fh);font-size:13px;font-weight:900;color:var(--ev);line-height:1;display:block}
 .la-item .ll{font-size:6.5px;color:var(--gry);text-transform:uppercase}
 .pc{flex:1;overflow:hidden;padding:4px 6px;display:flex;flex-direction:column;gap:2px;min-height:0}
-.cr{display:flex;align-items:center;gap:4px;min-height:15px}
+.cr{display:flex;align-items:center;gap:4px;min-height:15px;flex-shrink:0}
 .ew{width:36px;flex-shrink:0;height:8px;background:#E5E7EB;border-radius:3px;overflow:hidden}
 .eb{height:100%;border-radius:3px}.eb.over{background:var(--acc)}.eb.full{background:var(--grn)}.eb.mid{background:var(--amb)}.eb.low{background:var(--red)}.eb.oe{width:100%;background:var(--evm);opacity:.7}
 .oe-r .cn{color:var(--gry)}
@@ -224,10 +224,9 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .xy-pub-meta{font-size:7.5px;color:#9CA3AF;margin-top:1px}
 .xy-pub-meta .pl{color:#4ADE80;font-weight:700}
 .xy-none{font-size:8.5px;color:#9CA3AF;font-style:italic;padding:4px 0}
-.as-inner{display:flex;flex-direction:column;gap:inherit;animation:asScroll var(--as-dur,40s) linear infinite}
-.as-copy{display:flex;flex-direction:column;gap:inherit;flex-shrink:0}
-.as-outer:hover .as-inner{animation-play-state:paused}
-@keyframes asScroll{from{transform:translateY(0)}to{transform:translateY(calc(-1 * var(--as-shift,50%)))}}
+.as-outer{position:relative}
+.as-outer::after{content:'';position:absolute;left:0;right:0;bottom:0;height:12px;background:linear-gradient(rgba(255,255,255,0),var(--day));pointer-events:none}
+.as-inner{display:flex;flex-direction:column;gap:inherit;flex:0 0 auto;will-change:transform}
 #loading{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--ev);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
 #loading .lt{font-family:var(--fh);font-size:24px;font-weight:900;color:var(--acc);text-transform:uppercase;letter-spacing:2px}
 #loading .ls{font-size:12px;color:rgba(255,255,255,0.6)}
@@ -373,7 +372,7 @@ function renderSlide1(D){
 
   // AP items
   let apItems='';
-  for(const item of (ap.inProgressItems||[]).slice(0,8)){
+  for(const item of (ap.inProgressItems||[])){   // overflow auto-scrolls
     const st=item.currentStatus==='Delayed'?'delayed':'in-prog';
     const lb=item.currentStatus==='Delayed'?'Delayed':'In Progress';
     apItems+=`<div class="ap-item"><div class="ap-dot" style="background:${st==='delayed'?'#C0392B':'#1D4ED8'}"></div><div class="ap-text">${item.title}</div><div class="ap-badge ${st}">${lb}</div></div>`;
@@ -576,31 +575,53 @@ function renderSlide2(D){
   </div>`;
 }
 
-// ── OVERFLOW AUTO-SCROLL ─────────────────────────────────────────────────────
-// Any list marked with initAutoScrolls() gets a slow seamless ticker, but only
-// when its content is taller than its container. JS does the overflow check
-// (CSS can't) and duplicates the content; CSS animates and pauses on hover.
-const AS_SPEED=35; // px per second — slow and readable on the wall display
+// ── OVERFLOW AUTO-SCROLL (pause → page-turn → pause) ─────────────────────────
+// Any list marked with initAutoScrolls() steps through its content one visible
+// "page" at a time, but only when the content is taller than its container:
+// show a screenful, pause, glide up one card height, pause, … then snap back
+// to the top instantly and repeat. Hovering holds the current page.
+const AS_PAUSE_MS=3000;   // dwell on each page
+const AS_GLIDE_MS=1200;   // page-turn duration (ease-in-out)
 
 function enableAutoScroll(el){
   if(!el||el.dataset.as)return;
   if(el.scrollHeight<=el.clientHeight+2)return;   // fits — no scroll
   el.dataset.as='1';
-  const html=el.innerHTML;
-  const gap=parseFloat(getComputedStyle(el).rowGap)||0;
-  el.innerHTML=`<div class="as-inner"><div class="as-copy">${html}</div><div class="as-copy">${html}</div></div>`;
-  const inner=el.querySelector('.as-inner');
-  const shift=el.querySelector('.as-copy').offsetHeight+gap;  // one full copy
-  inner.style.setProperty('--as-shift',shift+'px');
-  inner.style.setProperty('--as-dur',(shift/AS_SPEED).toFixed(1)+'s');
-  el.classList.add('as-outer');
+  el.classList.add('as-outer');                   // adds the bottom fade line
+  const inner=document.createElement('div');
+  inner.className='as-inner';
+  while(el.firstChild)inner.appendChild(el.firstChild);
+  el.appendChild(inner);
+
+  const st={hover:false,offset:0};
+  el.addEventListener('mouseenter',()=>{st.hover=true;});
+  el.addEventListener('mouseleave',()=>{st.hover=false;});
+
+  function step(){
+    if(st.hover){setTimeout(step,500);return}     // hold page while hovered
+    const page=el.clientHeight;
+    const max=Math.max(inner.scrollHeight-page,0);
+    if(st.offset>=max-2){
+      st.offset=0;                                // end of list → instant snap to top
+      inner.style.transition='none';
+      inner.style.transform='translateY(0)';
+      void inner.offsetHeight;                    // flush so the next glide animates
+      setTimeout(step,AS_PAUSE_MS);
+    }else{
+      st.offset=Math.min(st.offset+page,max);
+      inner.style.transition=`transform ${AS_GLIDE_MS}ms ease-in-out`;
+      inner.style.transform=`translateY(-${st.offset}px)`;
+      setTimeout(step,AS_GLIDE_MS+AS_PAUSE_MS);
+    }
+  }
+  setTimeout(step,AS_PAUSE_MS);
 }
 
 function initAutoScrolls(root){
   // Measured only while the slide is visible (hidden elements report height 0);
   // each element is processed once (data-as guard).
   if(!root)return;
-  root.querySelectorAll('.pc,.cx-item-list').forEach(enableAutoScroll);
+  root.querySelectorAll('.pc,.cx-item-list,.ap-list').forEach(enableAutoScroll);
 }
 
 // ── SLIDE CONTROLLER ─────────────────────────────────────────────────────────
