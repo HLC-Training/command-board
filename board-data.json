@@ -17,13 +17,13 @@
       "KLC": 24,
       "Other": 119
     },
-    "safetyRag": "green",
+    "safetyRag": "red",
     "minorIncidents": 0,
-    "ragReason": "0 incidents this week — All safety KPIs on plan",
+    "ragReason": "Life Saving Rules compliance 85% vs 90% plan",
     "safetyKPIs": {
       "liveStop": {
-        "value": 100,
-        "rag": "green"
+        "value": 85,
+        "rag": "red"
       },
       "readAcross": {
         "value": 90,
@@ -33,45 +33,45 @@
     "kpis": {
       "ptsi": {
         "label": "Post-Training Skill Improvement",
-        "ytdValue": 83,
+        "ytdValue": 82,
         "ytdRag": "green",
-        "monthLabel": "Mar",
-        "monthValue": 83,
+        "monthLabel": "Jun",
+        "monthValue": 81,
         "monthRag": "green",
         "plan": 70,
         "reverse": false
       },
       "timecard": {
         "label": "Timecard On-Time Delivery",
-        "ytdValue": 72,
+        "ytdValue": 78,
         "ytdRag": "red",
-        "monthLabel": "Apr",
-        "monthValue": 85,
+        "monthLabel": "Jun",
+        "monthValue": 91,
         "monthRag": "amber",
         "plan": 92,
         "reverse": false
       },
       "instUtil": {
-        "label": "Instructor Workforce Compliance",
-        "ytdValue": 79,
+        "label": "Fully Loaded & Qualified Instructors (FLIQ)",
+        "ytdValue": 20,
         "ytdRag": "amber",
-        "monthLabel": "Apr",
-        "monthValue": 80,
-        "monthRag": "amber",
-        "plan": 81,
-        "reverse": false
+        "monthLabel": "Jun",
+        "monthValue": 13,
+        "monthRag": "green",
+        "plan": 15,
+        "reverse": true
       }
     },
     "overallRAGs": {
       "bowler": {
         "rag": "amber",
         "label": "Bowler KPIs",
-        "reason": "Timecard YTD 72% vs 92% plan"
+        "reason": "Timecard Jun 91% vs 92% plan"
       },
       "safety": {
-        "rag": "green",
+        "rag": "red",
         "label": "Safety",
-        "reason": "0 incidents this week — All safety KPIs on plan"
+        "reason": "Life Saving Rules compliance 85% vs 90% plan"
       },
       "actionPlans": {
         "rag": "red",
@@ -87,9 +87,9 @@
   },
   "safetyLog": [
     {
-      "date": "Mar 14, 2026",
-      "shortDesc": "Slip — wet floor near lab",
-      "desc": "Slip on wet floor near lab entrance — no injury, area secured"
+      "date": "Jul 17, 2026",
+      "shortDesc": "📵 No-Photo Policy — Training Bays",
+      "desc": "ADVISORY — No photos in the training bays without approval. A recent unauthorized social media post from the bays reached senior leadership before we knew about it. No safety violation occurred, but perception moved faster than facts. Vetted posts are welcome — route them through HLC leadership."
     },
     {
       "date": "Apr 3, 2026",
@@ -97,9 +97,9 @@
       "desc": "Lube oil spill during maintenance exercise — contained, cleaned, no injury"
     },
     {
-      "date": "Jun 18, 2026",
-      "shortDesc": "🌡️ Heat Stress Awareness",
-      "desc": "SAFETY ADVISORY — Heat stress/exhaustion is serious. Know the signs. Hydration: carry water, know refill stations. Vehicles: park in shade, use sunshades, open all doors 30s before entry, never leave power banks or lighters inside. Bldg 1 Bays: instructors manage break frequency, watch for symptoms, open bay doors for airflow, wear light-colored linen — no synthetics. EHS distributing cooling towels & electrolytes."
+      "date": "Mar 14, 2026",
+      "shortDesc": "Slip — wet floor near lab",
+      "desc": "Slip on wet floor near lab entrance — no injury, area secured"
     }
   ],
   "slide2": {
