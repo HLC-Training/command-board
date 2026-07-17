@@ -21,6 +21,7 @@ Generates board-data.json in repo root. Run locally or via the
 
 import json
 import os
+import re
 import sys
 import argparse
 from datetime import date, timedelta
@@ -147,38 +148,57 @@ CUSTOMER_TECH_RULES = [
 ]
 
 # ── Bowler KPI thresholds ──────────────────────────────────────────────────
+# "plan" is the displayed target value; for reverse metrics it's also the
+# green/amber boundary. Labels match the live board-data.json exactly.
 BOWLER_CONFIG = {
     "ptsi": {
         "label":   "Post-Training Skill Improvement",
         "green":   70.0,
         "red":     63.0,
         "reverse": False,   # higher is better
+        "plan":    70,
     },
     "timecard": {
-        "label":   "Timecard OTD",
+        "label":   "Timecard On-Time Delivery",
         "green":   92.0,
         "red":     82.0,
         "reverse": False,
+        "plan":    92,
     },
     "instUtil": {
-        "label":   "Instructor Utilization",
-        "green":   None,    # thresholds TBD — reverse metric (lower is better)
-        "red":     None,
+        "label":   "Fully Loaded & Qualified Instructors (FLIQ)",
+        "green":   15.0,    # reverse metric (lower is better) — health-monitoring only
+        "red":     None,    # no red per spec
         "reverse": True,
+        "plan":    15,
     },
 }
 
+# Short names for Bowler overall-RAG reason strings (e.g. "Timecard Jun 91% vs 92% plan").
+BOWLER_SHORT_NAMES = {"ptsi": "PTSI", "timecard": "Timecard", "instUtil": "FLIQ"}
+
 # ── Safety log — cumulative, always carried forward ────────────────────────
+# Newest first. Update when a new advisory/incident is logged or an old one
+# is retired (see CLAUDE.md "Cumulative Safety Log").
 SAFETY_LOG_BASE = [
     {
-        "date":      "2026-03-14",
-        "shortDesc": "Slip on wet floor",
-        "desc":      "Slip on wet floor near lab entrance — no injury, area secured",
+        "date":      "Jul 17, 2026",
+        "shortDesc": "\U0001F4F5 No-Photo Policy — Training Bays",
+        "desc":      "ADVISORY — No photos in the training bays without approval. "
+                     "A recent unauthorized social media post from the bays reached "
+                     "senior leadership before we knew about it. No safety violation "
+                     "occurred, but perception moved faster than facts. Vetted posts "
+                     "are welcome — route them through HLC leadership.",
     },
     {
-        "date":      "2026-04-03",
-        "shortDesc": "Lube oil spill",
+        "date":      "Apr 3, 2026",
+        "shortDesc": "Lube oil spill — contained",
         "desc":      "Lube oil spill during maintenance exercise — contained, cleaned, no injury",
+    },
+    {
+        "date":      "Mar 14, 2026",
+        "shortDesc": "Slip — wet floor near lab",
+        "desc":      "Slip on wet floor near lab entrance — no injury, area secured",
     },
 ]
 
@@ -456,14 +476,6 @@ def to_date(val):
     return None
 
 
-def to_pct(val):
-    """Convert decimal (0–1) to percentage. Pass-through if already > 1."""
-    if val is None:
-        return None
-    v = float(val)
-    return round(v * 100, 1) if v <= 1.0 else round(v, 1)
-
-
 def classify_location(raw):
     """Map raw location string to HLC / BLC / KLC / Other."""
     if not raw:
@@ -540,15 +552,28 @@ def route_customer(technology, class_name=""):
 
 
 def bowler_rag(key, value):
-    """Calculate RAG for a single Bowler KPI value."""
+    """
+    Calculate RAG for a single Bowler KPI value.
+    Reverse metrics (lower is better, e.g. FLIQ) have no red — green below
+    the threshold, amber at or above it.
+    """
     cfg = BOWLER_CONFIG.get(key, {})
-    if cfg.get("reverse") or cfg.get("green") is None or value is None:
+    if value is None or cfg.get("green") is None:
         return "amber"
+    if cfg.get("reverse"):
+        return "green" if value < cfg["green"] else "amber"
     if value >= cfg["green"]:
         return "green"
-    if value < cfg["red"]:
+    if cfg.get("red") is not None and value < cfg["red"]:
         return "red"
     return "amber"
+
+
+def safety_kpi_rag(value):
+    """Binary RAG for a safety KPI vs its 90% plan — green >= 90, else red."""
+    if value is None:
+        return "amber"
+    return "green" if value >= 90 else "red"
 
 
 def worst_rag(*rags):
@@ -561,10 +586,30 @@ def worst_rag(*rags):
 # WEEK DETECTION
 # ══════════════════════════════════════════════════════════════════════════
 
+def sanitize_week_override(raw):
+    """
+    Clean a raw --week / WEEK_OF value before parsing as an ISO date: strip
+    surrounding whitespace/quotes and a leading "week_of:" or "week_of="
+    label (case-insensitive). A pasted 'week_of: 2026-07-20' crashed run #1
+    on 2026-07-17.
+    """
+    s = raw.strip().strip("'\"").strip()
+    s = re.sub(r"(?i)^week_of\s*[:=]\s*", "", s)
+    return s.strip().strip("'\"").strip()
+
+
 def get_week(override=None):
     """Return (week_start, week_end) as date objects (Mon–Fri)."""
     if override:
-        ws = date.fromisoformat(override)
+        cleaned = sanitize_week_override(override)
+        try:
+            ws = date.fromisoformat(cleaned)
+        except ValueError:
+            print(f"⛔  --week/WEEK_OF value {override!r} is not a valid date "
+                  f"after cleanup (got {cleaned!r}). Expected format: "
+                  f"YYYY-MM-DD — the Monday of the target week, "
+                  f"e.g. 2026-07-20.")
+            sys.exit(1)
     else:
         today = date.today()
         ws = today - timedelta(days=today.weekday())  # Monday
@@ -862,59 +907,199 @@ def process_customer_classes(path, bucket, week_start, week_end):
 # BOWLER PROCESSING
 # ══════════════════════════════════════════════════════════════════════════
 
-def process_bowler(path):
-    """
-    Extract April KPI data from Bowler Chart.
-    Returns (kpis dict, overall_rag string).
-    Falls back to amber if structure is unclear.
-    """
-    print("  Reading Bowler Chart…")
-    headers, rows = load_sheet(path)
+MONTH_ABBR = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun",
+              7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}
 
-    # Build default kpis structure
+
+def bowler_target_month(today):
+    """Most recent complete month number (build month minus 1; Jan wraps to Dec)."""
+    return 12 if today.month == 1 else today.month - 1
+
+
+def parse_bowler_value(raw):
+    """
+    Normalize a raw Bowler Act cell to a percentage number (0-100, rounded
+    to the nearest int), or None if it isn't usable (NA, TBD, blank, …).
+    Values arrive as mixed decimals (0.91) and already-percentage numbers or
+    strings (84.6, '*58%', '90%%') — strip stray characters, then treat
+    <= 1.5 as a decimal fraction (×100).
+    """
+    if raw is None:
+        return None
+    s = str(raw).strip()
+    if not s or s.upper() in ("NA", "N/A", "TBD"):
+        return None
+    s = re.sub(r"[^0-9.\-]", "", s)
+    if not s or s in ("-", "."):
+        return None
+    try:
+        v = float(s)
+    except ValueError:
+        return None
+    if v <= 1.5:
+        v *= 100
+    return round(v)
+
+
+def load_bowler_sheet(path):
+    """
+    Load the raw Bowler Chart sheet and return:
+      month_cols: {month_number (1-12): column_index}   (1Q/2Q/3Q/4Q skipped)
+      kpi_rows:   {kpi_name_lower: {"py": row, "plan": row, "act": row}}
+    The sheet's true header row (JAN…DEC) isn't the first row — load_sheet's
+    headers/rows split doesn't apply here, so this reads the workbook directly.
+    """
+    wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
+    ws = wb.worksheets[0]
+    raw_rows = list(ws.iter_rows(values_only=True))
+    wb.close()
+
+    header_idx = next(
+        (i for i, r in enumerate(raw_rows)
+         if r and any(str(c).strip().upper() == "JAN" for c in r if c is not None)),
+        None
+    )
+    if header_idx is None:
+        return {}, {}
+
+    header = raw_rows[header_idx]
+    month_cols = {}
+    for col_i, cell in enumerate(header):
+        label = str(cell).strip().upper() if cell else ""
+        for m, abbr in enumerate(
+            ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+             "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"], start=1
+        ):
+            if label == abbr:
+                month_cols[m] = col_i
+
+    # Each KPI spans 3 rows (PY / Plan / Act); only the first carries the
+    # KPI name (col 2) — carry it forward across the triplet.
+    kpi_rows = {}
+    current_name = None
+    for i in range(header_idx + 1, len(raw_rows)):
+        row = raw_rows[i]
+        name_cell = row[2] if len(row) > 2 else None
+        if name_cell and str(name_cell).strip():
+            current_name = str(name_cell).strip()
+        row_type = str(row[7]).strip().lower() if len(row) > 7 and row[7] else ""
+        if current_name and row_type in ("py", "plan", "act"):
+            kpi_rows.setdefault(current_name.lower(), {})[row_type] = row
+
+    return month_cols, kpi_rows
+
+
+def find_kpi_act_row(kpi_rows, *keywords):
+    """Find a KPI's Act row by substring match on its (lowercased) name."""
+    for name_lower, rowset in kpi_rows.items():
+        if any(kw in name_lower for kw in keywords):
+            return rowset.get("act")
+    return None
+
+
+def bowler_month_value(month_cols, act_row, target_month):
+    """
+    Return (value, month_used) from an Act row, starting at target_month and
+    walking backward through populated months until a usable numeric value
+    is found. (None, None) if nothing is populated back to January.
+    """
+    if act_row is None:
+        return None, None
+    for m in range(target_month, 0, -1):
+        col = month_cols.get(m)
+        if col is None or col >= len(act_row):
+            continue
+        val = parse_bowler_value(act_row[col])
+        if val is not None:
+            return val, m
+    return None, None
+
+
+def bowler_overall_reason(kpis, overall):
+    """Build the Bowler-card reason string from whichever KPI drives the overall RAG."""
+    if overall == "green":
+        return "All Bowler KPIs on plan"
+    for key in BOWLER_CONFIG:
+        k = kpis[key]
+        if k["monthRag"] == overall and k["monthValue"] is not None:
+            short = BOWLER_SHORT_NAMES.get(key, key)
+            return f"{short} {k['monthLabel']} {k['monthValue']:g}% vs {k['plan']:g}% plan"
+    return f"Bowler KPIs {overall}"
+
+
+def process_bowler(month_cols, kpi_rows, target_month):
+    """
+    Extract Bowler KPI data for the most recent complete month, walking
+    backward per-KPI to the latest populated month when the target month is
+    blank/NA. Returns (kpis dict, overall_rag string, overall_reason string).
+    """
+    print(f"  Reading Bowler Chart ({MONTH_ABBR[target_month]} target)…")
+    target_label = MONTH_ABBR[target_month]
+
     kpis = {}
     for key, cfg in BOWLER_CONFIG.items():
         kpis[key] = {
             "label":      cfg["label"],
             "ytdValue":   None,
             "ytdRag":     "amber",
-            "monthLabel": "Apr",
+            "monthLabel": target_label,
             "monthValue": None,
             "monthRag":   "amber",
-            "plan":       None,
+            "plan":       cfg["plan"],
             "reverse":    cfg["reverse"],
         }
 
-    # Find April column
-    all_h = [str(h).lower().strip() if h else "" for h in headers]
-    apr_col = next((i for i, h in enumerate(all_h)
-                    if h in ("april", "apr") or "april" in h), None)
+    act_row_for = {
+        "ptsi":     find_kpi_act_row(kpi_rows, "skill improvement"),
+        "timecard": find_kpi_act_row(kpi_rows, "timecard"),
+        "instUtil": find_kpi_act_row(kpi_rows, "fully loaded and qualified instructors"),
+    }
 
-    # Find KPI rows by keyword
-    kpi_row = {}
-    for i, row in enumerate(rows):
-        first = str(row[0]).lower().strip() if row[0] else ""
-        if "skill improvement" in first or "ptsi" in first:
-            kpi_row["ptsi"] = i
-        elif "timecard" in first or "otd" in first:
-            kpi_row["timecard"] = i
-        elif "utiliz" in first or "util" in first:
-            kpi_row["instUtil"] = i
+    for key, act_row in act_row_for.items():
+        value, used_month = bowler_month_value(month_cols, act_row, target_month)
+        if value is not None:
+            kpis[key]["monthValue"] = value
+            kpis[key]["monthLabel"] = MONTH_ABBR[used_month]
+            kpis[key]["monthRag"]   = bowler_rag(key, value)
 
-    if apr_col is not None and kpi_row:
-        for key, row_i in kpi_row.items():
-            row = rows[row_i]
-            val = row[apr_col] if apr_col < len(row) else None
-            if val is not None:
-                try:
-                    val_pct = to_pct(float(val))
-                    kpis[key]["monthValue"] = val_pct
-                    kpis[key]["monthRag"]   = bowler_rag(key, val_pct)
-                except (TypeError, ValueError):
-                    pass
+        # YTD = mean of populated Act months Jan..target_month (not the
+        # walked-back month — YTD always spans the full year-to-date window).
+        if act_row is not None:
+            ytd_vals = []
+            for m in range(1, target_month + 1):
+                col = month_cols.get(m)
+                if col is None or col >= len(act_row):
+                    continue
+                v = parse_bowler_value(act_row[col])
+                if v is not None:
+                    ytd_vals.append(v)
+            if ytd_vals:
+                kpis[key]["ytdValue"] = round(sum(ytd_vals) / len(ytd_vals))
+                kpis[key]["ytdRag"]   = bowler_rag(key, kpis[key]["ytdValue"])
 
     overall = worst_rag(*[k["monthRag"] for k in kpis.values()])
-    return kpis, overall
+    reason  = bowler_overall_reason(kpis, overall)
+    return kpis, overall, reason
+
+
+def process_safety_kpis(month_cols, kpi_rows, target_month):
+    """
+    Extract liveStop / readAcross fresh from the Bowler Chart's Act rows —
+    no longer preserved from the previous board. Same month-walk-back logic
+    as process_bowler(); readAcross in particular tends to be NA in the
+    current month before Ops closes it out (falls back to the latest
+    populated month, per CLAUDE.md).
+    """
+    live_row = find_kpi_act_row(kpi_rows, "live save rule compliance")
+    read_row = find_kpi_act_row(kpi_rows, "read across closing rate")
+
+    live_value, _ = bowler_month_value(month_cols, live_row, target_month)
+    read_value, _ = bowler_month_value(month_cols, read_row, target_month)
+
+    return {
+        "liveStop":   {"value": live_value, "rag": safety_kpi_rag(live_value)},
+        "readAcross": {"value": read_value, "rag": safety_kpi_rag(read_value)},
+    }
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -1257,13 +1442,25 @@ def process_xyleme(ss):
 # SAFETY
 # ══════════════════════════════════════════════════════════════════════════
 
-def calculate_safety_rag(weekly_incidents, kpis_in_spec):
-    if not kpis_in_spec:
+def calculate_safety_rag(weekly_incidents, bowler_overall, safety_kpis):
+    """
+    Safety RAG per CLAUDE.md: any KPI out of spec forces red \u2014 Life Saving
+    Rules / Read Across compliance override the zero-incident green \u2014 then
+    falls back to incident-count severity.
+    """
+    live = safety_kpis["liveStop"]
+    read = safety_kpis["readAcross"]
+
+    if live["rag"] == "red":
+        return "red", f"Life Saving Rules compliance {live['value']}% vs 90% plan"
+    if read["rag"] == "red":
+        return "red", f"Read Across Closing Rate {read['value']}% vs 90% plan"
+    if bowler_overall == "red":
         return "red", "KPI out of spec"
     if weekly_incidents == 0:
         return "green", "0 incidents this week \u2014 All safety KPIs on plan"
     if weekly_incidents <= 2:
-        return "yellow", f"{weekly_incidents} minor incident(s) \u2014 all KPIs in spec"
+        return "amber", f"{weekly_incidents} minor incident(s) \u2014 all KPIs in spec"
     return "red", f"{weekly_incidents} incidents this week"
 
 
@@ -1439,31 +1636,20 @@ def build(week_override=None):
     ap   = process_action_plans(ap_headers, ap_rows)
     cx   = process_capex(cx_headers, cx_rows)
 
-    # KPIs / Bowler — preserve curated values from the existing board if present
-    # (the Bowler Chart parse is unreliable; Jim maintains these manually).
-    if existing and "slide1" in existing:
-        es1 = existing["slide1"]
-        kpis           = es1.get("kpis", {})
-        safety_kpis    = es1.get("safetyKPIs",
-                                 {"liveStop":   {"value": 0, "rag": "green"},
-                                  "readAcross": {"value": 0, "rag": "green"}})
-        _bowler        = es1.get("overallRAGs", {}).get("bowler", {})
-        bowler_overall = _bowler.get("rag", "amber")
-        bowler_reason  = _bowler.get("reason", f"April data — {_bowler.get('rag', 'amber')}")
-        kpis_preserved = True
-    else:
-        kpis, bowler_overall = process_bowler(files["bowler"])
-        bowler_reason  = f"April data — {bowler_overall}"
-        safety_kpis    = {"liveStop":   {"value": 0, "rag": "green"},
-                          "readAcross": {"value": 0, "rag": "green"}}
-        kpis_preserved = False
+    # KPIs / Bowler / Safety KPIs — derived fresh from the Bowler Chart every
+    # build (no longer preserved from the previous board-data.json; the
+    # month auto-selection + NA walk-back below replaced the unreliable
+    # hardcoded-April parse that made preservation necessary).
+    month_cols, kpi_rows = load_bowler_sheet(files["bowler"])
+    target_month = bowler_target_month(date.today())
+    kpis, bowler_overall, bowler_reason = process_bowler(month_cols, kpi_rows, target_month)
+    safety_kpis = process_safety_kpis(month_cols, kpi_rows, target_month)
 
     # Safety — 0 new incidents assumed; Jim reviews weekly report manually
     weekly_incidents = 0
     safety_log = (existing.get("safetyLog") if existing and existing.get("safetyLog")
                   else list(SAFETY_LOG_BASE))   # carry forward cumulative log
-    kpis_in_spec = bowler_overall != "red"
-    safety_rag, safety_reason = calculate_safety_rag(weekly_incidents, kpis_in_spec)
+    safety_rag, safety_reason = calculate_safety_rag(weekly_incidents, bowler_overall, safety_kpis)
 
     # ── Totals across the 3 buckets (Internal / OE / SS) ─────────────────
     internal_students = enr["total_internal"]
@@ -1642,8 +1828,6 @@ def build(week_override=None):
 
     # ── Preserved / verify-manually flags ────────────────────────────────
     print("  ⚠️   VERIFY MANUALLY — sections carried forward, not derived from source:")
-    if kpis_preserved:
-        print("      → Bowler KPIs + safetyKPIs: preserved from previous board")
     print("      → PLL lookAhead30: preserved from previous board (not yet computed)")
     print()
 

@@ -42,6 +42,12 @@ A local build still works when needed:
    produced missing `totalClasses`, a malformed Week at a Glance entry,
    wrong slide 3 data, and inflated student counts.)
 
+   `--week`/`WEEK_OF` tolerates a pasted `week_of: YYYY-MM-DD` label,
+   surrounding quotes/whitespace (`sanitize_week_override()` strips them
+   before parsing) — a bare `week_of: 2026-07-20` crashed run #1 on
+   2026-07-17. Anything else invalid after cleanup fails fast with the
+   expected format.
+
 ---
 
 ## Required Sources
@@ -146,37 +152,58 @@ Sherif → Pablo → Ben Smith → Mohammed → Harry → Greg → Linda Nelson 
 
 ## Bowler KPI Rules
 
-- **Bowler KPIs and the Bowler RAG are PRESERVED from the previous
-  board-data.json**, not parsed from the Bowler Chart — Jim maintains
-  them manually (the xlsx parse is unreliable and is only a fallback
-  when no existing board exists). Confirm the carried-forward values
-  with Jim each build.
-- Current status (as of Jul 6, 2026): **AMBER — Timecard YTD 72% vs 92% plan**
-- Thresholds (for when values are updated):
-  - All actuals stored as decimals → multiply ×100
-  - Instructor Utilization: REVERSE metric — lower is better
-  - Post-Training Skill Improvement: Green ≥70%, Red <63%
-  - Timecard OTD: Green ≥92%, Red <82%
+- **Bowler KPIs, the Bowler RAG, and safetyKPIs (liveStop/readAcross) are
+  derived fresh from the Bowler Chart every build** (as of the Jul 2026
+  hardening — no longer preserved from the previous board-data.json).
+  `load_bowler_sheet()` reads the sheet's true header row (JAN…DEC, with
+  1Q/2Q/3Q/4Q columns skipped) and each KPI's 3-row PY/Plan/Act block.
+- **Month auto-selection:** target month = build month minus 1 (most
+  recent complete month), via `bowler_target_month(date.today())`. If the
+  target month's Act cell is empty/NA, `bowler_month_value()` walks
+  backward to the most recent populated month and reports that month as
+  `monthLabel`.
+- **Value normalization:** `parse_bowler_value()` strips stray characters
+  (`%`, `*`, etc.) then treats a result `<= 1.5` as a decimal fraction
+  (×100) — the sheet mixes decimals (0.91), bare percentages (84.6), and
+  dirty strings (`'*58%'`, `'90%%'`).
+- **YTD value** = mean of populated Act values from Jan through the target
+  month (not the walked-back month — YTD always spans the full year so far).
+- Thresholds (`BOWLER_CONFIG` in build.py):
+  - Post-Training Skill Improvement (PTSI): Green ≥70%, Red <63%
+  - Timecard On-Time Delivery: Green ≥92%, Red <82%
+  - FLIQ (Fully Loaded & Qualified Instructors): REVERSE metric (lower is
+    better), Green <15%, Amber ≥15%, **no red** — health-monitoring only
 
 ---
 
 ## Safety RAG Logic
 
 - **Green:** 0 incidents AND all KPIs in spec
-- **Yellow:** 1–2 minor incidents AND all KPIs in spec
-- **Red Path A:** Any KPI out of spec
+- **Amber:** 1–2 minor incidents AND all KPIs in spec
+- **Red Path A:** Any KPI out of spec — `liveStop` or `readAcross` red
+  (<90% vs the 90% plan) overrides the zero-incident green, per
+  `calculate_safety_rag()` in build.py
 - **Red Path B:** 3+ incidents AND all KPIs in spec
 
-### Cumulative Safety Log — carry forward always:
+`liveStop` (Live Save Rule Compliance %) and `readAcross` (Read Across
+Closing Rate) are extracted from the Bowler Chart with the same
+month-auto-select + NA-walk-back logic as the Bowler KPIs above
+(`process_safety_kpis()`) — no longer preserved from the previous board.
+Both are green ≥90%, red <90%, no amber zone.
 
-- **Mar 14, 2026:** Slip on wet floor near lab entrance — no injury, area secured
+### Cumulative Safety Log — carry forward always (newest first):
+
+- **Jul 17, 2026:** 📵 No-Photo Policy — Training Bays — advisory (unauthorized
+  social media post from the training bays)
 - **Apr 3, 2026:** Lube oil spill during maintenance exercise — contained, cleaned, no injury
-- **Jun 18, 2026:** 🌡️ Heat Stress Awareness advisory — hydration, vehicle,
-  and Bldg 1 Bay precautions; EHS distributing cooling towels & electrolytes
+- **Mar 14, 2026:** Slip on wet floor near lab entrance — no injury, area secured
+
+(Retired 2026-07-17: Jun 18 Heat Stress Awareness advisory — season passed.)
 
 build.py carries `safetyLog` forward from the existing board-data.json
 automatically — new incidents are added there (or to `SAFETY_LOG_BASE`
-in build.py), never dropped.
+in build.py, which must be kept in sync so a from-scratch rebuild matches
+production), never dropped.
 
 ---
 
@@ -253,17 +280,18 @@ OE ← CMCustomerDemandList, SS ← ClassList. OE + SS = "customer".
 ## Carried-Forward Sections — verify each build
 
 build.py preserves these from the existing board-data.json instead of
-recomputing (no reliable weekly source). The build summary flags them
-under "VERIFY MANUALLY":
+recomputing:
 
-- **Bowler KPIs + Bowler RAG** (see Bowler KPI Rules)
-- **safetyKPIs** and **safetyLog**
+- **safetyLog** — cumulative, carried forward always (see Safety RAG Logic)
 - **Per-PLL lookAhead30** (currently all zeros — the Jul 6 hand-built
-  board dropped them; needs manual re-entry if Jim wants them back)
+  board dropped them; needs manual re-entry if Jim wants them back;
+  flagged in the build summary under "VERIFY MANUALLY")
 
-CapEx is NO LONGER carried forward — it is computed live from the CapEx
-Smartsheet (Year 2026, Order ≥ 3 line items, Cancelled excluded; budget
-totals from the Order-1 summary row).
+Bowler KPIs, Bowler RAG, and safetyKPIs (liveStop/readAcross) are NO
+LONGER carried forward as of the Jul 2026 hardening — see Bowler KPI
+Rules. CapEx is also NOT carried forward — it is computed live from the
+CapEx Smartsheet (Year 2026, Order ≥ 3 line items, Cancelled excluded;
+budget totals from the Order-1 summary row).
 
 Because preservation reads the CURRENT board-data.json, never delete or
 hand-strip that file — a bad board propagates into the next build.
