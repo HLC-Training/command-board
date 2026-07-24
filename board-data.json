@@ -17,9 +17,9 @@
       "KLC": 28,
       "Other": 221
     },
-    "safetyRag": "green",
+    "safetyRag": "red",
     "minorIncidents": 0,
-    "ragReason": "0 incidents this week — All safety KPIs on plan",
+    "ragReason": "Live Saving Rules compliance Jun 85% vs 90% plan — single KPI miss, zero incidents",
     "safetyKPIs": {
       "liveStop": {
         "value": 85,
@@ -69,9 +69,9 @@
         "reason": "Timecard Jun 91% vs 92% plan"
       },
       "safety": {
-        "rag": "green",
+        "rag": "red",
         "label": "Safety",
-        "reason": "0 incidents this week — All safety KPIs on plan"
+        "reason": "Live Saving Rules compliance Jun 85% vs 90% plan"
       },
       "actionPlans": {
         "rag": "red",
@@ -87,9 +87,14 @@
   },
   "safetyLog": [
     {
-      "date": "Jul 17, 2026",
-      "shortDesc": "📵 No-Photo Policy — Training Bays",
-      "desc": "ADVISORY — No photos in the training bays without approval. A recent unauthorized social media post from the bays reached senior leadership before we knew about it. No safety violation occurred, but perception moved faster than facts. Vetted posts are welcome — route them through HLC leadership."
+      "date": "Jul 24, 2026",
+      "shortDesc": "🛑 Stop Work — damaged sling caught before rotor lift",
+      "desc": "7HA.03 Project Crew — Damaged sling discovered while unloading the rotor beam from the hook to the lifting beam. Sling immediately tagged out of service; no equivalent-rated sling available onsite, so a replacement was rented locally in Houston. Lift completed on schedule with no further delay."
+    },
+    {
+      "date": "Jul 5, 2026",
+      "shortDesc": "🛑 Stop Work — barricade correction, 7FH2 rotor",
+      "desc": "Submitted by Ben Smith — LV 26-1 class was performing live electrical testing on the 7FH2 rotor without barricades. Work was stopped and the team coached on proper barricade placement to protect the testing area before work resumed."
     },
     {
       "date": "Apr 3, 2026",
