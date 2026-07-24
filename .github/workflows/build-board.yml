@@ -20,10 +20,10 @@ jobs:
 
       # Jim uploads the weekly xlsx files to data/ on main via the GitHub web
       # UI — pull them onto preview so the build always uses the latest files.
-      - name: Sync data files from main
+      - name: Sync data files + build.py from main
         run: |
           git fetch origin main
-          git checkout origin/main -- data/
+          git checkout origin/main -- data/ build.py
 
       - name: Set up Python
         uses: actions/setup-python@v5
