@@ -1,7 +1,13 @@
 name: Promote Preview to Main
 
 on:
-  workflow_dispatch:          # Jim triggers this after reviewing preview
+  workflow_dispatch:          # Jim can still trigger this manually anytime
+  schedule:
+    - cron: '0 17 * * 0'      # Every Sunday, 12:00 PM Central (17:00 UTC / CDT)
+                              # NOTE: GitHub cron doesn't observe DST — this
+                              # drifts to 11:00 AM Central once Houston falls
+                              # back to CST in the winter. Adjust the hour
+                              # then if you want it pinned to noon exactly.
 
 jobs:
   promote:
@@ -25,3 +31,12 @@ jobs:
           git fetch origin preview
           git merge origin/preview -m "Promote preview to main — $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push origin main
+
+      - name: Switch Pages source back to main
+        run: |
+          curl -sf -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.COMMAND_BOARD_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/HLC-Training/command-board/pages \
+            -d '{"source":{"branch":"main","path":"/"}}'
