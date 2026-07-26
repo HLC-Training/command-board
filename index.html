@@ -9,18 +9,21 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.js"></script>
 <style>
-:root{--ev:#005E60;--day:#FFFFFF;--night:#212121;--acc:#C8FF08;--evl:#E6F2F2;--evm:#007A7C;--grn:#2D7A45;--red:#C0392B;--amb:#E67E22;--gry:#6B7280;--bdr:#D1D5DB;--fh:'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif;--fb:Inter,'Segoe UI',Arial,sans-serif}
+@font-face{font-family:'Sons Condensed';src:url("assets/fonts/SonsCondensed-Semibold.ttf") format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Sons Condensed';src:url("assets/fonts/SonsCondensed-Extrabold.ttf") format("truetype");font-weight:800;font-style:normal;font-display:swap}
+:root{--ev:#005E60;--day:#FFFFFF;--night:#212121;--acc:#3FD2FF;--acc-ink:#0A7EA4;--evl:#E6F2F2;--evm:#007A7C;--grn:#2D7A45;--red:#C0392B;--amb:#E67E22;--gry:#6B7280;--bdr:#D1D5DB;--fh:'Sons Condensed',Inter,'Segoe UI',Arial,sans-serif;--fb:Inter,'Segoe UI',Arial,sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:var(--night);font-family:var(--fb)}
 .slide{position:absolute;top:0;left:0;width:100vw;height:100vh;display:none;overflow:hidden;flex-direction:column}
 .slide.active{display:flex}
 #pb{position:fixed;bottom:0;left:0;height:4px;background:var(--acc);z-index:200}
 #sc{position:fixed;bottom:8px;right:12px;font-size:10px;color:rgba(33,33,33,.35);z-index:200;font-family:var(--fb)}
-.gh{background:var(--ev);padding:6px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.gh{background:var(--ev);padding:6px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:4px solid var(--acc)}
 .gh .ht{font-family:var(--fh);font-size:17px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1.5px}
 .gh .hs{font-size:9px;color:rgba(255,255,255,.6);margin-top:1px}
 .gh .hw{font-size:13px;font-weight:700;color:var(--acc)}
 .gh .hl{font-size:10px;color:rgba(255,255,255,.6);text-align:right}
+.ghb{display:flex;align-items:center;gap:8px}
 .s1b{flex:1;display:flex;flex-direction:column;padding:7px 12px;gap:5px;background:var(--day);overflow:hidden}
 .ms{display:grid;grid-template-columns:1.4fr 1fr 1fr repeat(4,0.72fr);gap:5px;flex-shrink:0}
 .mc{background:var(--ev);border-radius:8px;padding:8px;text-align:center}
@@ -130,7 +133,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .ph-type{flex:1;text-align:center;border-radius:3px;padding:2px 0}
 .ph-type .tn{font-family:var(--fh);font-size:13px;font-weight:900;line-height:1;display:block}
 .ph-type .tl{font-size:6.5px;text-transform:uppercase;letter-spacing:.3px}
-.ph-type.int-t{background:rgba(200,255,8,.12)}.ph-type.int-t .tn{color:var(--acc)}.ph-type.int-t .tl{color:rgba(200,255,8,.65)}
+.ph-type.int-t{background:rgba(63,210,255,.12)}.ph-type.int-t .tn{color:var(--acc)}.ph-type.int-t .tl{color:rgba(63,210,255,.65)}
 .ph-type.oe-t{background:rgba(255,255,255,.1)}.ph-type.oe-t .tn{color:#7DD3FC}.ph-type.oe-t .tl{color:rgba(125,211,252,.65)}
 .la-section{background:rgba(0,94,96,.05);border-top:1px solid rgba(0,94,96,.15);padding:3px 6px;flex-shrink:0}
 .la-title{font-family:var(--fh);font-size:7px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px}
@@ -167,7 +170,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .kfi-title{font-family:var(--fh);font-size:9px;font-weight:900;color:var(--lim);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
 .kfi-grid{display:flex;gap:5px}
 .kfi-item{flex:1;background:rgba(0,0,0,0.2);border-radius:5px;padding:5px 4px;text-align:center}
-.kfi-item.ev{background:rgba(200,255,8,0.12);border:1px solid rgba(200,255,8,0.3)}
+.kfi-item.ev{background:rgba(63,210,255,0.12);border:1px solid rgba(63,210,255,0.3)}
 .kfi-val{font-size:18px;font-weight:900;color:#fff;line-height:1}
 .kfi-lbl{font-size:7px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
 .wag-card{background:var(--night);overflow:hidden}
@@ -184,7 +187,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .wag-loc-item.hlc{background:rgba(0,94,96,0.4);border:1px solid rgba(0,94,96,0.6)}
 .wag-loc-item.blc{background:rgba(0,78,152,0.3);border:1px solid rgba(0,78,152,0.5)}
 .wag-loc-item.klc{background:rgba(100,100,100,0.2);border:1px solid rgba(150,150,150,0.3)}
-.wag-loc-item.oth{background:rgba(200,255,8,0.08);border:1px solid rgba(200,255,8,0.2)}
+.wag-loc-item.oth{background:rgba(63,210,255,0.08);border:1px solid rgba(63,210,255,0.2)}
 .wag-loc-num{font-size:18px;font-weight:900;color:var(--day);line-height:1}
 .wag-loc-name{font-size:7px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;line-height:1.3}
 .wag-safety{display:flex;align-items:center;gap:10px;background:rgba(45,122,69,0.2);border:1px solid rgba(45,122,69,0.5);border-radius:8px;padding:9px 11px}
@@ -246,7 +249,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
   <div class="gh">
     <div><div class="ht">Internal Training — Student Country of Origin</div><div class="hs">Where this week's students are coming from</div></div>
     <div class="hw" id="s3-hw"></div>
-    <div class="hl">GE Vernova<br>OFS Training Command Board</div>
+    <div class="ghb"><svg width="28" height="28" viewBox="0 0 96 96" aria-label="ORiON mark"><path d="M80.5 38.1A34 34 0 1 1 57.9 15.5" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"></path><circle cx="36" cy="60" r="4" fill="#3FD2FF"></circle><circle cx="50" cy="46" r="5.5" fill="#3FD2FF"></circle><circle cx="66" cy="30" r="7" fill="#3FD2FF"></circle></svg><div class="hl">GE Vernova<br>OFS Training Command Board</div></div>
   </div>
   <div class="mb" id="map3-container"></div>
 </div>
@@ -255,7 +258,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
   <div class="gh">
     <div><div class="ht">Customer Training — Global Delivery</div><div class="hs">Site-Specific &amp; Open Enrollment delivery locations</div></div>
     <div class="hw" id="s4-hw"></div>
-    <div class="hl">GE Vernova<br>OFS Training Command Board</div>
+    <div class="ghb"><svg width="28" height="28" viewBox="0 0 96 96" aria-label="ORiON mark"><path d="M80.5 38.1A34 34 0 1 1 57.9 15.5" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"></path><circle cx="36" cy="60" r="4" fill="#3FD2FF"></circle><circle cx="50" cy="46" r="5.5" fill="#3FD2FF"></circle><circle cx="66" cy="30" r="7" fill="#3FD2FF"></circle></svg><div class="hl">GE Vernova<br>OFS Training Command Board</div></div>
   </div>
   <div class="mb" id="map4-container"></div>
 </div>
@@ -399,7 +402,7 @@ function renderSlide1(D){
   <div class="gh">
     <div><div class="ht">OFS Training Delivery Command Board</div><div class="hs">${D.meta.specVersion} Build ${D.meta.buildDate}</div></div>
     <div class="hw">${s1.weekOf}</div>
-    <div class="hl">GE Vernova<br>Houston Learning Center</div>
+    <div class="ghb"><svg width="28" height="28" viewBox="0 0 96 96" aria-label="ORiON mark"><path d="M80.5 38.1A34 34 0 1 1 57.9 15.5" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"></path><circle cx="36" cy="60" r="4" fill="#3FD2FF"></circle><circle cx="50" cy="46" r="5.5" fill="#3FD2FF"></circle><circle cx="66" cy="30" r="7" fill="#3FD2FF"></circle></svg><div class="hl">GE Vernova<br>Houston Learning Center</div></div>
   </div>
   <div class="s1b">
     <div class="ms">
@@ -529,7 +532,7 @@ function renderSlide2(D){
   const histStr=sl.map(e=>`📅 ${e.date}: ${e.shortDesc||e.desc}`).join(' • ');
   cards+=`<div class="pll-card wag-card">
     <div class="pn" style="border-bottom:1px solid rgba(0,94,96,0.15);padding:8px 10px;display:flex;align-items:center;gap:7px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#C8FF08" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#3FD2FF" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
       WEEK AT A GLANCE<span style="margin-left:auto;font-size:9px;font-weight:500;color:var(--gry);text-transform:none">${s1.weekOf}</span>
     </div>
     <div class="wag-body">
@@ -547,7 +550,7 @@ function renderSlide2(D){
         </div>
       </div>
       <div class="wag-safety">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#C8FF08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#3FD2FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div class="wag-safety-text">
           <div class="wag-safety-status">${s1.minorIncidents===0?'ALL CLEAR':'ATTENTION'}</div>
           <div class="wag-safety-sub">${s1.minorIncidents} incidents • ${s1.minorIncidents===0?'All KPIs on plan':'Review safety section'}</div>
@@ -561,7 +564,7 @@ function renderSlide2(D){
   <div class="gh">
     <div><div class="ht">Internal Training Roster — PLL Assignments</div><div class="hs">Week of ${s1.weekOf} | Internal + OE/SS</div></div>
     <div class="hw">${s1.weeklyTotal} Students Total This Week</div>
-    <div class="hl">GE Vernova<br>OFS Training Command Board</div>
+    <div class="ghb"><svg width="28" height="28" viewBox="0 0 96 96" aria-label="ORiON mark"><path d="M80.5 38.1A34 34 0 1 1 57.9 15.5" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"></path><circle cx="36" cy="60" r="4" fill="#3FD2FF"></circle><circle cx="50" cy="46" r="5.5" fill="#3FD2FF"></circle><circle cx="66" cy="30" r="7" fill="#3FD2FF"></circle></svg><div class="hl">GE Vernova<br>OFS Training Command Board</div></div>
   </div>
   <div class="s2b">
     <div class="pg">${cards}</div>
@@ -696,8 +699,8 @@ function buildMap(cid,pins,opts){
     const cnt=p.count||p.students||0;
     const r=Math.max(18,rS(cnt));
     const wk=!!pins.week;
-    pG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r).attr("fill",wk?"rgba(200,255,8,.88)":"rgba(0,94,96,.78)").attr("stroke","white").attr("stroke-width",2);
-    pG.append("text").attr("x",c[0]).attr("y",c[1]).attr("text-anchor","middle").attr("dominant-baseline","central").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",r>26?14:r>19?11:9).attr("fill",wk?"#005E60":"#C8FF08").text(cnt);
+    pG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r).attr("fill",wk?"rgba(63,210,255,.88)":"rgba(0,94,96,.78)").attr("stroke","white").attr("stroke-width",2);
+    pG.append("text").attr("x",c[0]).attr("y",c[1]).attr("text-anchor","middle").attr("dominant-baseline","central").attr("font-family","'Sons Condensed',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",r>26?14:r>19?11:9).attr("fill",wk?"#005E60":"#3FD2FF").text(cnt);
     pG.append("text").attr("x",c[0]).attr("y",c[1]+r+9).attr("text-anchor","middle").attr("font-family","Inter,'Segoe UI',Arial,sans-serif").attr("font-size",8).attr("fill","#212121").attr("font-weight","600").text(p.country);
   }
   if(pins.lcs){
@@ -705,8 +708,8 @@ function buildMap(cid,pins,opts){
     for(const lc of pins.lcs){
       const c=proj([lc.lon,lc.lat]);if(!c)continue;
       const r2=lc.students>0?Math.max(10,rS(lc.students)*.4):7;
-      lG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r2+4).attr("fill","none").attr("stroke","#C8FF08").attr("stroke-width",2.5).attr("stroke-dasharray","4,2");
-      lG.append("text").attr("x",c[0]).attr("y",c[1]-r2-10).attr("text-anchor","middle").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",10).attr("fill","#005E60").text(lc.name.split("—")[0].trim());
+      lG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r2+4).attr("fill","none").attr("stroke","#3FD2FF").attr("stroke-width",2.5).attr("stroke-dasharray","4,2");
+      lG.append("text").attr("x",c[0]).attr("y",c[1]-r2-10).attr("text-anchor","middle").attr("font-family","'Sons Condensed',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",10).attr("fill","#005E60").text(lc.name.split("—")[0].trim());
     }
   }
   const leg=d3.select(ct).append("div").style("position","absolute").style("bottom","18px").style("left","14px").style("display","flex").style("gap","14px").style("background","rgba(0,94,96,.88)").style("padding","6px 14px").style("border-radius","6px");
@@ -724,9 +727,9 @@ async function initMaps(DATA){
   document.getElementById('s3-hw').textContent=`${DATA.slide3.totalCountries} Countries · ${DATA.slide3.totalStudents} Students`;
   document.getElementById('s4-hw').textContent=`${DATA.slide4.weekStudents} Students · ${DATA.slide4.weekClasses} Classes This Week`;
   const s3=document.getElementById("map3-container");
-  if(s3)buildMap("map3-container",{origin:DATA.slide3.pins,lcs:DATA.slide3.learningCenters},{maxR:50,li:[{c:"rgba(0,94,96,.78)",l:"Student Origin — bubble = student count"},{c:"#C8FF08",l:"Learning Center"}]});
+  if(s3)buildMap("map3-container",{origin:DATA.slide3.pins,lcs:DATA.slide3.learningCenters},{maxR:50,li:[{c:"rgba(0,94,96,.78)",l:"Student Origin — bubble = student count"},{c:"#3FD2FF",l:"Learning Center"}]});
   const s4=document.getElementById("map4-container");
-  if(s4)buildMap("map4-container",{week:DATA.slide4.weekDelivery},{maxR:55,li:[{c:"rgba(200,255,8,.88)",l:"This Week — customer training delivery locations"}]});
+  if(s4)buildMap("map4-container",{week:DATA.slide4.weekDelivery},{maxR:55,li:[{c:"rgba(63,210,255,.88)",l:"This Week — customer training delivery locations"}]});
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
