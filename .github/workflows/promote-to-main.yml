@@ -22,8 +22,6 @@ jobs:
 
       # A plain merge (not --ff-only) because main routinely has commits
       # preview lacks — the weekly data-file uploads land on main first.
-      # Content conflicts can't happen in practice: the build workflow syncs
-      # data/ from main before committing, so both sides carry identical files.
       - name: Merge preview into main
         run: |
           git config user.name "github-actions[bot]"
@@ -34,7 +32,7 @@ jobs:
 
       - name: Switch Pages source back to main
         run: |
-          response=$(curl -s -w "\n%{http_code}" -X PUT \
+          response=$(curl -s -D /tmp/pages_headers.txt -w "\n%{http_code}" -X PUT \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.COMMAND_BOARD_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
@@ -44,7 +42,9 @@ jobs:
           body="${response%$'\n'*}"
           echo "HTTP status: $status"
           echo "Response body: $body"
+          echo "--- Diagnostic headers ---"
+          grep -i "x-accepted-github-permissions\|x-github-request-id" /tmp/pages_headers.txt || echo "(no permission header returned)"
           if [ "$status" -ge 400 ]; then
-            echo "::error::Pages API call failed with status $status — see response body above"
+            echo "::error::Pages API call failed with status $status — see response body/headers above"
             exit 1
           fi
