@@ -18,8 +18,8 @@
       "Other": 148
     },
     "safetyRag": "red",
-    "minorIncidents": 0,
-    "ragReason": "Life Saving Rules compliance 85% vs 90% plan",
+    "minorIncidents": 1,
+    "ragReason": "Life Saving Rules compliance 85% vs 90% plan; PSE under investigation (Jul 29)",
     "safetyKPIs": {
       "liveStop": {
         "value": 85,
@@ -71,7 +71,7 @@
       "safety": {
         "rag": "red",
         "label": "Safety",
-        "reason": "Life Saving Rules compliance 85% vs 90% plan"
+        "reason": "Life Saving Rules 85% vs 90% plan; 1 PSE open"
       },
       "actionPlans": {
         "rag": "red",
@@ -86,6 +86,16 @@
     }
   },
   "safetyLog": [
+    {
+      "date": "Jul 31, 2026",
+      "shortDesc": "📌 ADVISORY — rigging path check before crane cable-up",
+      "desc": "ADVISORY — Interim, pending PSE investigation. Before cabling up with the crane, walk the full rigging path and confirm no wire rope, sling, or chain fall can catch on studs, bolting, or protruding hardware. Confirm personnel positions and exclusion zones below and adjacent to the lift before load is taken. Applies to all lifting operations at HLC. To be revised when investigation findings are issued."
+    },
+    {
+      "date": "Jul 29, 2026",
+      "shortDesc": "⚠️ PSE — dropped chain fall, 7HA.03 exhaust frame rigging",
+      "desc": "ADVANCE COMMUNICATION — Potential Severe Event, investigation active. 7HA.03 crew was clearing rigging after the exhaust frame was set. While cabling up with the crane, two 3/4-inch wire ropes caught on an ITH stud between the mini case and the exhaust frame and failed. A 10T chain fall fell to the turbine deck and did not strike anyone. A signal person was tied off on top of the compressor turbine shell at the time. No injuries. Work was stopped immediately. Findings to follow."
+    },
     {
       "date": "Jul 24, 2026",
       "shortDesc": "🛑 Stop Work — damaged sling caught before rotor lift",
