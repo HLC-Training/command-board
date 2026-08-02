@@ -434,13 +434,13 @@ function renderSlide1(D){
           <div style="flex:1">
             <div class="sh-title-big ${safetyClass}">SAFETY</div>
             <div class="sh-reason" style="color:${safetyClass==='green'?'#4ADE80':safetyClass==='amber'?'#FCD34D':'#F87171'};font-size:9px;margin:2px 0">
-              ${s1.minorIncidents===0?'All KPIs on plan — 0 incidents this week':s1.ragReason||''}
+              ${(s1.minorIncidents===0&&safetyClass==='green')?'All KPIs on plan — 0 incidents this week':s1.ragReason||''}
             </div>
-            <span class="sh-incident ${safetyClass}">● ${s1.minorIncidents} Minor Incidents This Week</span>
+            <span class="sh-incident ${safetyClass}">● ${s1.minorIncidents} Safety Event${s1.minorIncidents===1?'':'s'} Logged</span>
           </div>
         </div>
         <div class="sh-kpis">
-          <div class="sh-kpi"><div class="sv green-val">${s1.minorIncidents}</div><div class="sl">Incidents &amp; Injuries</div></div>
+          <div class="sh-kpi"><div class="sv green-val">${s1.minorIncidents}</div><div class="sl">Safety Events Logged</div></div>
           <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.liveStop?.value||'—'}%</div><div class="sl">Live Save Compliance</div></div>
           <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.readAcross?.value||'—'}%</div><div class="sl">Read Across Rate</div></div>
         </div>
