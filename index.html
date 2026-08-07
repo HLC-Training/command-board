@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>OFS Training Delivery Command Board</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-<script defer src="https://umami-patn9x71l-jim-s-projects4.vercel.app/script.js" data-website-id="c0bc3ecf-fab7-4921-8338-2aaf1f4abf42"></script>
+<script defer src="https://umami-three-puce.vercel.app/script.js" data-website-id="c0bc3ecf-fab7-4921-8338-2aaf1f4abf42"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.js"></script>
 <style>
@@ -434,13 +434,13 @@ function renderSlide1(D){
           <div style="flex:1">
             <div class="sh-title-big ${safetyClass}">SAFETY</div>
             <div class="sh-reason" style="color:${safetyClass==='green'?'#4ADE80':safetyClass==='amber'?'#FCD34D':'#F87171'};font-size:9px;margin:2px 0">
-              ${s1.minorIncidents===0?'All KPIs on plan — 0 incidents this week':s1.ragReason||''}
+              ${(s1.minorIncidents===0&&safetyClass==='green')?'All KPIs on plan — 0 incidents this week':s1.ragReason||''}
             </div>
-            <span class="sh-incident ${safetyClass}">● ${s1.minorIncidents} Minor Incidents This Week</span>
+            <span class="sh-incident ${safetyClass}">● ${s1.minorIncidents} Safety Event${s1.minorIncidents===1?'':'s'} Logged</span>
           </div>
         </div>
         <div class="sh-kpis">
-          <div class="sh-kpi"><div class="sv green-val">${s1.minorIncidents}</div><div class="sl">Incidents &amp; Injuries</div></div>
+          <div class="sh-kpi"><div class="sv green-val">${s1.minorIncidents}</div><div class="sl">Safety Events Logged</div></div>
           <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.liveStop?.value||'—'}%</div><div class="sl">Live Save Compliance</div></div>
           <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.readAcross?.value||'—'}%</div><div class="sl">Read Across Rate</div></div>
         </div>

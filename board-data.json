@@ -1,25 +1,25 @@
 {
   "meta": {
     "specVersion": "v2.2",
-    "buildDate": "2026-07-24",
-    "weekOf": "Jul 27 – 31, 2026"
+    "buildDate": "2026-07-31",
+    "weekOf": "Aug 3 – 7, 2026"
   },
   "slide1": {
-    "weekOf": "Jul 27 – 31, 2026",
-    "weeklyTotal": 555,
-    "internalStudents": 420,
-    "oeStudents": 135,
-    "internalCourses": 36,
-    "oeCourses": 12,
+    "weekOf": "Aug 3 – 7, 2026",
+    "weeklyTotal": 432,
+    "internalStudents": 272,
+    "oeStudents": 160,
+    "internalCourses": 23,
+    "oeCourses": 13,
     "locationBreakdown": {
-      "HLC": 284,
-      "BLC": 22,
-      "KLC": 28,
-      "Other": 221
+      "HLC": 260,
+      "BLC": 17,
+      "KLC": 7,
+      "Other": 148
     },
     "safetyRag": "red",
-    "minorIncidents": 0,
-    "ragReason": "Live Saving Rules compliance Jun 85% vs 90% plan — single KPI miss, zero incidents",
+    "minorIncidents": 1,
+    "ragReason": "Life Saving Rules compliance 85% vs 90% plan; PSE under investigation (Jul 29)",
     "safetyKPIs": {
       "liveStop": {
         "value": 85,
@@ -71,12 +71,12 @@
       "safety": {
         "rag": "red",
         "label": "Safety",
-        "reason": "Live Saving Rules compliance Jun 85% vs 90% plan"
+        "reason": "Life Saving Rules 85% vs 90% plan; 1 PSE open"
       },
       "actionPlans": {
         "rag": "red",
         "label": "Action Plans",
-        "reason": "26 delayed / 40 in progress"
+        "reason": "27 delayed / 33 in progress"
       },
       "capex": {
         "rag": "amber",
@@ -86,6 +86,16 @@
     }
   },
   "safetyLog": [
+    {
+      "date": "Jul 31, 2026",
+      "shortDesc": "📌 ADVISORY — rigging path check before crane cable-up",
+      "desc": "ADVISORY — Interim, pending PSE investigation. Before cabling up with the crane, walk the full rigging path and confirm no wire rope, sling, or chain fall can catch on studs, bolting, or protruding hardware. Confirm personnel positions and exclusion zones below and adjacent to the lift before load is taken. Applies to all lifting operations at HLC. To be revised when investigation findings are issued."
+    },
+    {
+      "date": "Jul 29, 2026",
+      "shortDesc": "⚠️ PSE — dropped chain fall, 7HA.03 exhaust frame rigging",
+      "desc": "ADVANCE COMMUNICATION — Potential Severe Event, investigation active. 7HA.03 crew was clearing rigging after the exhaust frame was set. While cabling up with the crane, two 3/4-inch wire ropes caught on an ITH stud between the mini case and the exhaust frame and failed. A 10T chain fall fell to the turbine deck and did not strike anyone. A signal person was tied off on top of the compressor turbine shell at the time. No injuries. Work was stopped immediately. Findings to follow."
+    },
     {
       "date": "Jul 24, 2026",
       "shortDesc": "🛑 Stop Work — damaged sling caught before rotor lift",
@@ -111,11 +121,11 @@
     "plls": [
       {
         "name": "Sherif Khalifa",
-        "totalClasses": 6,
-        "totalStudents": 97,
-        "internalStudents": 85,
-        "oeStudents": 12,
-        "oeClasses": 1,
+        "totalClasses": 10,
+        "totalStudents": 132,
+        "internalStudents": 88,
+        "oeStudents": 44,
+        "oeClasses": 4,
         "courses": [
           {
             "name": "Entry Level Gas Turbine 26-1",
@@ -142,12 +152,20 @@
             "locCat": "HLC"
           },
           {
-            "name": "HA FE Tasks & Tools - Combustion Inspection / ITS Rollout & TRACC Scan Alignment 26-4",
-            "capacity": 9,
-            "enrolled": 9,
-            "enrollPct": 100,
+            "name": "Gas Turbine - Rotalign Touch 26-4",
+            "capacity": 8,
+            "enrolled": 5,
+            "enrollPct": 62,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "Expert Gas Turbine 26-1",
+            "capacity": 10,
+            "enrolled": 7,
+            "enrollPct": 70,
+            "overEnrolled": false,
+            "locCat": "BLC"
           },
           {
             "name": "Entry Level GT MkVIe 26-2",
@@ -160,7 +178,22 @@
         ],
         "oeCourses": [
           {
-            "title": "26-14 - ENEVA - UTE Azulao - II - Gas Turbine - Operation",
+            "title": "26-709 - OEC - Gas Turbine - 6,7, 9 B, E & F Class Operation Familiarization",
+            "students": 8,
+            "country": "United States"
+          },
+          {
+            "title": "26-215 - GSF - Andres CCPP - - - Gas Turbine - Operation",
+            "students": 12,
+            "country": "Dominican Republic"
+          },
+          {
+            "title": "26-149 - TVA - Kingston - - - Gas Turbine -  Maintenance  - G1",
+            "students": 12,
+            "country": "United States"
+          },
+          {
+            "title": "26-15 - ENEVA - UTE Azulao - II - Gas Turbine -  Maintenance",
             "students": 12,
             "country": "Brazil"
           }
@@ -175,12 +208,20 @@
       },
       {
         "name": "Pablo Schibli",
-        "totalClasses": 7,
-        "totalStudents": 106,
+        "totalClasses": 6,
+        "totalStudents": 94,
         "internalStudents": 55,
-        "oeStudents": 51,
-        "oeClasses": 4,
+        "oeStudents": 39,
+        "oeClasses": 3,
         "courses": [
+          {
+            "name": "Expert Steam Turbine, WSC / HRSG / CCPP 26-2",
+            "capacity": 10,
+            "enrolled": 10,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "BLC"
+          },
           {
             "name": "Entry Level Steam Turbine 26-1",
             "capacity": 24,
@@ -190,25 +231,17 @@
             "locCat": "HLC"
           },
           {
-            "name": "GE Steam Turbine to Alstom Steam Turbine (ST mechanical x-over) 26-2",
-            "capacity": 10,
-            "enrolled": 9,
-            "enrollPct": 90,
-            "overEnrolled": false,
-            "locCat": "BLC"
-          },
-          {
             "name": "Entry Level Steam Turbine 26-2",
             "capacity": 24,
-            "enrolled": 24,
-            "enrollPct": 100,
+            "enrolled": 23,
+            "enrollPct": 96,
             "overEnrolled": false,
             "locCat": "HLC"
           }
         ],
         "oeCourses": [
           {
-            "title": "26-988 - Calik / TURKMENENERGO - - - KIYANLY - Heat Recovery Steam Generator (HRSG) -  Operation & Maintenance (GE Engineered) - GG1",
+            "title": "26-989 - Calik / TURKMENENERGO - - - KIYANLY - Steam Turbine -  Operation - GG1",
             "students": 15,
             "country": "Turkmenistan"
           },
@@ -216,11 +249,6 @@
             "title": "26-174 - TPC - Hsinta - - - Combined Cycle Fundamentals / extended - G1",
             "students": 12,
             "country": "Taiwan"
-          },
-          {
-            "title": "26-148 - TVA - Kingston - - - Steam Turbine -  Operation  - G1",
-            "students": 12,
-            "country": "United States"
           },
           {
             "title": "26-62 - LG&E - Mill Creek - 5 - Steam Turbine -  Operation  - G2",
@@ -239,16 +267,16 @@
       {
         "name": "Ben Smith",
         "totalClasses": 2,
-        "totalStudents": 27,
-        "internalStudents": 15,
+        "totalStudents": 23,
+        "internalStudents": 11,
         "oeStudents": 12,
         "oeClasses": 1,
         "courses": [
           {
-            "name": "Generator Specialist Training 26-1",
-            "capacity": 16,
-            "enrolled": 15,
-            "enrollPct": 94,
+            "name": "Entry Level Electrical Excitation 26-2",
+            "capacity": 12,
+            "enrolled": 11,
+            "enrollPct": 92,
             "overEnrolled": false,
             "locCat": "HLC"
           }
@@ -270,12 +298,20 @@
       },
       {
         "name": "Mohammed Nizami",
-        "totalClasses": 12,
-        "totalStudents": 93,
-        "internalStudents": 45,
-        "oeStudents": 48,
-        "oeClasses": 5,
+        "totalClasses": 8,
+        "totalStudents": 76,
+        "internalStudents": 31,
+        "oeStudents": 45,
+        "oeClasses": 3,
         "courses": [
+          {
+            "name": "Electrical Control System (ECS) 26-2",
+            "capacity": 12,
+            "enrolled": 9,
+            "enrollPct": 75,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
           {
             "name": "Control Server and Thin Client Advanced 26-2",
             "capacity": 8,
@@ -285,34 +321,10 @@
             "locCat": "HLC"
           },
           {
-            "name": "Mk VIe 26-2",
-            "capacity": 12,
-            "enrolled": 9,
-            "enrollPct": 75,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          },
-          {
             "name": "ICS Commissioning Engineer Level 2 (Controls/Start-up) 26-2",
             "capacity": 6,
             "enrolled": 4,
             "enrollPct": 67,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          },
-          {
-            "name": "COMET Commissioning Engineers Training Program 26-1",
-            "capacity": 12,
-            "enrolled": 9,
-            "enrollPct": 75,
-            "overEnrolled": false,
-            "locCat": "BLC"
-          },
-          {
-            "name": "Mk VIeS 26-1",
-            "capacity": 12,
-            "enrolled": 6,
-            "enrollPct": 50,
             "overEnrolled": false,
             "locCat": "HLC"
           },
@@ -327,32 +339,22 @@
           {
             "name": "DLE Mapping Simulator Training 26-3",
             "capacity": 4,
-            "enrolled": 3,
-            "enrollPct": 75,
+            "enrolled": 4,
+            "enrollPct": 100,
             "overEnrolled": false,
             "locCat": "HLC"
           }
         ],
         "oeCourses": [
           {
-            "title": "26-568 - OEC - Control System -  Aero DLE Familiarization & Mapping Overview",
-            "students": 12,
+            "title": "26-729 - OEC - Control System - Mark VIe Familiarization with Advanced Viewer HMI",
+            "students": 18,
             "country": "United States"
           },
           {
-            "title": "26-1193 - Vistra - Forney - - - Remote-Hosted Simulator Introductory Training",
-            "students": 6,
+            "title": "26-1126 - OGE - Redbud - - - Control System - OpFlex Enhanced Transient Stability with AutoTune DX and Cold Day Performance Operation / DLN 2.6+/ Aspirated Haz Gas - G1",
+            "students": 15,
             "country": "United States"
-          },
-          {
-            "title": "26-1024 - ACWA POWER INTERNATIONAL - Taiba-1 - IPP Project_1.8GW_7E.03 SC - Control System - Mark VIe Maintenance (Extended)",
-            "students": 12,
-            "country": "Saudi Arabia"
-          },
-          {
-            "title": "26-1010 - TPC - Datan - 8&9 Local Training - Simulator - Operator Training Course",
-            "students": 6,
-            "country": "Taiwan"
           },
           {
             "title": "26-967 - CFE - MGVP Cozumel - LM2500 - Control System - Controls Operation & Maintenance On-the-Job Training (OJT)",
@@ -370,62 +372,30 @@
       },
       {
         "name": "Harry Hanson",
-        "totalClasses": 7,
-        "totalStudents": 70,
-        "internalStudents": 70,
+        "totalClasses": 3,
+        "totalStudents": 30,
+        "internalStudents": 30,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
           {
-            "name": "Craft Entry Level GT 26-7",
-            "capacity": 12,
-            "enrolled": 11,
-            "enrollPct": 92,
-            "overEnrolled": false,
-            "locCat": "Other"
-          },
-          {
-            "name": "Craft GE to Alstom GT 13E2/13D Familiarization 26-5",
-            "capacity": 15,
-            "enrolled": 9,
-            "enrollPct": 60,
-            "overEnrolled": false,
-            "locCat": "KLC"
-          },
-          {
-            "name": "Craft Intermediate Level GT 26-5",
-            "capacity": 0,
-            "enrolled": 12,
-            "enrollPct": 0,
-            "overEnrolled": false,
-            "locCat": "KLC"
-          },
-          {
-            "name": "Fast Stator Rewind 26-3",
+            "name": "Craft HA Combustion Training 26-4",
             "capacity": 8,
-            "enrolled": 10,
-            "enrollPct": 125,
-            "overEnrolled": true,
-            "locCat": "HLC"
-          },
-          {
-            "name": "Craft Intermediate Level GT 26-4",
-            "capacity": 12,
-            "enrolled": 12,
-            "enrollPct": 100,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          },
-          {
-            "name": "Compressor PT/UT/PA UT 26-2",
-            "capacity": 4,
-            "enrolled": 4,
-            "enrollPct": 100,
+            "enrolled": 6,
+            "enrollPct": 75,
             "overEnrolled": false,
             "locCat": "HLC"
           },
           {
             "name": "Craft Intermediate Level ST 26-5",
+            "capacity": 12,
+            "enrolled": 12,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Craft HA GT Familiarization 26-3",
             "capacity": 12,
             "enrolled": 12,
             "enrollPct": 100,
@@ -444,48 +414,29 @@
       },
       {
         "name": "Greg Walker",
-        "totalClasses": 5,
-        "totalStudents": 39,
-        "internalStudents": 27,
-        "oeStudents": 12,
-        "oeClasses": 1,
+        "totalClasses": 3,
+        "totalStudents": 28,
+        "internalStudents": 8,
+        "oeStudents": 20,
+        "oeClasses": 2,
         "courses": [
           {
-            "name": "LMS100 Level 2 Hot Section Maintenance 26-2",
+            "name": "LM6000 Borescope Training 26-2",
             "capacity": 8,
-            "enrolled": 7,
-            "enrollPct": 88,
+            "enrolled": 8,
+            "enrollPct": 100,
             "overEnrolled": false,
             "locCat": "HLC"
-          },
-          {
-            "name": "LM6000 Level 2 Hot Section Maintenance 26-2",
-            "capacity": 8,
-            "enrolled": 5,
-            "enrollPct": 62,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          },
-          {
-            "name": "LM2500+ Borescope Training 26-2",
-            "capacity": 8,
-            "enrolled": 5,
-            "enrollPct": 62,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          },
-          {
-            "name": "Aeroderivative Report Writing 26-3",
-            "capacity": 12,
-            "enrolled": 10,
-            "enrollPct": 83,
-            "overEnrolled": false,
-            "locCat": "Other"
           }
         ],
         "oeCourses": [
           {
-            "title": "26-96 - Western Farmers - - - - - Gas Turbine - LM6000 Package Maintenance",
+            "title": "26-1028 - Hindustan Aeronautics Ltd. - - - Indian Navy - Gas Turbine - LM2500 Level 1 Maintenance - G4",
+            "students": 8,
+            "country": "United States"
+          },
+          {
+            "title": "26-97 - Western Farmers - - - - - Gas Turbine - LM6000 Package Maintenance",
             "students": 12,
             "country": "United States"
           }
@@ -500,21 +451,12 @@
       },
       {
         "name": "Linda Nelson",
-        "totalClasses": 1,
-        "totalStudents": 7,
-        "internalStudents": 7,
+        "totalClasses": 0,
+        "totalStudents": 0,
+        "internalStudents": 0,
         "oeStudents": 0,
         "oeClasses": 0,
-        "courses": [
-          {
-            "name": "Craft Entry Level CTE Program 26-1",
-            "capacity": 12,
-            "enrolled": 7,
-            "enrollPct": 58,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          }
-        ],
+        "courses": [],
         "oeCourses": [],
         "lookAhead30": {
           "label": "Next 30 Days",
@@ -530,32 +472,32 @@
     ]
   },
   "slide3": {
-    "totalCountries": 35,
-    "totalStudents": 420,
+    "totalCountries": 34,
+    "totalStudents": 272,
     "learningCenters": [
       {
         "name": "HLC — Houston",
         "lat": 29.7604,
         "lon": -95.3698,
-        "students": 260
+        "students": 214
       },
       {
         "name": "BLC — Birr",
         "lat": 47.36,
         "lon": 8.04,
-        "students": 22
+        "students": 17
       },
       {
         "name": "KLC — Kuwait",
         "lat": 29.3117,
         "lon": 47.4818,
-        "students": 28
+        "students": 7
       }
     ],
     "pins": [
       {
         "country": "United States",
-        "students": 260,
+        "students": 170,
         "lat": 38.0,
         "lon": -97.0
       },
@@ -566,82 +508,22 @@
         "lon": -102.6
       },
       {
-        "country": "Algeria",
-        "students": 16,
-        "lat": 28.0,
-        "lon": 3.0
-      },
-      {
-        "country": "Spain",
-        "students": 13,
-        "lat": 40.5,
-        "lon": -3.7
-      },
-      {
         "country": "Saudi Arabia",
-        "students": 12,
+        "students": 11,
         "lat": 24.0,
         "lon": 45.0
       },
       {
         "country": "Malaysia",
-        "students": 11,
+        "students": 7,
         "lat": 4.2,
         "lon": 108.0
       },
       {
-        "country": "Canada",
-        "students": 10,
-        "lat": 56.1,
-        "lon": -106.3
-      },
-      {
-        "country": "Egypt",
-        "students": 7,
-        "lat": 26.8,
-        "lon": 30.8
-      },
-      {
-        "country": "Nigeria",
-        "students": 7,
-        "lat": 9.1,
-        "lon": 8.7
-      },
-      {
-        "country": "Brazil",
+        "country": "Algeria",
         "students": 6,
-        "lat": -14.2,
-        "lon": -51.9
-      },
-      {
-        "country": "Bahrain",
-        "students": 5,
-        "lat": 26.0,
-        "lon": 50.5
-      },
-      {
-        "country": "United Arab Emirates",
-        "students": 5,
-        "lat": 23.4,
-        "lon": 53.8
-      },
-      {
-        "country": "Indonesia",
-        "students": 5,
-        "lat": -0.8,
-        "lon": 113.9
-      },
-      {
-        "country": "Argentina",
-        "students": 5,
-        "lat": -38.4,
-        "lon": -63.6
-      },
-      {
-        "country": "Ireland",
-        "students": 5,
-        "lat": 53.4,
-        "lon": -8.2
+        "lat": 28.0,
+        "lon": 3.0
       },
       {
         "country": "China",
@@ -650,16 +532,40 @@
         "lon": 104.2
       },
       {
-        "country": "India",
+        "country": "Canada",
+        "students": 5,
+        "lat": 56.1,
+        "lon": -106.3
+      },
+      {
+        "country": "Brazil",
         "students": 4,
+        "lat": -14.2,
+        "lon": -51.9
+      },
+      {
+        "country": "Spain",
+        "students": 4,
+        "lat": 40.5,
+        "lon": -3.7
+      },
+      {
+        "country": "Switzerland",
+        "students": 3,
+        "lat": 46.8,
+        "lon": 8.2
+      },
+      {
+        "country": "India",
+        "students": 3,
         "lat": 20.6,
         "lon": 79.0
       },
       {
-        "country": "Italy",
-        "students": 4,
-        "lat": 41.9,
-        "lon": 12.6
+        "country": "United Arab Emirates",
+        "students": 3,
+        "lat": 23.4,
+        "lon": 53.8
       },
       {
         "country": "Pakistan",
@@ -668,16 +574,40 @@
         "lon": 69.3
       },
       {
-        "country": "United Kingdom",
-        "students": 3,
-        "lat": 55.4,
-        "lon": -3.4
+        "country": "France",
+        "students": 2,
+        "lat": 46.2,
+        "lon": 2.2
       },
       {
-        "country": "Croatia",
+        "country": "Indonesia",
         "students": 2,
-        "lat": 45.1,
-        "lon": 15.2
+        "lat": -0.8,
+        "lon": 113.9
+      },
+      {
+        "country": "Peru",
+        "students": 2,
+        "lat": -9.2,
+        "lon": -75.0
+      },
+      {
+        "country": "Chile",
+        "students": 2,
+        "lat": -35.7,
+        "lon": -71.5
+      },
+      {
+        "country": "Argentina",
+        "students": 2,
+        "lat": -38.4,
+        "lon": -63.6
+      },
+      {
+        "country": "Greece",
+        "students": 2,
+        "lat": 39.1,
+        "lon": 21.8
       },
       {
         "country": "Poland",
@@ -692,40 +622,34 @@
         "lon": 17.2
       },
       {
-        "country": "Qatar",
-        "students": 1,
-        "lat": 25.4,
-        "lon": 51.2
+        "country": "Ireland",
+        "students": 2,
+        "lat": 53.4,
+        "lon": -8.2
       },
       {
-        "country": "Taiwan",
-        "students": 1,
-        "lat": 23.7,
-        "lon": 121.0
+        "country": "Iraq",
+        "students": 2,
+        "lat": 33.2,
+        "lon": 43.7
       },
       {
-        "country": "Chile",
-        "students": 1,
-        "lat": -35.7,
-        "lon": -71.5
+        "country": "Israel",
+        "students": 2,
+        "lat": 31.0,
+        "lon": 34.8
       },
       {
-        "country": "Switzerland",
+        "country": "Turkey",
         "students": 1,
-        "lat": 46.8,
-        "lon": 8.2
+        "lat": 38.9,
+        "lon": 35.2
       },
       {
-        "country": "Greece",
+        "country": "United Kingdom",
         "students": 1,
-        "lat": 39.1,
-        "lon": 21.8
-      },
-      {
-        "country": "Tunisia",
-        "students": 1,
-        "lat": 33.9,
-        "lon": 9.5
+        "lat": 55.4,
+        "lon": -3.4
       },
       {
         "country": "Kuwait",
@@ -734,28 +658,40 @@
         "lon": 47.5
       },
       {
+        "country": "Egypt",
+        "students": 1,
+        "lat": 26.8,
+        "lon": 30.8
+      },
+      {
+        "country": "Qatar",
+        "students": 1,
+        "lat": 25.4,
+        "lon": 51.2
+      },
+      {
+        "country": "Italy",
+        "students": 1,
+        "lat": 41.9,
+        "lon": 12.6
+      },
+      {
         "country": "Bangladesh",
         "students": 1,
         "lat": 23.7,
         "lon": 90.4
       },
       {
-        "country": "Iraq",
+        "country": "Bahrain",
         "students": 1,
-        "lat": 33.2,
-        "lon": 43.7
+        "lat": 26.0,
+        "lon": 50.5
       },
       {
-        "country": "France",
+        "country": "Nigeria",
         "students": 1,
-        "lat": 46.2,
-        "lon": 2.2
-      },
-      {
-        "country": "Jordan",
-        "students": 1,
-        "lat": 31.2,
-        "lon": 36.5
+        "lat": 9.1,
+        "lon": 8.7
       },
       {
         "country": "Morocco",
@@ -766,20 +702,14 @@
     ]
   },
   "slide4": {
-    "weekStudents": 135,
-    "weekClasses": 12,
+    "weekStudents": 160,
+    "weekClasses": 13,
     "weekDelivery": [
       {
         "country": "United States",
         "lat": 38.0,
         "lon": -97.0,
-        "count": 66
-      },
-      {
-        "country": "Taiwan",
-        "lat": 23.7,
-        "lon": 121.0,
-        "count": 18
+        "count": 97
       },
       {
         "country": "Turkmenistan",
@@ -788,15 +718,21 @@
         "count": 15
       },
       {
-        "country": "Saudi Arabia",
-        "lat": 24.0,
-        "lon": 45.0,
-        "count": 12
-      },
-      {
         "country": "Mexico",
         "lat": 23.6,
         "lon": -102.6,
+        "count": 12
+      },
+      {
+        "country": "Dominican Republic",
+        "lat": 18.7,
+        "lon": -70.2,
+        "count": 12
+      },
+      {
+        "country": "Taiwan",
+        "lat": 23.7,
+        "lon": 121.0,
         "count": 12
       },
       {
@@ -808,47 +744,11 @@
     ]
   },
   "actionPlans": {
-    "deliveryTotal": 79,
-    "inProgress": 40,
-    "delayed": 26,
-    "notStarted": 13,
+    "deliveryTotal": 77,
+    "inProgress": 33,
+    "delayed": 27,
+    "notStarted": 17,
     "inProgressItems": [
-      {
-        "title": "Develop Feedback Method for OJT",
-        "currentStatus": "On Track"
-      },
-      {
-        "title": "Develop Xyleme Governance",
-        "currentStatus": "On Track"
-      },
-      {
-        "title": "Aero Maintenance Practices Training",
-        "currentStatus": "At Risk"
-      },
-      {
-        "title": "Build Process for Identifying & Scheduling extra prep time for customer instructor Visas",
-        "currentStatus": "On Track"
-      },
-      {
-        "title": "Launch State of Art Seminar for Gas Turbine",
-        "currentStatus": "On Track"
-      },
-      {
-        "title": "Recertification tracker for EU Craft",
-        "currentStatus": "On Track"
-      },
-      {
-        "title": "Develop e4 Point Training",
-        "currentStatus": "On Track"
-      },
-      {
-        "title": "Improve Controls Rooms Setup & Hardware",
-        "currentStatus": "At Risk"
-      },
-      {
-        "title": "Live Outage sustainment",
-        "currentStatus": "In Progress"
-      },
       {
         "title": "Enhance existing TIM role",
         "currentStatus": "In Progress"
@@ -858,8 +758,44 @@
         "currentStatus": "Delayed"
       },
       {
+        "title": "Develop Xyleme Governance",
+        "currentStatus": "Delayed"
+      },
+      {
         "title": "Move MM Outline function to Xyleme & Smartsheet",
         "currentStatus": "On Track"
+      },
+      {
+        "title": "Instructor Feedback Survey for Course Logistics/Support",
+        "currentStatus": "Delayed"
+      },
+      {
+        "title": "Feedback after 1 year promotion from FEP",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Develop e4 Point Training",
+        "currentStatus": "On Track"
+      },
+      {
+        "title": "Standardize Internal Control Server Thin Client course",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Steam Turbine Controls TDI Training Program",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Aero Maintenance Practices Training",
+        "currentStatus": "At Risk"
+      },
+      {
+        "title": "Outage Manager New Hire Curriculum",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Develop “Combined Cycle - Simulator based Operator OJT” Customer Training",
+        "currentStatus": "Delayed"
       }
     ]
   },
@@ -965,13 +901,13 @@
     "modulesComplete": 17,
     "modulesTotal": 405,
     "exams": {
-      "notReceived": 196,
-      "notStarted": 25,
-      "inProgress": 1,
-      "underReview": 13,
-      "approved": 8,
-      "published": 61,
-      "total": 381
+      "notReceived": 189,
+      "notStarted": 13,
+      "inProgress": 0,
+      "underReview": 27,
+      "approved": 7,
+      "published": 63,
+      "total": 373
     },
     "recentlyPublished": [
       {
