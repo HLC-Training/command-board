@@ -81,6 +81,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .sh-kpi{background:rgba(255,255,255,.08);border-radius:5px;padding:5px;text-align:center}
 .sh-kpi .sv{font-family:var(--fh);font-size:15px;font-weight:900;color:var(--acc);line-height:1}
 .sh-kpi .sl{font-size:7px;color:rgba(255,255,255,.55);text-transform:uppercase;margin-top:1px}
+.sh-kpi.kpi-green .sv{color:#4ADE80}
+.sh-kpi.kpi-amber .sv{color:#FCD34D}
 .sh-kpi.kpi-red .sv{color:#F87171}
 .ap-panel{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
 .cx-panel{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
@@ -440,9 +442,9 @@ function renderSlide1(D){
           </div>
         </div>
         <div class="sh-kpis">
-          <div class="sh-kpi"><div class="sv green-val">${s1.minorIncidents}</div><div class="sl">Safety Events Logged</div></div>
-          <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.liveStop?.value||'—'}%</div><div class="sl">Live Save Compliance</div></div>
-          <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.readAcross?.value||'—'}%</div><div class="sl">Read Across Rate</div></div>
+          <div class="sh-kpi kpi-${s1.minorIncidents===0?'green':s1.minorIncidents<=2?'amber':'red'}"><div class="sv">${s1.minorIncidents}</div><div class="sl">Safety Events Logged</div></div>
+          <div class="sh-kpi kpi-${s1.safetyKPIs?.liveStop?.rag||'green'}"><div class="sv">${s1.safetyKPIs?.liveStop?.value||'—'}%</div><div class="sl">Live Save Compliance</div></div>
+          <div class="sh-kpi kpi-${s1.safetyKPIs?.readAcross?.rag||'green'}"><div class="sv">${s1.safetyKPIs?.readAcross?.value||'—'}%</div><div class="sl">Read Across Rate</div></div>
         </div>
         ${logHtml}
       </div>
