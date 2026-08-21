@@ -76,6 +76,30 @@ EXCLUDED_STATUSES = {
     "waitlisted", "did not finish", "did not pass"
 }
 
+# ── 30-day look-ahead (slide 2 PLL cards) ──────────────────────────────────
+# Window = week_of Monday through week_of + 29 days, inclusive.
+# Forward-looking classes only count students who are actually booked:
+# Registered / In Progress. Completed and Auditor apply to in-session
+# counting, not to classes that haven't started yet (per the 2026-08-21
+# lookAhead30 brief).
+LOOKAHEAD_DAYS = 30
+LOOKAHEAD_ACTIVE_STATUSES = {"registered", "in progress"}
+
+# Internal look-ahead routing (brief 2026-08-21 §4c) — PROGRAM-FIRST, on the
+# Enrollment Database's Program + Technology COLUMNS (not the course name;
+# the name only disambiguates Leadership/PM exclusion and CTE, and feeds the
+# last-resort fallback through the weekly name router before flagging).
+# Rule 1 (Program = Craft/Repairs/ILES → Harry) is checked before these.
+LOOKAHEAD_TECH_RULES = [
+    ("sherif",   ["gas turbine"]),
+    ("pablo",    ["steam turbine"]),
+    ("mohammed", ["controls", "gic", "comet"]),
+    ("ben",      ["excitation", "generator"]),
+    ("greg",     ["aeroderivative", "aet"]),
+    ("linda",    ["cte", "workforce"]),
+    ("harry",    ["stator"]),
+]
+
 # Exact location strings from Enrollment Database → board category
 LOCATION_MAP = {
     "houston learning center":                              "HLC",
@@ -315,9 +339,12 @@ def country_coords(name):
 
 def load_existing_board(path="board-data.json"):
     """
-    Load the current board-data.json (if present) so curated sections
-    (CapEx, KPIs, safety, per-PLL lookAhead30) can be preserved across builds
-    instead of being recomputed from raw files that don't cleanly produce them.
+    Load the current board-data.json (if present) so genuinely-manual curated
+    sections (currently only safetyLog) can be preserved across builds.
+    Everything else — CapEx, Bowler KPIs, safetyKPIs, per-PLL lookAhead30 —
+    is computed from source every run; do not add sections back to the
+    preserved set without a staleness check (see
+    knowledge/learnings/2026-08-21-board-build-preserve-not-compute.md).
     Returns the parsed dict, or None if missing/unreadable.
     """
     p = Path(path)
@@ -409,16 +436,43 @@ def fetch_sheet_table(ss, sheet_key, label):
              blank on rows without children.
     """
     print(f"  Fetching {label} from Smartsheet…")
+    sheet_id = SMARTSHEET_SHEETS[sheet_key]
+    page_size = 500
+
+    # Page explicitly and assert completeness against the sheet's own
+    # total_row_count. A partial read that reports success is a silent
+    # undercount (the exact bug class that hid the stale lookAhead30) —
+    # better to kill the build than ship a sampled sheet.
+    page = 1
     sheet = ss.Sheets.get_sheet(
-        SMARTSHEET_SHEETS[sheet_key], level=2, include="objectValue"
+        sheet_id, level=2, include="objectValue",
+        page_size=page_size, page=page
     )
     headers = [c.title for c in sheet.columns]
     col_pos = {c.id: c.index for c in sheet.columns}
     n = len(headers)
+    total = sheet.total_row_count
+    api_rows = list(sheet.rows)
+    while len(api_rows) < total:
+        page += 1
+        more = ss.Sheets.get_sheet(
+            sheet_id, level=2, include="objectValue",
+            page_size=page_size, page=page
+        )
+        got = list(more.rows)
+        if not got:
+            break
+        api_rows.extend(got)
+
+    if len(api_rows) != total:
+        print(f"⛔  {label}: fetched {len(api_rows)} rows but the sheet "
+              f"reports {total} (total_row_count) — incomplete read. "
+              f"Build stopped rather than shipping an undercount.")
+        sys.exit(1)
 
     rows, depths = [], []
     depth_by_id = {}
-    for row in sheet.rows:
+    for row in api_rows:
         parent = getattr(row, "parent_id", None)
         d = depth_by_id.get(parent, -1) + 1 if parent else 0
         depth_by_id[row.id] = d
@@ -429,7 +483,8 @@ def fetch_sheet_table(ss, sheet_key, label):
                 vals[i] = _cell_value(cell)
         rows.append(tuple(vals))
         depths.append(d)
-    print(f"    → {len(rows)} rows")
+    print(f"    → {len(rows)} rows in {page} page(s) — complete "
+          f"(sheet total_row_count = {total})")
     return headers, rows, depths
 
 
@@ -901,6 +956,200 @@ def process_customer_classes(path, bucket, week_start, week_end):
         "total_students":  total_students,
         "total_classes":   total_classes,
     }
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# 30-DAY LOOK-AHEAD (slide 2 PLL cards)
+# Computed from source every build — previously preserved from the prior
+# board-data.json, which silently carried a stale zero block forward week
+# over week (caught 2026-08-21).
+# ══════════════════════════════════════════════════════════════════════════
+
+def lookahead_window(week_start):
+    """30-day look-ahead window: week_of Monday → +29 days, inclusive."""
+    return week_start, week_start + timedelta(days=LOOKAHEAD_DAYS - 1)
+
+
+def route_lookahead_internal(course_name, program, technology):
+    """
+    Program-first routing for the internal 30-day look-ahead
+    (brief 2026-08-21 §4c). Routes on the Program + Technology columns.
+
+    Order (first match wins):
+      • Leadership / Project Management → EXCLUDED entirely (wins over
+        Craft — "Craft Leadership Program" is excluded, not Harry's)
+      • CTE / Workforce Readiness → Linda (must precede the Craft rule —
+        "Craft Entry Level CTE Program" is Linda's, per CLAUDE.md)
+      • Program = Craft / Repairs / ILES → Harry
+      • Technology/Program keywords (LOOKAHEAD_TECH_RULES, rules 2–8)
+      • Fallback: the weekly name router (route_pll) for rows with blank
+        Program/Technology — vendor-led classes map to excluded
+      • Unmatched → FLAG TO JIM, never routed silently
+
+    Returns (pll_key or "__excluded__" or None, flagged bool).
+    """
+    name = " " + (course_name or "").lower() + " "
+    prog = (program or "").strip().lower()
+    tech = (technology or "").strip().lower()
+
+    for kw in ("leadership", "project management"):
+        if kw in name or kw in prog or kw in tech:
+            return "__excluded__", False
+
+    if ("cte" in prog or "workforce" in prog or "cte" in tech
+            or "workforce" in tech
+            or " cte " in name or "cte program" in name
+            or "workforce" in name or "readiness" in name):
+        return "linda", False
+
+    if any(kw in prog for kw in ("craft", "repair", "iles")):
+        return "harry", False
+
+    for pll_key, keywords in LOOKAHEAD_TECH_RULES:
+        for kw in keywords:
+            if kw in tech or kw in prog:
+                return pll_key, False
+
+    pll_key, flagged = route_pll(course_name or "")
+    if pll_key == "__vendor__":
+        return "__excluded__", False
+    return pll_key, flagged
+
+
+def compute_lookahead_internal(headers, rows, la_start, la_end):
+    """
+    Internal look-ahead from the (fully fetched) Enrollment Database:
+    classes with Start Date in the window, students counted per
+    LOOKAHEAD_ACTIVE_STATUSES, routed program-first on the Program +
+    Technology columns (route_lookahead_internal). Vendor-led / Leadership /
+    PM classes are excluded from every card; unmatched classes flag to Jim.
+
+    Returns (per_pll, flags, stats):
+      per_pll: {pll_key: {"classes": int, "students": int}}
+      stats:   {"rows_in_window": raw row count with Start Date in window,
+                "active_rows": rows that also passed the status filter}
+    """
+    c = {
+        "course":  find_col(headers, "course name", "class name", "course"),
+        "program": find_col(headers, "program"),
+        "tech":    find_col(headers, "technology"),
+        "start":   find_col(headers, "start date", "class start", "start"),
+        "status":  find_col(headers, "student status", "enrollment status", "status"),
+    }
+
+    def get(row, key):
+        idx = c.get(key)
+        return row[idx] if idx is not None and idx < len(row) else None
+
+    classes = {}          # course name → {"students", "program", "tech"}
+    rows_in_window = 0
+    active_rows = 0
+    for row in rows:
+        course = get(row, "course")
+        if not course:
+            continue
+        start = to_date(get(row, "start"))
+        if not start or not (la_start <= start <= la_end):
+            continue
+        rows_in_window += 1
+        status = str(get(row, "status") or "").strip().lower()
+        if status not in LOOKAHEAD_ACTIVE_STATUSES:
+            continue
+        active_rows += 1
+        name = str(course).strip()
+        cls = classes.setdefault(name, {
+            "students": 0,
+            "program":  str(get(row, "program") or "").strip(),
+            "tech":     str(get(row, "tech") or "").strip(),
+        })
+        cls["students"] += 1
+
+    per_pll = {k: {"classes": 0, "students": 0} for k in PLL_NAMES}
+    flags = []
+    for course, cls in classes.items():
+        students = cls["students"]
+        pll_key, flagged = route_lookahead_internal(
+            course, cls["program"], cls["tech"])
+        if pll_key == "__excluded__":
+            continue    # Leadership / PM / vendor-led — excluded entirely
+        if flagged:
+            flags.append(
+                f"UNMATCHED INTERNAL (30-day look-ahead): '{course}' "
+                f"(program='{cls['program']}', tech='{cls['tech']}', "
+                f"{students} students) — manual routing required"
+            )
+            continue
+        per_pll[pll_key]["classes"] += 1
+        per_pll[pll_key]["students"] += students
+
+    return per_pll, flags, {"rows_in_window": rows_in_window,
+                            "active_rows": active_rows}
+
+
+def compute_lookahead_customer(sources, la_start, la_end):
+    """
+    OE/SS look-ahead from the demand files: classes with Delivery Start Date
+    in the window, deduped ACROSS files by (Unique Identifier, Class Name)
+    — the same class can appear in both — and routed by Technology
+    (route_customer, so Harry and Linda never receive customer classes).
+
+    sources: list of (bucket_label, headers, rows) — pre-loaded so the
+    routing/dedupe logic is testable without xlsx fixtures.
+    Returns (per_pll, flags).
+    """
+    per_pll = {k: {"classes": 0, "students": 0} for k in PLL_NAMES}
+    flags = []
+    seen = set()
+
+    for bucket, headers, rows in sources:
+        col = {
+            "title":    find_col(headers, "course title"),
+            "classnm":  find_col(headers, "class name"),
+            "tech":     find_col(headers, "technology"),
+            "students": find_col(headers, "contractual # of students",
+                                 "contractual", "# of students"),
+            "uid":      find_col(headers, "unique identifier"),
+            "start":    find_col(headers, "delivery start date", "delivery start"),
+            "status":   find_col(headers, "class status"),
+        }
+
+        def get(row, key):
+            idx = col.get(key)
+            return row[idx] if idx is not None and idx < len(row) else None
+
+        for row in rows:
+            name = str(get(row, "classnm") or get(row, "title") or "").strip()
+            if not name:
+                continue
+            start = to_date(get(row, "start"))
+            if not start or not (la_start <= start <= la_end):
+                continue
+            if str(get(row, "status") or "").strip().lower() == "cancelled":
+                continue
+            try:
+                students = int(get(row, "students") or 0)
+            except (TypeError, ValueError):
+                students = 0
+            if students <= 0:
+                continue
+
+            identity = (str(get(row, "uid") or "").strip(), name)
+            if identity in seen:
+                continue    # same class listed in both demand files
+            seen.add(identity)
+
+            tech = str(get(row, "tech") or "").strip()
+            pll_key, flagged = route_customer(tech, name)
+            if flagged:
+                flags.append(
+                    f"UNMATCHED {bucket} (30-day look-ahead): '{name}' "
+                    f"(tech='{tech}', {students} students) — manual routing required"
+                )
+                continue
+            per_pll[pll_key]["classes"] += 1
+            per_pll[pll_key]["students"] += students
+
+    return per_pll, flags
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -1468,8 +1717,12 @@ def calculate_safety_rag(weekly_incidents, bowler_overall, safety_kpis):
 # JSON ASSEMBLY
 # ══════════════════════════════════════════════════════════════════════════
 
-def build_pll_card(pll_key, class_list):
-    """Assemble a slide2 PLL card object from processed class data."""
+def build_pll_card(pll_key, class_list, lookahead=None):
+    """
+    Assemble a slide2 PLL card object from processed class data.
+    lookahead: {"internal": {classes, students}, "customer": {classes, students}}
+    computed by compute_lookahead_internal / compute_lookahead_customer.
+    """
     courses    = []
     oe_courses = []
     total_students   = 0
@@ -1509,13 +1762,20 @@ def build_pll_card(pll_key, class_list):
         "oeClasses":        len(oe_courses),
         "courses":          courses,
         "oeCourses":        oe_courses,
-        "lookAhead30": {
-            "label":        "Next 30 Days",
-            "totalClasses": 0,
-            "totalStudents":0,
-            "intClasses":   0,
-            "oeClasses":    0,
-        },
+        "lookAhead30": build_lookahead_block(lookahead),
+    }
+
+
+def build_lookahead_block(lookahead):
+    """Render one PLL's computed look-ahead into the card's JSON shape."""
+    la_int  = (lookahead or {}).get("internal") or {"classes": 0, "students": 0}
+    la_cust = (lookahead or {}).get("customer") or {"classes": 0, "students": 0}
+    return {
+        "label":         "Next 30 Days",
+        "totalClasses":  la_int["classes"] + la_cust["classes"],
+        "totalStudents": la_int["students"] + la_cust["students"],
+        "intClasses":    la_int["classes"],
+        "oeClasses":     la_cust["classes"],
     }
 
 
@@ -1669,20 +1929,22 @@ def build(week_override=None):
 
     all_flags = enr["flags"] + oe["flags"] + ss["flags"]
 
+    # ── 30-day look-ahead (COMPUTED from source — never preserved) ────────
+    la_start, la_end = lookahead_window(week_start)
+    la_int, la_int_flags, la_stats = compute_lookahead_internal(
+        enr_headers, enr_rows, la_start, la_end)
+    la_cust, la_cust_flags = compute_lookahead_customer(
+        [("OE", *load_sheet(files["demand"])),
+         ("SS", *load_sheet(files["classlist"]))],
+        la_start, la_end)
+    lookahead = {k: {"internal": la_int[k], "customer": la_cust[k]}
+                 for k in PLL_NAMES}
+    all_flags += la_int_flags + la_cust_flags
+
     # ── Build PLL cards (merge the 3 buckets per PLL) ─────────────────────
     merged = {k: enr["pll_classes"][k] + oe["pll_classes"][k] + ss["pll_classes"][k]
               for k in PLL_NAMES}
-    plls = [build_pll_card(k, merged[k]) for k in PLL_ORDER]
-
-    # Preserve each PLL's 30-day look-ahead from the existing board (not yet
-    # computed from source — carry forward by PLL name).
-    if existing and "slide2" in existing:
-        prev_cards = {p.get("name"): p for p in existing["slide2"].get("plls", [])
-                      if isinstance(p, dict) and "name" in p}
-        for card in plls:
-            prev = prev_cards.get(card["name"])
-            if prev and "lookAhead30" in prev:
-                card["lookAhead30"] = prev["lookAhead30"]
+    plls = [build_pll_card(k, merged[k], lookahead[k]) for k in PLL_ORDER]
 
     plls.append({"name": "__WAG__"})   # sentinel — must be last
 
@@ -1826,9 +2088,19 @@ def build(week_override=None):
         print(f"      ℹ️  exam statuses outside pipeline buckets (total-only): {ub}")
     print()
 
-    # ── Preserved / verify-manually flags ────────────────────────────────
-    print("  ⚠️   VERIFY MANUALLY — sections carried forward, not derived from source:")
-    print("      → PLL lookAhead30: preserved from previous board (not yet computed)")
+    # ── 30-day look-ahead summary (computed from source) ─────────────────
+    print(f"  30-Day Look-Ahead  ({la_start.isoformat()} → {la_end.isoformat()}, "
+          f"computed from source):")
+    print(f"      Enrollment DB rows with Start Date in window: "
+          f"{la_stats['rows_in_window']} "
+          f"({la_stats['active_rows']} Registered/In Progress)")
+    for key in PLL_ORDER:
+        li, lc = la_int[key], la_cust[key]
+        print(f"    {PLL_NAMES[key]:<24} "
+              f"{li['classes'] + lc['classes']:>2} class(es)  "
+              f"{li['students'] + lc['students']:>3} students   "
+              f"(INT {li['classes']}/{li['students']} | "
+              f"OE+SS {lc['classes']}/{lc['students']})")
     print()
 
     # ── Action-Plan status diagnostics (confirm the parent filter) ────────
