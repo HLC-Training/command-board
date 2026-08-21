@@ -33,10 +33,10 @@
     "kpis": {
       "ptsi": {
         "label": "Post-Training Skill Improvement",
-        "ytdValue": 82,
+        "ytdValue": 83,
         "ytdRag": "green",
-        "monthLabel": "Jun",
-        "monthValue": 81,
+        "monthLabel": "YTD",
+        "monthValue": 83,
         "monthRag": "green",
         "plan": 70,
         "reverse": false
@@ -177,10 +177,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 0,
-          "totalStudents": 0,
+          "totalClasses": 13,
+          "totalStudents": 131,
           "intClasses": 0,
-          "oeClasses": 0
+          "oeClasses": 13
         }
       },
       {
@@ -256,10 +256,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 0,
-          "totalStudents": 0,
-          "intClasses": 0,
-          "oeClasses": 0
+          "totalClasses": 14,
+          "totalStudents": 156,
+          "intClasses": 3,
+          "oeClasses": 11
         }
       },
       {
@@ -332,10 +332,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 0,
-          "totalStudents": 0,
-          "intClasses": 0,
-          "oeClasses": 0
+          "totalClasses": 15,
+          "totalStudents": 171,
+          "intClasses": 2,
+          "oeClasses": 13
         }
       },
       {
@@ -411,10 +411,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 0,
-          "totalStudents": 0,
-          "intClasses": 0,
-          "oeClasses": 0
+          "totalClasses": 19,
+          "totalStudents": 173,
+          "intClasses": 3,
+          "oeClasses": 16
         }
       },
       {
@@ -477,9 +477,9 @@
         "oeCourses": [],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 0,
-          "totalStudents": 0,
-          "intClasses": 0,
+          "totalClasses": 13,
+          "totalStudents": 202,
+          "intClasses": 13,
           "oeClasses": 0
         }
       },
@@ -505,10 +505,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 0,
-          "totalStudents": 0,
+          "totalClasses": 14,
+          "totalStudents": 125,
           "intClasses": 0,
-          "oeClasses": 0
+          "oeClasses": 14
         }
       },
       {
