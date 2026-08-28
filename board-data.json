@@ -33,9 +33,9 @@
     "kpis": {
       "ptsi": {
         "label": "Post-Training Skill Improvement",
-        "ytdValue": 82,
+        "ytdValue": 83,
         "ytdRag": "green",
-        "monthLabel": "Jun",
+        "monthLabel": "Jul",
         "monthValue": 81,
         "monthRag": "green",
         "plan": 70,
@@ -43,10 +43,10 @@
       },
       "timecard": {
         "label": "Timecard On-Time Delivery",
-        "ytdValue": 79,
-        "ytdRag": "red",
+        "ytdValue": 82,
+        "ytdRag": "amber",
         "monthLabel": "Jul",
-        "monthValue": 89,
+        "monthValue": 82,
         "monthRag": "amber",
         "plan": 92,
         "reverse": false
@@ -56,7 +56,7 @@
         "ytdValue": 20,
         "ytdRag": "amber",
         "monthLabel": "Jul",
-        "monthValue": 21,
+        "monthValue": 16,
         "monthRag": "amber",
         "plan": 15,
         "reverse": true
@@ -66,7 +66,7 @@
       "bowler": {
         "rag": "amber",
         "label": "Bowler KPIs",
-        "reason": "Timecard Jul 89% vs 92% plan"
+        "reason": "Timecard Jul 82% vs 92% plan"
       },
       "safety": {
         "rag": "green",
