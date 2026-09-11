@@ -1246,14 +1246,6 @@ def find_kpi_act_row(kpi_rows, *keywords):
     return None
 
 
-def find_kpi_rowset(kpi_rows, *keywords):
-    """Find a KPI's full {"py","plan","act"} rowset by substring match on its name."""
-    for name_lower, rowset in kpi_rows.items():
-        if any(kw in name_lower for kw in keywords):
-            return rowset
-    return {}
-
-
 def bowler_month_value(month_cols, act_row, target_month):
     """
     Return (value, month_used) from an Act row, starting at target_month and
@@ -1289,15 +1281,6 @@ def process_bowler(month_cols, kpi_rows, target_month):
     Extract Bowler KPI data for the most recent complete month, walking
     backward per-KPI to the latest populated month when the target month is
     blank/NA. Returns (kpis dict, overall_rag string, overall_reason string).
-
-    YTD reads the sheet's own owner-maintained "YTD Actual" column (the
-    py-row, index 6) rather than averaging the monthly Act values — the two
-    diverge (see knowledge/learnings/2026-09-08-bowler-ytd-source-column.md).
-
-    PTSI has a named exception: when its target-month Act is N/A/blank, the
-    board shows the YTD figure in both the month and YTD slots (label
-    "YTD") instead of walking back to a prior month, per CLAUDE.md. Timecard
-    and FLIQ keep the standard walk-back.
     """
     print(f"  Reading Bowler Chart ({MONTH_ABBR[target_month]} target)…")
     target_label = MONTH_ABBR[target_month]
@@ -1315,39 +1298,33 @@ def process_bowler(month_cols, kpi_rows, target_month):
             "reverse":    cfg["reverse"],
         }
 
-    rowset_for = {
-        "ptsi":     find_kpi_rowset(kpi_rows, "skill improvement"),
-        "timecard": find_kpi_rowset(kpi_rows, "timecard"),
-        "instUtil": find_kpi_rowset(kpi_rows, "fully loaded and qualified instructors"),
+    act_row_for = {
+        "ptsi":     find_kpi_act_row(kpi_rows, "skill improvement"),
+        "timecard": find_kpi_act_row(kpi_rows, "timecard"),
+        "instUtil": find_kpi_act_row(kpi_rows, "fully loaded and qualified instructors"),
     }
 
-    for key, rowset in rowset_for.items():
-        act_row = rowset.get("act")
-        py_row  = rowset.get("py")
-
-        if py_row is not None and len(py_row) > 6:
-            ytd = parse_bowler_value(py_row[6])
-            if ytd is not None:
-                kpis[key]["ytdValue"] = ytd
-                kpis[key]["ytdRag"]   = bowler_rag(key, ytd)
-
-        target_col = month_cols.get(target_month)
-        target_raw = (act_row[target_col]
-                      if act_row is not None and target_col is not None
-                      and target_col < len(act_row) else None)
-        target_val = parse_bowler_value(target_raw)
-
-        if key == "ptsi" and target_val is None:
-            kpis[key]["monthLabel"] = "YTD"
-            kpis[key]["monthValue"] = kpis[key]["ytdValue"]
-            kpis[key]["monthRag"]   = kpis[key]["ytdRag"]
-            continue
-
+    for key, act_row in act_row_for.items():
         value, used_month = bowler_month_value(month_cols, act_row, target_month)
         if value is not None:
             kpis[key]["monthValue"] = value
             kpis[key]["monthLabel"] = MONTH_ABBR[used_month]
             kpis[key]["monthRag"]   = bowler_rag(key, value)
+
+        # YTD = mean of populated Act months Jan..target_month (not the
+        # walked-back month — YTD always spans the full year-to-date window).
+        if act_row is not None:
+            ytd_vals = []
+            for m in range(1, target_month + 1):
+                col = month_cols.get(m)
+                if col is None or col >= len(act_row):
+                    continue
+                v = parse_bowler_value(act_row[col])
+                if v is not None:
+                    ytd_vals.append(v)
+            if ytd_vals:
+                kpis[key]["ytdValue"] = round(sum(ytd_vals) / len(ytd_vals))
+                kpis[key]["ytdRag"]   = bowler_rag(key, kpis[key]["ytdValue"])
 
     overall = worst_rag(*[k["monthRag"] for k in kpis.values()])
     reason  = bowler_overall_reason(kpis, overall)
