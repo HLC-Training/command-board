@@ -161,13 +161,22 @@ Sherif → Pablo → Ben Smith → Mohammed → Harry → Greg → Linda Nelson 
   recent complete month), via `bowler_target_month(date.today())`. If the
   target month's Act cell is empty/NA, `bowler_month_value()` walks
   backward to the most recent populated month and reports that month as
-  `monthLabel`.
+  `monthLabel` — **except PTSI** (see the N/A rule below).
 - **Value normalization:** `parse_bowler_value()` strips stray characters
   (`%`, `*`, etc.) then treats a result `<= 1.5` as a decimal fraction
   (×100) — the sheet mixes decimals (0.91), bare percentages (84.6), and
   dirty strings (`'*58%'`, `'90%%'`).
-- **YTD value** = mean of populated Act values from Jan through the target
-  month (not the walked-back month — YTD always spans the full year so far).
+- **YTD value** is read directly from the sheet's own owner-maintained
+  "YTD Actual" column (the py-row, index 6 — same row that carries the
+  KPI name) via `parse_bowler_value()`. It is **not** a mean of the
+  monthly Act values — that was tried, drifted from the true figure every
+  week, and shipped wrong three builds running before the 2026-09-08 fix
+  (see `knowledge/learnings/2026-09-08-bowler-ytd-source-column.md`).
+- **PTSI N/A rule:** when PTSI's target-month Act cell is N/A/blank,
+  `process_bowler()` sets `monthLabel="YTD"` and shows the YTD figure in
+  both the month and YTD slots — it does **not** walk back to a prior
+  month. This rule is PTSI-only; Timecard and FLIQ keep the standard
+  walk-back.
 - Thresholds (`BOWLER_CONFIG` in build.py):
   - Post-Training Skill Improvement (PTSI): Green ≥70%, Red <63%
   - Timecard On-Time Delivery: Green ≥92%, Red <82%
