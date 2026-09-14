@@ -20,10 +20,13 @@ jobs:
 
       # Jim uploads the weekly xlsx files to data/ on main via the GitHub web
       # UI — pull them onto preview so the build always uses the latest files.
-      - name: Sync data files, build.py + index.html from main
+      # build.py is deliberately NOT synced: the build uses preview's build.py.
+      # Syncing it from main clobbered a preview-only fix (2026-09-11, Bowler
+      # YTD regression) — build.py fixes must land on preview to take effect.
+      - name: Sync data files + index.html from main
         run: |
           git fetch origin main
-          git checkout origin/main -- data/ build.py index.html
+          git checkout origin/main -- data/ index.html
 
       - name: Set up Python
         uses: actions/setup-python@v5

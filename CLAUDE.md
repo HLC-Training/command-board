@@ -31,6 +31,14 @@ Read it fully before taking any action.
 Resolve every UNMATCHED flag in the build summary (workflow run log)
 before promoting — routing fixes go in build.py, never one-off JSON edits.
 
+**build.py is NOT synced from main during a build.** The workflow checks
+out `preview` and syncs only `data/` and `index.html` from main; the build
+runs preview's own build.py. A build.py fix must therefore be on `preview`
+to take effect in a build (it reaches main via Promote Preview to Main).
+Never re-add build.py to the workflow's sync step — that step clobbered
+the 2026-09-08 Bowler YTD fix (preview-only at the time) on 2026-09-11 and
+the broken build.py was promoted to main.
+
 A local build still works when needed:
 
    ```
@@ -363,7 +371,8 @@ Commit: [commit hash]
 - **CLAUDE.md** — Do not modify during a build run
 - **board-data.json** — The only file written during a build
 - **build.py** — routing/logic fixes are allowed but go in a SEPARATE
-  commit from the weekly board-data.json commit
+  commit from the weekly board-data.json commit, and must be on `preview`
+  before the next build (the workflow does not sync build.py from main)
 - **main branch** — weekly data reaches it only via Promote Preview to Main
 
 ---

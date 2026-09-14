@@ -12,11 +12,15 @@ Run from the repo root:
 
     python tests/test_bowler_ytd.py
 
-No network access needed. Tests 1, 5, and 6 read the committed
-"data/2026 Bowler Chart - OFS Training.xlsx" directly (target_month is
-hardcoded to August=8 rather than derived from date.today(), so the
-assertions stay deterministic regardless of when this runs). The rest use
-small in-memory rowset fixtures.
+No network access needed. Tests 1, 5, and 6 read a FROZEN copy of the
+Bowler sheet as committed on 2026-09-08 (tests/fixtures/…, git 51a4ca3)
+rather than the live data/ copy — data/ is replaced by Jim's weekly upload,
+and the 2026-09-11 upload populated Aug for Timecard/FLIQ, which silently
+changed what tests 5 and 6 observe (they assert the Aug-N/A walk-back).
+target_month is hardcoded to August=8 rather than derived from date.today(),
+so the assertions stay deterministic regardless of when this runs. The rest
+use small in-memory rowset fixtures. Assertions are unchanged from the
+2026-09-08 brief.
 """
 
 import sys
@@ -25,12 +29,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from build import (  # noqa: E402
-    find_file,
     load_bowler_sheet,
     process_bowler,
 )
 
-BOWLER_XLSX = find_file(["bowler chart"])
+BOWLER_XLSX = (Path(__file__).resolve().parent / "fixtures"
+               / "2026-09-08 Bowler Chart - OFS Training.xlsx")
+BOWLER_XLSX = BOWLER_XLSX if BOWLER_XLSX.exists() else None
 TARGET_MONTH = 8  # August — the target month for the 2026-09-08 committed sheet
 
 # ── synthetic fixtures for isolated per-rule tests ─────────────────────────
@@ -81,9 +86,9 @@ def kpi_rows_fixture(ptsi_ytd=0.83, ptsi_act=None,
 
 def test_1_ytd_from_source_matches_committed_sheet():
     """YTD reads index 6 of the py-row — asserted against the real xlsx."""
-    assert BOWLER_XLSX is not None, "data/2026 Bowler Chart - OFS Training.xlsx not found"
+    assert BOWLER_XLSX is not None, "tests/fixtures/2026-09-08 Bowler Chart - OFS Training.xlsx not found"
     month_cols, kpi_rows = load_bowler_sheet(BOWLER_XLSX)
-    kpis, _, _ = process_bowler(month_cols, kpi_rows, TARGET_MONTH)
+    kpis, _, _, _ = process_bowler(month_cols, kpi_rows, TARGET_MONTH)
     assert kpis["ptsi"]["ytdValue"] == 83, kpis["ptsi"]["ytdValue"]
     assert kpis["timecard"]["ytdValue"] == 72, kpis["timecard"]["ytdValue"]
     assert kpis["instUtil"]["ytdValue"] == 29, kpis["instUtil"]["ytdValue"]
@@ -103,7 +108,7 @@ def test_2_ytd_moves_with_source_column_not_with_months():
         timecard_act=act_row(jan=0.83, feb=0.60, apr=0.72, may=0.85,
                               jun=0.89, jul=0.91),  # mean of these != 50
     )
-    kpis, _, _ = process_bowler(MONTH_COLS, rows, TARGET_MONTH)
+    kpis, _, _, _ = process_bowler(MONTH_COLS, rows, TARGET_MONTH)
     assert kpis["timecard"]["ytdValue"] == 50, kpis["timecard"]["ytdValue"]
 
 
@@ -119,7 +124,7 @@ def test_3_ptsi_na_target_month_shows_ytd_not_prior_month():
         ptsi_ytd=0.83,
         ptsi_act=act_row(mar=0.83, jun=0.81, aug=None),
     )
-    kpis, _, _ = process_bowler(MONTH_COLS, rows, TARGET_MONTH)
+    kpis, _, _, _ = process_bowler(MONTH_COLS, rows, TARGET_MONTH)
     ptsi = kpis["ptsi"]
     assert ptsi["monthLabel"] == "YTD", ptsi["monthLabel"]
     assert ptsi["monthValue"] == ptsi["ytdValue"], (ptsi["monthValue"], ptsi["ytdValue"])
@@ -134,7 +139,7 @@ def test_4_ptsi_populated_target_month_shows_month_not_ytd():
         ptsi_ytd=0.83,
         ptsi_act=act_row(jun=0.81, aug=0.75),
     )
-    kpis, _, _ = process_bowler(MONTH_COLS, rows, TARGET_MONTH)
+    kpis, _, _, _ = process_bowler(MONTH_COLS, rows, TARGET_MONTH)
     ptsi = kpis["ptsi"]
     assert ptsi["monthLabel"] == "Aug", ptsi["monthLabel"]
     assert ptsi["monthValue"] == 75, ptsi["monthValue"]
@@ -148,7 +153,7 @@ def test_5_timecard_and_fliq_walkback_unchanged():
     must walk back to Jul, unaffected by the PTSI-only branch.
     """
     month_cols, kpi_rows = load_bowler_sheet(BOWLER_XLSX)
-    kpis, _, _ = process_bowler(month_cols, kpi_rows, TARGET_MONTH)
+    kpis, _, _, _ = process_bowler(month_cols, kpi_rows, TARGET_MONTH)
     assert kpis["timecard"]["monthLabel"] == "Jul", kpis["timecard"]["monthLabel"]
     assert kpis["timecard"]["monthValue"] == 89, kpis["timecard"]["monthValue"]
     assert kpis["instUtil"]["monthLabel"] == "Jul", kpis["instUtil"]["monthLabel"]
@@ -159,7 +164,7 @@ def test_5_timecard_and_fliq_walkback_unchanged():
 
 def test_6_overall_rag_reason_cites_a_month_not_ytd():
     month_cols, kpi_rows = load_bowler_sheet(BOWLER_XLSX)
-    kpis, overall, reason = process_bowler(month_cols, kpi_rows, TARGET_MONTH)
+    kpis, overall, reason, _ = process_bowler(month_cols, kpi_rows, TARGET_MONTH)
     assert overall == "amber", overall
     assert "YTD" not in reason, reason
     assert "Jul" in reason, reason
