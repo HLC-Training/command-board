@@ -197,28 +197,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .wag-safety-status{font-family:var(--fh);font-size:18px;font-weight:900;color:#4ADE80;text-transform:uppercase;letter-spacing:2px;line-height:1}
 .wag-safety-sub{font-size:9px;color:rgba(255,255,255,0.7);margin-top:3px;font-weight:600}
 .wag-safety-incidents{font-size:7.5px;color:rgba(255,255,255,0.45);margin-top:3px}
-/* Open Positions card — slide 2, 8th cell (replaced Week at a Glance, Sep 2026) */
-.hr-card{background:var(--night);overflow:hidden}
-.hr-card .pn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1px;background:var(--ev);display:flex;align-items:center;gap:7px;padding:8px 10px;flex-shrink:0}
-.hr-count{margin-left:auto;font-family:var(--fb);font-size:9px;font-weight:700;color:var(--acc);text-transform:none;letter-spacing:0;background:rgba(63,210,255,.12);border:1px solid rgba(63,210,255,.35);border-radius:10px;padding:2px 8px}
-.hr-body{flex:1;min-height:0;padding:6px 8px;display:flex;flex-direction:column;gap:5px;overflow:hidden}
-.hr-list{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:3px}
-.hr-row{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border-radius:5px;padding:4px 7px;flex-shrink:0;min-height:28px}
-.hr-info{flex:1;min-width:0}
-.hr-title{font-size:10.5px;font-weight:700;color:var(--day);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
-.hr-meta{font-size:8px;color:rgba(255,255,255,.6);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hr-meta .pl{color:var(--acc);font-weight:700}
-.hr-counts{font-size:8px;font-weight:700;color:#4ADE80;white-space:nowrap;flex-shrink:0;text-align:right;line-height:1.25}
-.hr-counts .f{color:rgba(255,255,255,.55);font-weight:600;display:block}
-.hr-tag{font-size:6.5px;font-weight:900;color:var(--night);background:var(--acc);border-radius:3px;padding:2px 4px;flex-shrink:0;letter-spacing:.4px}
-.hr-scan{flex-shrink:0;border-top:1px solid rgba(255,255,255,.1);padding-top:5px}
-.hr-scan-title{font-size:7.5px;color:rgba(255,255,255,.5);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;text-align:center}
-.hr-qrs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-.hr-qr{width:100px;text-align:center;flex-shrink:0}
-.hr-qr img{width:96px;height:96px;display:block;margin:0 auto;background:#fff;border-radius:3px;padding:3px}
-.hr-qr .cap{font-size:7.5px;color:rgba(255,255,255,.7);margin-top:2px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hr-qr .cap.pl{color:var(--acc);font-weight:700;margin-top:0}
-.hr-none{flex:1;display:flex;align-items:center;justify-content:center;font-size:10px;color:#9CA3AF;font-style:italic;text-align:center;padding:12px}
 .xy-card{background:var(--night);border-radius:8px;padding:7px 10px;flex:0 0 25%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .xy-head{display:flex;align-items:baseline;gap:9px;border-bottom:2px solid var(--acc);padding-bottom:3px;margin-bottom:5px;flex-shrink:0}
 .xy-title{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--acc);text-transform:uppercase;letter-spacing:1.2px}
@@ -356,74 +334,6 @@ function buildXylemeCard(xy){
         <div class="xy-panel-title">Recently Published</div>
         <div class="xy-scroll"><div class="xy-scroll-inner${anim}" ${dur}>${pubHtml}</div></div>
       </div>
-    </div>
-  </div>`;
-}
-
-function buildWagCard(D){
-  // Legacy 8th card — kept only as the fallback for boards without `hiring`.
-  const s1=D.slide1;
-  const sl=D.safetyLog||[];
-  const histStr=sl.map(e=>`📅 ${e.date}: ${e.shortDesc||e.desc}`).join(' • ');
-  return`<div class="pll-card wag-card">
-    <div class="pn" style="border-bottom:1px solid rgba(0,94,96,0.15);padding:8px 10px;display:flex;align-items:center;gap:7px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#3FD2FF" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-      WEEK AT A GLANCE<span style="margin-left:auto;font-size:9px;font-weight:500;color:var(--gry);text-transform:none">${s1.weekOf}</span>
-    </div>
-    <div class="wag-body">
-      <div class="wag-stats">
-        <div class="wag-stat-big"><div class="wag-val">${s1.weeklyTotal}</div><div class="wag-lbl">Total Students</div></div>
-        <div class="wag-stat-big"><div class="wag-val" style="color:var(--lim)">${s1.internalCourses+s1.oeCourses}</div><div class="wag-lbl">Active Classes</div></div>
-      </div>
-      <div class="wag-locs">
-        <div class="wag-loc-title">📍 LOCATIONS THIS WEEK</div>
-        <div class="wag-loc-grid">
-          <div class="wag-loc-item hlc"><div class="wag-loc-num">${s1.locationBreakdown.HLC}</div><div class="wag-loc-name">HLC<br>Houston</div></div>
-          <div class="wag-loc-item blc"><div class="wag-loc-num">${s1.locationBreakdown.BLC}</div><div class="wag-loc-name">BLC<br>Birr</div></div>
-          <div class="wag-loc-item klc"><div class="wag-loc-num">${s1.locationBreakdown.KLC}</div><div class="wag-loc-name">KLC<br>Kuwait</div></div>
-          <div class="wag-loc-item oth"><div class="wag-loc-num">${s1.locationBreakdown.Other}</div><div class="wag-loc-name">OE/SS<br>Remote</div></div>
-        </div>
-      </div>
-      <div class="wag-safety">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#3FD2FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="wag-safety-text">
-          <div class="wag-safety-status">${s1.minorIncidents===0?'ALL CLEAR':'ATTENTION'}</div>
-          <div class="wag-safety-sub">${s1.minorIncidents} incidents • ${s1.minorIncidents===0?'All KPIs on plan':'Review safety section'}</div>
-          ${histStr?`<div class="wag-safety-incidents">${histStr}</div>`:''}
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function buildHiringCard(D){
-  const hiring=D.hiring;
-  if(!Array.isArray(hiring))return buildWagCard(D);   // field absent → pre-hiring board
-  const esc=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const icon=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="14" rx="2" fill="#005E60"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" stroke="#3FD2FF" stroke-width="2" stroke-linecap="round"/><path d="M3 12h18" stroke="white" stroke-width="2"/><path d="M12 11v3" stroke="#3FD2FF" stroke-width="2" stroke-linecap="round"/></svg>`;
-  const n=hiring.length;
-  const head=`<div class="pn">${icon}OPEN POSITIONS<span class="hr-count">${n} open</span></div>`;
-  if(!n){
-    return`<div class="pll-card hr-card">${head}<div class="hr-body"><div class="hr-none">No open positions right now</div></div></div>`;
-  }
-  const rows=hiring.map(p=>{
-    const meta=[p.productLine,p.country].filter(Boolean).map((t,i)=>i===0&&p.productLine?`<span class="pl">${esc(t)}</span>`:esc(t)).join(' · ');
-    const tag=p.qr?`<span class="hr-tag">QR</span>`:'';
-    return`<div class="hr-row">
-      <div class="hr-info"><div class="hr-title">${esc(p.jobTitle)||'—'}</div><div class="hr-meta">${meta||'—'}</div></div>
-      ${tag}
-      <div class="hr-counts">${p.posted|0} posted<span class="f">${p.filled|0} filled</span></div>
-    </div>`;
-  }).join('');
-  const linked=hiring.filter(p=>p.qr&&p.link);
-  const scan=linked.length?`<div class="hr-scan">
-      <div class="hr-scan-title">Scan with your phone to apply</div>
-      <div class="hr-qrs">${linked.map(p=>`<div class="hr-qr"><img src="${p.qr}" alt="QR: ${esc(p.jobTitle)}"><div class="cap">${esc(p.jobTitle)}</div>${p.productLine?`<div class="cap pl">${esc(p.productLine)}</div>`:''}</div>`).join('')}</div>
-    </div>`:'';
-  return`<div class="pll-card hr-card">${head}
-    <div class="hr-body">
-      <div class="hr-list">${rows}</div>
-      ${scan}
     </div>
   </div>`;
 }
@@ -618,12 +528,40 @@ function renderSlide2(D){
     }
   }
 
-  // 8th cell (always last): Open Positions. Falls back to Week at a Glance
-  // when board-data.json has no `hiring` field (a board built before the
-  // hiring sheet was wired in) — never an undefined/broken cell.
-  cards+=buildHiringCard(D);
-
+  // Week at a Glance card (always last)
   const s1=D.slide1;
+  const sl=D.safetyLog||[];
+  const histStr=sl.map(e=>`📅 ${e.date}: ${e.shortDesc||e.desc}`).join(' • ');
+  cards+=`<div class="pll-card wag-card">
+    <div class="pn" style="border-bottom:1px solid rgba(0,94,96,0.15);padding:8px 10px;display:flex;align-items:center;gap:7px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#3FD2FF" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      WEEK AT A GLANCE<span style="margin-left:auto;font-size:9px;font-weight:500;color:var(--gry);text-transform:none">${s1.weekOf}</span>
+    </div>
+    <div class="wag-body">
+      <div class="wag-stats">
+        <div class="wag-stat-big"><div class="wag-val">${s1.weeklyTotal}</div><div class="wag-lbl">Total Students</div></div>
+        <div class="wag-stat-big"><div class="wag-val" style="color:var(--lim)">${s1.internalCourses+s1.oeCourses}</div><div class="wag-lbl">Active Classes</div></div>
+      </div>
+      <div class="wag-locs">
+        <div class="wag-loc-title">📍 LOCATIONS THIS WEEK</div>
+        <div class="wag-loc-grid">
+          <div class="wag-loc-item hlc"><div class="wag-loc-num">${s1.locationBreakdown.HLC}</div><div class="wag-loc-name">HLC<br>Houston</div></div>
+          <div class="wag-loc-item blc"><div class="wag-loc-num">${s1.locationBreakdown.BLC}</div><div class="wag-loc-name">BLC<br>Birr</div></div>
+          <div class="wag-loc-item klc"><div class="wag-loc-num">${s1.locationBreakdown.KLC}</div><div class="wag-loc-name">KLC<br>Kuwait</div></div>
+          <div class="wag-loc-item oth"><div class="wag-loc-num">${s1.locationBreakdown.Other}</div><div class="wag-loc-name">OE/SS<br>Remote</div></div>
+        </div>
+      </div>
+      <div class="wag-safety">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#3FD2FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="wag-safety-text">
+          <div class="wag-safety-status">${s1.minorIncidents===0?'ALL CLEAR':'ATTENTION'}</div>
+          <div class="wag-safety-sub">${s1.minorIncidents} incidents • ${s1.minorIncidents===0?'All KPIs on plan':'Review safety section'}</div>
+          ${histStr?`<div class="wag-safety-incidents">${histStr}</div>`:''}
+        </div>
+      </div>
+    </div>
+  </div>`;
+
   document.getElementById('s2').innerHTML=`
   <div class="gh">
     <div><div class="ht">Internal Training Roster — PLL Assignments</div><div class="hs">Week of ${s1.weekOf} | Internal + OE/SS</div></div>
@@ -688,7 +626,7 @@ function initAutoScrolls(root){
   // Measured only while the slide is visible (hidden elements report height 0);
   // each element is processed once (data-as guard).
   if(!root)return;
-  root.querySelectorAll('.pc,.cx-item-list,.ap-list,.hr-list').forEach(enableAutoScroll);
+  root.querySelectorAll('.pc,.cx-item-list,.ap-list').forEach(enableAutoScroll);
 }
 
 // ── SLIDE CONTROLLER ─────────────────────────────────────────────────────────
