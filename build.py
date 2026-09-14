@@ -1246,14 +1246,6 @@ def find_kpi_act_row(kpi_rows, *keywords):
     return None
 
 
-def find_kpi_rowset(kpi_rows, *keywords):
-    """Find a KPI's full {"py","plan","act"} rowset by substring match on its name."""
-    for name_lower, rowset in kpi_rows.items():
-        if any(kw in name_lower for kw in keywords):
-            return rowset
-    return {}
-
-
 def bowler_month_value(month_cols, act_row, target_month):
     """
     Return (value, month_used) from an Act row, starting at target_month and
@@ -1272,22 +1264,6 @@ def bowler_month_value(month_cols, act_row, target_month):
     return None, None
 
 
-def bowler_staleness_flag(short_name, month_used, target_month):
-    """
-    Flag (not gate) when a KPI's walked-back month is more than one month
-    behind the build's expected (target) month — signals a forgotten weekly
-    Bowler Chart upload rather than a legitimately blank current month.
-    Returns a flag string, or None if the data is fresh (or altogether absent
-    — bowler_month_value already returns None for that case).
-    """
-    if month_used is None:
-        return None
-    if target_month - month_used >= 1:
-        return (f"Bowler {short_name}: showing {MONTH_ABBR[month_used]} data, "
-                f"expected {MONTH_ABBR[target_month]} — check for a missing upload.")
-    return None
-
-
 def bowler_overall_reason(kpis, overall):
     """Build the Bowler-card reason string from whichever KPI drives the overall RAG."""
     if overall == "green":
@@ -1304,17 +1280,7 @@ def process_bowler(month_cols, kpi_rows, target_month):
     """
     Extract Bowler KPI data for the most recent complete month, walking
     backward per-KPI to the latest populated month when the target month is
-    blank/NA. Returns (kpis dict, overall_rag string, overall_reason string,
-    staleness flags list).
-
-    YTD reads the sheet's own owner-maintained "YTD Actual" column (the
-    py-row, index 6) rather than averaging the monthly Act values — the two
-    diverge (see knowledge/learnings/2026-09-08-bowler-ytd-source-column.md).
-
-    PTSI has a named exception: when its target-month Act is N/A/blank, the
-    board shows the YTD figure in both the month and YTD slots (label
-    "YTD") instead of walking back to a prior month, per CLAUDE.md. Timecard
-    and FLIQ keep the standard walk-back (and its staleness flag).
+    blank/NA. Returns (kpis dict, overall_rag string, overall_reason string).
     """
     print(f"  Reading Bowler Chart ({MONTH_ABBR[target_month]} target)…")
     target_label = MONTH_ABBR[target_month]
@@ -1332,59 +1298,37 @@ def process_bowler(month_cols, kpi_rows, target_month):
             "reverse":    cfg["reverse"],
         }
 
-    rowset_for = {
-        "ptsi":     find_kpi_rowset(kpi_rows, "skill improvement"),
-        "timecard": find_kpi_rowset(kpi_rows, "timecard"),
-        "instUtil": find_kpi_rowset(kpi_rows, "fully loaded and qualified instructors"),
+    act_row_for = {
+        "ptsi":     find_kpi_act_row(kpi_rows, "skill improvement"),
+        "timecard": find_kpi_act_row(kpi_rows, "timecard"),
+        "instUtil": find_kpi_act_row(kpi_rows, "fully loaded and qualified instructors"),
     }
 
-    # Staleness flags — a flag, not a gate: the displayed value is unaffected,
-    # this only tells Jim the walk-back reached further than one month behind.
-    flags = []
-
-    for key, rowset in rowset_for.items():
-        act_row = rowset.get("act")
-        py_row  = rowset.get("py")
-
-        # YTD comes straight from the sheet's "YTD Actual" column (py-row,
-        # index 6). NEVER re-derive it as a mean of the monthly Act values —
-        # that drifted from the true figure and shipped wrong three builds
-        # running (2026-09-08 fix; regressed via the workflow's build.py sync
-        # and re-applied 2026-09-14).
-        if py_row is not None and len(py_row) > 6:
-            ytd = parse_bowler_value(py_row[6])
-            if ytd is not None:
-                kpis[key]["ytdValue"] = ytd
-                kpis[key]["ytdRag"]   = bowler_rag(key, ytd)
-
-        # PTSI-only: target month N/A → show YTD in both slots, no walk-back
-        # (checked BEFORE the generic walk-back so it can't swallow the rule).
-        target_col = month_cols.get(target_month)
-        target_raw = (act_row[target_col]
-                      if act_row is not None and target_col is not None
-                      and target_col < len(act_row) else None)
-        target_val = parse_bowler_value(target_raw)
-
-        if key == "ptsi" and target_val is None:
-            kpis[key]["monthLabel"] = "YTD"
-            kpis[key]["monthValue"] = kpis[key]["ytdValue"]
-            kpis[key]["monthRag"]   = kpis[key]["ytdRag"]
-            continue
-
+    for key, act_row in act_row_for.items():
         value, used_month = bowler_month_value(month_cols, act_row, target_month)
         if value is not None:
             kpis[key]["monthValue"] = value
             kpis[key]["monthLabel"] = MONTH_ABBR[used_month]
             kpis[key]["monthRag"]   = bowler_rag(key, value)
 
-        stale_flag = bowler_staleness_flag(
-            BOWLER_SHORT_NAMES.get(key, key), used_month, target_month)
-        if stale_flag:
-            flags.append(stale_flag)
+        # YTD = mean of populated Act months Jan..target_month (not the
+        # walked-back month — YTD always spans the full year-to-date window).
+        if act_row is not None:
+            ytd_vals = []
+            for m in range(1, target_month + 1):
+                col = month_cols.get(m)
+                if col is None or col >= len(act_row):
+                    continue
+                v = parse_bowler_value(act_row[col])
+                if v is not None:
+                    ytd_vals.append(v)
+            if ytd_vals:
+                kpis[key]["ytdValue"] = round(sum(ytd_vals) / len(ytd_vals))
+                kpis[key]["ytdRag"]   = bowler_rag(key, kpis[key]["ytdValue"])
 
     overall = worst_rag(*[k["monthRag"] for k in kpis.values()])
     reason  = bowler_overall_reason(kpis, overall)
-    return kpis, overall, reason, flags
+    return kpis, overall, reason
 
 
 def process_safety_kpis(month_cols, kpi_rows, target_month):
@@ -1398,23 +1342,13 @@ def process_safety_kpis(month_cols, kpi_rows, target_month):
     live_row = find_kpi_act_row(kpi_rows, "live save rule compliance")
     read_row = find_kpi_act_row(kpi_rows, "read across closing rate")
 
-    live_value, live_month = bowler_month_value(month_cols, live_row, target_month)
-    read_value, read_month = bowler_month_value(month_cols, read_row, target_month)
+    live_value, _ = bowler_month_value(month_cols, live_row, target_month)
+    read_value, _ = bowler_month_value(month_cols, read_row, target_month)
 
-    flags = []
-    for short_name, used_month in (
-        ("Live Save Rule Compliance", live_month),
-        ("Read Across Closing Rate", read_month),
-    ):
-        stale_flag = bowler_staleness_flag(short_name, used_month, target_month)
-        if stale_flag:
-            flags.append(stale_flag)
-
-    safety_kpis = {
+    return {
         "liveStop":   {"value": live_value, "rag": safety_kpi_rag(live_value)},
         "readAcross": {"value": read_value, "rag": safety_kpi_rag(read_value)},
     }
-    return safety_kpis, flags
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -1968,24 +1902,13 @@ def build(week_override=None):
     # hardcoded-April parse that made preservation necessary).
     month_cols, kpi_rows = load_bowler_sheet(files["bowler"])
     target_month = bowler_target_month(date.today())
-    kpis, bowler_overall, bowler_reason, bowler_stale_flags = process_bowler(
-        month_cols, kpi_rows, target_month)
-    safety_kpis, safety_kpi_stale_flags = process_safety_kpis(month_cols, kpi_rows, target_month)
+    kpis, bowler_overall, bowler_reason = process_bowler(month_cols, kpi_rows, target_month)
+    safety_kpis = process_safety_kpis(month_cols, kpi_rows, target_month)
 
-    # Safety — weekly incident count is not separately tracked. The retired Weekly
-    # Report was its only source. Safety RAG is driven by KPI compliance and the
-    # cumulative safetyLog instead; this constant stays 0 by design. See
-    # knowledge/learnings/2026-08-21-board-build-preserve-not-compute.md.
+    # Safety — 0 new incidents assumed; Jim reviews weekly report manually
     weekly_incidents = 0
-    if existing and existing.get("safetyLog"):
-        safety_log = existing.get("safetyLog")
-    else:
-        print(f"⚠️  safetyLog: no existing board-data.json safetyLog found — "
-              f"falling back to SAFETY_LOG_BASE ({len(SAFETY_LOG_BASE)} entries, "
-              f"newest {SAFETY_LOG_BASE[0]['date'] if SAFETY_LOG_BASE else 'none'}). "
-              f"If this is not a deliberate from-scratch rebuild, STOP: recent "
-              f"incidents will be lost. Restore board-data.json first.")
-        safety_log = list(SAFETY_LOG_BASE)
+    safety_log = (existing.get("safetyLog") if existing and existing.get("safetyLog")
+                  else list(SAFETY_LOG_BASE))   # carry forward cumulative log
     safety_rag, safety_reason = calculate_safety_rag(weekly_incidents, bowler_overall, safety_kpis)
 
     # ── Totals across the 3 buckets (Internal / OE / SS) ─────────────────
@@ -2004,7 +1927,7 @@ def build(week_override=None):
 
     internal_loc = enr["location_counts"]   # slide3 learning-center markers (internal only)
 
-    all_flags = enr["flags"] + oe["flags"] + ss["flags"] + bowler_stale_flags + safety_kpi_stale_flags
+    all_flags = enr["flags"] + oe["flags"] + ss["flags"]
 
     # ── 30-day look-ahead (COMPUTED from source — never preserved) ────────
     la_start, la_end = lookahead_window(week_start)
@@ -2202,7 +2125,7 @@ def build(week_override=None):
         print()
 
     if all_flags:
-        print(f"  ⚠️   FLAGGED — {len(all_flags)} item(s) need attention:")
+        print(f"  ⚠️   FLAGGED — {len(all_flags)} unmatched class(es) need manual routing:")
         for flag in all_flags:
             print(f"      → {flag}")
         print()

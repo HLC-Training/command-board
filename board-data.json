@@ -1,21 +1,21 @@
 {
   "meta": {
     "specVersion": "v2.2",
-    "buildDate": "2026-09-11",
+    "buildDate": "2026-09-14",
     "weekOf": "Sep 14 – 18, 2026"
   },
   "slide1": {
     "weekOf": "Sep 14 – 18, 2026",
-    "weeklyTotal": 522,
-    "internalStudents": 292,
-    "oeStudents": 230,
-    "internalCourses": 19,
-    "oeCourses": 21,
+    "weeklyTotal": 483,
+    "internalStudents": 277,
+    "oeStudents": 206,
+    "internalCourses": 18,
+    "oeCourses": 19,
     "locationBreakdown": {
-      "HLC": 282,
-      "BLC": 24,
+      "HLC": 280,
+      "BLC": 12,
       "KLC": 9,
-      "Other": 207
+      "Other": 182
     },
     "safetyRag": "green",
     "minorIncidents": 0,
@@ -74,9 +74,9 @@
         "reason": "0 incidents this week — All safety KPIs on plan"
       },
       "actionPlans": {
-        "rag": "green",
+        "rag": "red",
         "label": "Action Plans",
-        "reason": "0 delayed / 54 in progress"
+        "reason": "6 delayed / 50 in progress"
       },
       "capex": {
         "rag": "amber",
@@ -121,11 +121,11 @@
     "plls": [
       {
         "name": "Sherif Khalifa",
-        "totalClasses": 8,
-        "totalStudents": 105,
+        "totalClasses": 7,
+        "totalStudents": 93,
         "internalStudents": 78,
-        "oeStudents": 27,
-        "oeClasses": 3,
+        "oeStudents": 15,
+        "oeClasses": 2,
         "courses": [
           {
             "name": "Entry Level Gas Turbine 26-1",
@@ -175,11 +175,6 @@
             "country": "United States"
           },
           {
-            "title": "27-243 - ACWA - Quarayah IPP - Hajr Expansion 7HA.03 - Gas Turbine - Operation",
-            "students": 12,
-            "country": "Switzerland"
-          },
-          {
             "title": "26-200 - SEPCOIII ELECTRIC POWER CONSTRUCTION CO. - Taiba-1 - IPP Project_1.8GW_7HA.03 - Gas Turbine -  Maintenance",
             "students": 12,
             "country": "Saudi Arabia"
@@ -187,10 +182,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 6,
-          "totalStudents": 71,
+          "totalClasses": 5,
+          "totalStudents": 59,
           "intClasses": 1,
-          "oeClasses": 5
+          "oeClasses": 4
         }
       },
       {
@@ -296,11 +291,6 @@
             "country": "Saudi Arabia"
           },
           {
-            "title": "26-1025 - ACWA POWER INTERNATIONAL - Taiba-1 - IPP Project_1.8GW_7E.03 SC - Electrical - Intelligent Electronic Device (IED) IED's Protection & Control",
-            "students": 12,
-            "country": "Saudi Arabia"
-          },
-          {
             "title": "26-257 - TPC - Datan - 8&9 Local Training - Excitation - Generator Excitation, Protection and Static Starter Introduction - G4",
             "students": 12,
             "country": "Taiwan"
@@ -311,6 +301,11 @@
             "country": "Dominican Republic"
           },
           {
+            "title": "26-203 - SEPCOIII ELECTRIC POWER CONSTRUCTION CO. - Taiba-1 - IPP Project_1.8GW_7HA.03 - Electrical - Intelligent Electronic Device (IED) IED's Protection & Control",
+            "students": 12,
+            "country": "Saudi Arabia"
+          },
+          {
             "title": "26-68 - LG&E - Mill Creek - 5 - Excitation - Generator Excitation, Protection and Static Starter Introduction - G2",
             "students": 12,
             "country": "United States"
@@ -319,7 +314,7 @@
         "lookAhead30": {
           "label": "Next 30 Days",
           "totalClasses": 16,
-          "totalStudents": 184,
+          "totalStudents": 185,
           "intClasses": 2,
           "oeClasses": 14
         }
@@ -327,16 +322,16 @@
       {
         "name": "Mohammed Nizami",
         "totalClasses": 5,
-        "totalStudents": 54,
-        "internalStudents": 6,
+        "totalStudents": 53,
+        "internalStudents": 5,
         "oeStudents": 48,
         "oeClasses": 4,
         "courses": [
           {
             "name": "Foundation Fieldbus Advanced 26-5",
             "capacity": 6,
-            "enrolled": 6,
-            "enrollPct": 100,
+            "enrolled": 5,
+            "enrollPct": 83,
             "overEnrolled": false,
             "locCat": "HLC"
           }
@@ -365,17 +360,17 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 15,
-          "totalStudents": 161,
+          "totalClasses": 13,
+          "totalStudents": 138,
           "intClasses": 1,
-          "oeClasses": 14
+          "oeClasses": 12
         }
       },
       {
         "name": "Harry Hanson",
         "totalClasses": 6,
-        "totalStudents": 106,
-        "internalStudents": 106,
+        "totalStudents": 105,
+        "internalStudents": 105,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
@@ -414,8 +409,8 @@
           {
             "name": "Craft HA Combustion Training 26-6",
             "capacity": 8,
-            "enrolled": 8,
-            "enrollPct": 100,
+            "enrolled": 7,
+            "enrollPct": 88,
             "overEnrolled": false,
             "locCat": "HLC"
           },
@@ -431,19 +426,19 @@
         "oeCourses": [],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 5,
-          "totalStudents": 57,
-          "intClasses": 5,
+          "totalClasses": 6,
+          "totalStudents": 65,
+          "intClasses": 6,
           "oeClasses": 0
         }
       },
       {
         "name": "Greg Walker",
-        "totalClasses": 5,
-        "totalStudents": 44,
+        "totalClasses": 4,
+        "totalStudents": 32,
         "internalStudents": 0,
-        "oeStudents": 44,
-        "oeClasses": 5,
+        "oeStudents": 32,
+        "oeClasses": 4,
         "courses": [],
         "oeCourses": [
           {
@@ -465,19 +460,14 @@
             "title": "26-1028 - Hindustan Aeronautics Ltd. - - - Indian Navy - Gas Turbine - LM2500 Level 1 Maintenance - G4",
             "students": 8,
             "country": "United States"
-          },
-          {
-            "title": "26-968 - CFE - MGVP Cozumel - LM2500 - Gas Turbine -  Aero Package Operation & Maintenance (OJT)",
-            "students": 12,
-            "country": "Mexico"
           }
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 14,
-          "totalStudents": 134,
+          "totalClasses": 13,
+          "totalStudents": 119,
           "intClasses": 0,
-          "oeClasses": 14
+          "oeClasses": 13
         }
       },
       {
@@ -503,14 +493,14 @@
     ]
   },
   "slide3": {
-    "totalCountries": 27,
-    "totalStudents": 292,
+    "totalCountries": 24,
+    "totalStudents": 277,
     "learningCenters": [
       {
         "name": "HLC — Houston",
         "lat": 29.7604,
         "lon": -95.3698,
-        "students": 223
+        "students": 221
       },
       {
         "name": "BLC — Birr",
@@ -528,7 +518,7 @@
     "pins": [
       {
         "country": "United States",
-        "students": 171,
+        "students": 170,
         "lat": 38.0,
         "lon": -97.0
       },
@@ -551,12 +541,6 @@
         "lon": 45.0
       },
       {
-        "country": "Iraq",
-        "students": 6,
-        "lat": 33.2,
-        "lon": 43.7
-      },
-      {
         "country": "Tunisia",
         "students": 6,
         "lat": 33.9,
@@ -567,12 +551,6 @@
         "students": 5,
         "lat": 20.6,
         "lon": 79.0
-      },
-      {
-        "country": "Nigeria",
-        "students": 5,
-        "lat": 9.1,
-        "lon": 8.7
       },
       {
         "country": "Canada",
@@ -599,12 +577,6 @@
         "lon": 36.5
       },
       {
-        "country": "Malaysia",
-        "students": 2,
-        "lat": 4.2,
-        "lon": 108.0
-      },
-      {
         "country": "France",
         "students": 2,
         "lat": 46.2,
@@ -629,12 +601,6 @@
         "lon": 19.1
       },
       {
-        "country": "Egypt",
-        "students": 2,
-        "lat": 26.8,
-        "lon": 30.8
-      },
-      {
         "country": "Switzerland",
         "students": 1,
         "lat": 46.8,
@@ -657,6 +623,12 @@
         "students": 1,
         "lat": 29.3,
         "lon": 47.5
+      },
+      {
+        "country": "Malaysia",
+        "students": 1,
+        "lat": 4.2,
+        "lon": 108.0
       },
       {
         "country": "Pakistan",
@@ -691,8 +663,8 @@
     ]
   },
   "slide4": {
-    "weekStudents": 230,
-    "weekClasses": 21,
+    "weekStudents": 206,
+    "weekClasses": 19,
     "weekDelivery": [
       {
         "country": "United States",
@@ -713,22 +685,22 @@
         "count": 36
       },
       {
+        "country": "Turkmenistan",
+        "lat": 38.9,
+        "lon": 59.5,
+        "count": 15
+      },
+      {
         "country": "Switzerland",
         "lat": 46.8,
         "lon": 8.2,
-        "count": 24
+        "count": 12
       },
       {
         "country": "Mexico",
         "lat": 23.6,
         "lon": -102.6,
-        "count": 24
-      },
-      {
-        "country": "Turkmenistan",
-        "lat": 38.9,
-        "lon": 59.5,
-        "count": 15
+        "count": 12
       },
       {
         "country": "Dominican Republic",
@@ -739,10 +711,10 @@
     ]
   },
   "actionPlans": {
-    "deliveryTotal": 80,
-    "inProgress": 54,
-    "delayed": 0,
-    "notStarted": 26,
+    "deliveryTotal": 81,
+    "inProgress": 50,
+    "delayed": 6,
+    "notStarted": 25,
     "inProgressItems": [
       {
         "title": "Move MM Outline function to Xyleme & Smartsheet",
@@ -750,15 +722,19 @@
       },
       {
         "title": "Aero Maintenance Practices Training",
-        "currentStatus": "In Progress"
+        "currentStatus": "At Risk"
       },
       {
         "title": "Outage Manager New Hire Curriculum",
-        "currentStatus": "In Progress"
+        "currentStatus": "On Track"
+      },
+      {
+        "title": "Instructor Feedback Survey for Course Logistics/Support",
+        "currentStatus": "On Track"
       },
       {
         "title": "Add OJT and Qualification into DLN Tuning Training",
-        "currentStatus": "In Progress"
+        "currentStatus": "At Risk"
       },
       {
         "title": "Develop Standard Material for Customer DCS Maintenance Class",
@@ -770,15 +746,11 @@
       },
       {
         "title": "New Pacing Process Implementation",
-        "currentStatus": "In Progress"
-      },
-      {
-        "title": "Feedback after 1 year promotion from FEP",
-        "currentStatus": "In Progress"
+        "currentStatus": "Delayed"
       },
       {
         "title": "Spares for Mk VIe Panels in Birr",
-        "currentStatus": "In Progress"
+        "currentStatus": "Delayed"
       },
       {
         "title": "Improve Controls Rooms Setup & Hardware",
@@ -786,11 +758,11 @@
       },
       {
         "title": "Generator Protection Panel (GPP) Training with Relay testing",
-        "currentStatus": "In Progress"
+        "currentStatus": "On Track"
       },
       {
         "title": "Update I-CRFT30401 - FC.066 Bolting Mentor Training",
-        "currentStatus": "In Progress"
+        "currentStatus": "At Risk"
       }
     ]
   },
