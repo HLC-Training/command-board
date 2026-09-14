@@ -33,17 +33,17 @@
     "kpis": {
       "ptsi": {
         "label": "Post-Training Skill Improvement",
-        "ytdValue": 82,
+        "ytdValue": 83,
         "ytdRag": "green",
-        "monthLabel": "Jun",
-        "monthValue": 81,
+        "monthLabel": "YTD",
+        "monthValue": 83,
         "monthRag": "green",
         "plan": 70,
         "reverse": false
       },
       "timecard": {
         "label": "Timecard On-Time Delivery",
-        "ytdValue": 80,
+        "ytdValue": 72,
         "ytdRag": "red",
         "monthLabel": "Aug",
         "monthValue": 89,
@@ -53,7 +53,7 @@
       },
       "instUtil": {
         "label": "Fully Loaded & Qualified Instructors (FLIQ)",
-        "ytdValue": 20,
+        "ytdValue": 29,
         "ytdRag": "amber",
         "monthLabel": "Aug",
         "monthValue": 21,
