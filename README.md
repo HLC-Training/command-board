@@ -54,5 +54,6 @@ If the build summary flags `UNMATCHED` classes, fix the routing keywords in
 SMARTSHEET_API_TOKEN=... PYTHONUTF8=1 python build.py --week 2026-07-13
 ```
 
-Requires `pip install smartsheet-python-sdk openpyxl` (both auto-install on
+Requires `pip install -r requirements.txt` (smartsheet-python-sdk, openpyxl,
+qrcode[pil] — all auto-install on
 first run). See `CLAUDE.md` for counting rules, PLL routing, and RAG logic.

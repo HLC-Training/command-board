@@ -69,6 +69,7 @@ A local build still works when needed:
 | CapEx | CapEx RAG + panel |
 | Xyleme Modernization Tracker | Xyleme card (modules ring + recently published) |
 | Xyleme Exams Transfer Tracker | Xyleme card (exams pipeline) |
+| Training Master Hiring Sheet | Slide 2 Open Positions card (`hiring` array + build-time QR data-URIs) |
 
 **Manual xlsx uploads to data/** — confirm all 3 before building.
 File names include date stamps that change weekly — match by pattern:
@@ -139,7 +140,7 @@ never as one-off JSON edits.
 
 ### PLL Order in JSON and on Slide 2:
 
-Sherif → Pablo → Ben Smith → Mohammed → Harry → Greg → Linda Nelson → Week at a Glance
+Sherif → Pablo → Ben Smith → Mohammed → Harry → Greg → Linda Nelson → Open Positions
 
 - Always use full names: "Linda Nelson" not "Linda"
 
@@ -154,7 +155,30 @@ Sherif → Pablo → Ben Smith → Mohammed → Harry → Greg → Linda Nelson 
 5. Harry Hanson — Craft/Repairs/ILES
 6. Greg Walker — Aeroderivative
 7. Linda Nelson — CTE/Workforce Readiness
-8. Week at a Glance
+8. Open Positions (hiring card — replaced Week at a Glance, Sep 2026;
+   rendered from the top-level `hiring` array, falls back to Week at a
+   Glance only when a board-data.json predates that field)
+
+### Open Positions card — data rules (`process_hiring` / `filter_hiring_rows`)
+
+Source: Training Master Hiring Sheet (ID in `SMARTSHEET_SHEETS["hiring"]`).
+The sheet is NOT flat — its `Order` column encodes row type:
+1.0 = product-line summary (hidden), 2.0 = requisition (shown),
+3.0 = candidate in pipeline (hidden — a candidate is not an open seat).
+
+- Show Order-2.0 rows whose `Current Step` ∈ {need to post, posted,
+  interviews, ongoing}. Hide {hired, rejected, declined}. Any other value
+  is hidden AND flagged ⚠️ in the build summary — never routed silently.
+- Blank `Current Step` is shown as "not set" and flagged
+  (`HIRING_INCLUDE_BLANK_STEP`); flip that constant to hide instead.
+- Per card: Job Title, Product Line · Country, `N posted / M filled`.
+  Never show Quantity Approved (per-product-line, lives on the 1.0 row).
+- Dedupe on (Job Title, Product Line, Country); duplicates collapse by
+  TAKE-MAX on posted/filled (never sum — each duplicate describes the same
+  seat), first non-empty Link / Requisition Number wins.
+- QR codes are generated at BUILD time (`qrcode[pil]`, in requirements.txt
+  and the workflow install step) and stored as `qr` data-URIs; rows
+  without a Link get `qr: null` and render no QR.
 
 ---
 
@@ -281,9 +305,13 @@ OE ← CMCustomerDemandList, SS ← ClassList. OE + SS = "customer".
   `oeCourses[]`, `lookAhead30` — index.html renders `undefined` if any
   are missing
 - `slide2.plls[]` **must end with the sentinel `{"name": "__WAG__"}`** —
-  index.html builds the Week at a Glance card itself from slide1 +
-  safetyLog and skips the sentinel. Never embed a real Week at a Glance
-  object in the array.
+  index.html skips the sentinel and builds the 8th card itself (Open
+  Positions from the top-level `hiring` array; Week at a Glance from
+  slide1 + safetyLog only as the fallback when `hiring` is absent). Never
+  embed a real 8th-card object in the array.
+- `hiring[]` = Open Positions rows `{jobTitle, productLine, country, step,
+  posted, filled, reqNumber, link, qr}` — `qr` is a `data:image/png;base64`
+  URI or null. Empty array = "No open positions" empty state.
 - `slide3.pins` = **INTERNAL student country of ORIGIN** (Enrollment
   Database `Student Country` column) — NOT class delivery location.
   Typically ~38 countries.

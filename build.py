@@ -11,7 +11,8 @@ Usage:
 Data sources:
   • Smartsheet API (SMARTSHEET_API_TOKEN env var required):
     Enrollment Database, Action Plan Tracker, CapEx,
-    Xyleme Modernization Tracker, Exams Transfer Tracker
+    Xyleme Modernization Tracker, Exams Transfer Tracker,
+    Training Master Hiring Sheet (slide-2 Open Positions card)
   • data/ xlsx files (manual upload, 3 files):
     Bowler Chart, CM Customer Demand List (OE), Class List (SS)
 
@@ -52,6 +53,18 @@ except ImportError:
     )
     import smartsheet
 
+try:
+    import qrcode
+except ImportError:
+    import subprocess
+    print("Installing qrcode[pil]…")
+    subprocess.run(
+        [sys.executable, "-m", "pip", "install", "qrcode[pil]",
+         "--break-system-packages", "--quiet"],
+        check=True
+    )
+    import qrcode
+
 
 # ══════════════════════════════════════════════════════════════════════════
 # CONFIGURATION
@@ -65,7 +78,26 @@ SMARTSHEET_SHEETS = {
     "capex":         3961523206573956,   # CapEx
     "modernization": 3204043720576900,   # Xyleme Training Modernization Tracker
     "exams":         8868469282918276,   # Xyleme Exams Transfer Tracker
+    "hiring":        8760722187046788,   # Training Master Hiring Sheet
 }
+
+# ── Hiring (slide-2 Open Positions card) ───────────────────────────────────
+# The hiring sheet is NOT a flat list — its `Order` column encodes row type:
+#   1.0 = product-line summary (Hiring Manager + Quantity Approved) → hidden
+#   2.0 = requisition (Job Title, Country, Current Step, Link)     → shown
+#   3.0 = candidate in a pipeline                                   → hidden
+# Display filter locked with Jim 2026-09-14: Order-2.0 rows whose Current
+# Step is open. Closed steps are never shown.
+HIRING_REQ_ORDER    = 2.0
+HIRING_OPEN_STEPS   = {"need to post", "posted", "interviews", "ongoing"}
+HIRING_CLOSED_STEPS = {"hired", "rejected", "declined"}
+# A requisition with a BLANK Current Step is neither open nor closed in the
+# sheet. It is shown (a live req with a link but no step set is still an
+# open seat) and flagged in the build summary so the sheet owner fills it in.
+# Flip to False to hide blank-step rows instead.
+HIRING_INCLUDE_BLANK_STEP = True
+# QR PNG module size in pixels (small — it shares one grid cell with ~9 rows)
+HIRING_QR_BOX_SIZE = 3
 
 # Student statuses that count as active / in-seat
 ACTIVE_STATUSES = {"registered", "in progress", "completed", "auditor"}
@@ -1754,6 +1786,156 @@ def process_xyleme(ss):
 
 
 # ══════════════════════════════════════════════════════════════════════════
+# HIRING — slide-2 Open Positions card
+# ══════════════════════════════════════════════════════════════════════════
+
+def qr_data_uri(url):
+    """
+    Render `url` as a QR code PNG and return it as a data: URI.
+
+    Generated at BUILD time (not client-side) so the wall displays need no
+    JS QR library, no CDN call, and render instantly from board-data.json.
+    Error-correction M is the phone-camera sweet spot at small sizes.
+    """
+    import base64
+    from io import BytesIO
+    qr = qrcode.QRCode(
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=HIRING_QR_BOX_SIZE,
+        border=1,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+
+
+def _to_int(val):
+    """Smartsheet number cells come back as floats (1.0) or None."""
+    try:
+        return int(float(val))
+    except (TypeError, ValueError):
+        return 0
+
+
+def filter_hiring_rows(headers, rows):
+    """
+    Pure filter/dedupe step (no network, no QR) — unit-testable.
+
+    Returns (positions, stats):
+      positions: list of {jobTitle, productLine, country, step, posted,
+                 filled, reqNumber, link} — link is None when absent.
+      stats:     counts for the build summary (pre/post dedupe, per-step
+                 include/exclude tallies, blank-step and unknown-step rows).
+    """
+    col_order = find_col(headers, "order")
+    col_pl    = find_col(headers, "product line")
+    col_title = find_col(headers, "job title")
+    col_ctry  = find_col(headers, "country")
+    col_step  = find_col(headers, "current step")
+    col_post  = find_col(headers, "quantity posted")
+    col_fill  = find_col(headers, "quantity filled")
+    col_req   = find_col(headers, "requisition number")
+    col_link  = find_col(headers, "link")
+
+    missing = [n for n, c in [("Order", col_order), ("Job Title", col_title),
+                              ("Current Step", col_step), ("Link", col_link)]
+               if c is None]
+    if missing:
+        print(f"⛔  Hiring sheet: required column(s) not found: {missing}")
+        print(f"    headers seen: {headers}")
+        sys.exit(1)
+
+    def get(row, idx):
+        return row[idx] if idx is not None and idx < len(row) else None
+
+    def txt(v):
+        return str(v).strip() if v is not None else ""
+
+    stats = {"rows_total": len(rows), "order_2_rows": 0,
+             "included_by_step": {}, "excluded_by_step": {},
+             "blank_step": [], "unknown_step": [],
+             "pre_dedupe": 0, "post_dedupe": 0, "collapsed": []}
+
+    kept = []
+    for r in rows:
+        try:
+            order = float(get(r, col_order))
+        except (TypeError, ValueError):
+            continue                       # blank Order → not a requisition
+        if order != HIRING_REQ_ORDER:
+            continue                       # 1.0 summary / 3.0 candidate rows
+        stats["order_2_rows"] += 1
+        title = txt(get(r, col_title))
+        step  = txt(get(r, col_step)).lower()
+        label = f"{title or '(no title)'} [{txt(get(r, col_pl)) or '—'}]"
+        if step in HIRING_OPEN_STEPS:
+            stats["included_by_step"][step] = stats["included_by_step"].get(step, 0) + 1
+        elif step in HIRING_CLOSED_STEPS:
+            stats["excluded_by_step"][step] = stats["excluded_by_step"].get(step, 0) + 1
+            continue
+        elif step == "":
+            stats["blank_step"].append(label)
+            if not HIRING_INCLUDE_BLANK_STEP:
+                continue
+        else:
+            stats["unknown_step"].append(f"{label} step='{step}'")
+            continue                       # never route an unknown step silently
+        link = txt(get(r, col_link))
+        kept.append({
+            "jobTitle":    title,
+            "productLine": txt(get(r, col_pl)),
+            "country":     txt(get(r, col_ctry)),
+            "step":        step or "not set",
+            "posted":      _to_int(get(r, col_post)),
+            "filled":      _to_int(get(r, col_fill)),
+            "reqNumber":   txt(get(r, col_req)) or None,
+            "link":        link or None,
+        })
+    stats["pre_dedupe"] = len(kept)
+
+    # Dedupe on (Job Title, Product Line, Country) — the sheet carries exact
+    # duplicate requisition rows (two Generator/Instructor, two GT Instructor).
+    # Counts collapse by TAKE-MAX, not sum: the duplicates each say
+    # "1 posted" for the same seat, so summing would double-count it.
+    # Link / req number: first non-empty wins.
+    merged, order_keys = {}, []
+    for pos in kept:
+        key = (pos["jobTitle"].lower(), pos["productLine"].lower(),
+               pos["country"].lower())
+        if key not in merged:
+            merged[key] = dict(pos)
+            order_keys.append(key)
+        else:
+            m = merged[key]
+            m["posted"] = max(m["posted"], pos["posted"])
+            m["filled"] = max(m["filled"], pos["filled"])
+            m["link"]      = m["link"]      or pos["link"]
+            m["reqNumber"] = m["reqNumber"] or pos["reqNumber"]
+            stats["collapsed"].append(f"{pos['jobTitle']} [{pos['productLine']}]")
+    positions = [merged[k] for k in order_keys]
+    stats["post_dedupe"] = len(positions)
+    return positions, stats
+
+
+def process_hiring(ss):
+    """
+    Build the slide-2 Open Positions card data from the Training Master
+    Hiring Sheet: filter + dedupe (filter_hiring_rows) then attach a
+    build-time QR data-URI for every row that has an application Link.
+    """
+    headers, rows, _depths = fetch_sheet_table(ss, "hiring",
+                                               "Training Master Hiring Sheet")
+    positions, stats = filter_hiring_rows(headers, rows)
+    for pos in positions:
+        pos["qr"] = qr_data_uri(pos["link"]) if pos["link"] else None
+    stats["with_link"] = sum(1 for p in positions if p["link"])
+    return {"positions": positions, "_stats": stats}
+
+
+# ══════════════════════════════════════════════════════════════════════════
 # SAFETY
 # ══════════════════════════════════════════════════════════════════════════
 
@@ -1909,6 +2091,17 @@ def validate(board):
             f"≠ internalStudents {s1['internalStudents']}"
         )
 
+    # Slide-2 Open Positions card — index.html tolerates a missing/empty
+    # list (empty-state), but a present entry must be fully shaped.
+    for i, pos in enumerate(board.get("hiring", [])):
+        for k in ("jobTitle", "country", "posted", "filled", "link", "qr"):
+            if k not in pos:
+                errors.append(f"hiring[{i}] missing key '{k}'")
+        if pos.get("link") and not pos.get("qr"):
+            errors.append(f"hiring[{i}] has a link but no qr")
+        if not pos.get("link") and pos.get("qr"):
+            errors.append(f"hiring[{i}] has a qr but no link")
+
     return errors
 
 
@@ -1953,6 +2146,7 @@ def build(week_override=None):
                                                  "Action Plan Tracker")
     cx_headers, cx_rows, _   = fetch_sheet_table(client, "capex", "CapEx")
     xyleme = process_xyleme(client)
+    hiring = process_hiring(client)
     print()
 
     # ── Process ──────────────────────────────────────────────────────────
@@ -2111,6 +2305,10 @@ def build(week_override=None):
             "exams":             xyleme["exams"],
             "recentlyPublished": xyleme["recentlyPublished"],
         },
+        # Slide-2 Open Positions card (replaced Week at a Glance, Sep 2026).
+        # Each entry: jobTitle, productLine, country, step, posted, filled,
+        # reqNumber, link, qr (data:image/png;base64 or null).
+        "hiring": hiring["positions"],
     }
 
     # ── Validate ─────────────────────────────────────────────────────────
@@ -2163,6 +2361,27 @@ def build(week_override=None):
     if xyleme.get("_unbucketed"):
         ub = ", ".join(f"{k}={v}" for k, v in sorted(xyleme["_unbucketed"].items()))
         print(f"      ℹ️  exam statuses outside pipeline buckets (total-only): {ub}")
+    hs = hiring["_stats"]
+    print(f"  Hiring:        {hs['post_dedupe']} open positions "
+          f"({hs['with_link']} with QR link)  [live Smartsheet]")
+    print(f"      Order-2.0 requisitions: {hs['order_2_rows']} → "
+          f"{hs['pre_dedupe']} after step filter → "
+          f"{hs['post_dedupe']} after dedupe")
+    inc = ", ".join(f"{k}={v}" for k, v in sorted(hs["included_by_step"].items()))
+    exc = ", ".join(f"{k}={v}" for k, v in sorted(hs["excluded_by_step"].items()))
+    print(f"      included steps: {inc or '(none)'} | excluded steps: {exc or '(none)'}")
+    for c in hs["collapsed"]:
+        print(f"      ℹ️  duplicate requisition collapsed (take-max): {c}")
+    for b in hs["blank_step"]:
+        shown = "SHOWN" if HIRING_INCLUDE_BLANK_STEP else "HIDDEN"
+        print(f"      ⚠️  blank Current Step ({shown}) — set the step in the sheet: {b}")
+    for u in hs["unknown_step"]:
+        print(f"      ⚠️  UNKNOWN Current Step (hidden, not in open/closed sets): {u}")
+    for p in hiring["positions"]:
+        qr = "QR" if p["qr"] else "--"
+        print(f"      [{qr}] {p['jobTitle']} — {p['productLine'] or '—'} — "
+              f"{p['country'] or '—'} — {p['posted']} posted / {p['filled']} filled "
+              f"({p['step']})")
     print()
 
     # ── 30-day look-ahead summary (computed from source) ─────────────────
