@@ -2,8 +2,8 @@ name: Promote Preview to Main
 
 on:
   workflow_dispatch:          # Jim can still trigger this manually anytime
-  # schedule:
-  #   - cron: '0 17 * * 0'      # Every Sunday, 12:00 PM Central (17:00 UTC / CDT)
+  schedule:
+    - cron: '0 17 * * 0'      # Every Sunday, 12:00 PM Central (17:00 UTC / CDT)
                               # NOTE: GitHub cron doesn't observe DST — this
                               # drifts to 11:00 AM Central once Houston falls
                               # back to CST in the winter. Adjust the hour
