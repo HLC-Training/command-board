@@ -1,964 +1,923 @@
 {
- "meta": {
-  "specVersion": "v2.2",
-  "buildDate": "2026-09-18",
-  "weekOf": "Sep 21 – 25, 2026"
- },
- "slide1": {
-  "weekOf": "Sep 21 – 25, 2026",
-  "weeklyTotal": 459,
-  "internalStudents": 265,
-  "oeStudents": 194,
-  "internalCourses": 14,
-  "oeCourses": 19,
-  "locationBreakdown": {
-   "HLC": 324,
-   "BLC": 27,
-   "KLC": 0,
-   "Other": 108
+  "meta": {
+    "specVersion": "v2.2",
+    "buildDate": "2026-09-24",
+    "weekOf": "Sep 28 – Oct 2, 2026"
   },
-  "safetyRag": "green",
-  "minorIncidents": 0,
-  "ragReason": "0 incidents this week — All safety KPIs on plan",
-  "safetyKPIs": {
-   "liveStop": {
-    "value": 100,
-    "rag": "green"
-   },
-   "readAcross": {
-    "value": 90,
-    "rag": "green"
-   }
-  },
-  "kpis": {
-   "ptsi": {
-    "label": "Post-Training Skill Improvement",
-    "ytdValue": 83,
-    "ytdRag": "green",
-    "monthLabel": "YTD",
-    "monthValue": 83,
-    "monthRag": "green",
-    "plan": 70,
-    "reverse": false
-   },
-   "timecard": {
-    "label": "Timecard On-Time Delivery",
-    "ytdValue": 72,
-    "ytdRag": "red",
-    "monthLabel": "Aug",
-    "monthValue": 89,
-    "monthRag": "amber",
-    "plan": 92,
-    "reverse": false
-   },
-   "instUtil": {
-    "label": "Fully Loaded & Qualified Instructors (FLIQ)",
-    "ytdValue": 29,
-    "ytdRag": "amber",
-    "monthLabel": "Aug",
-    "monthValue": 21,
-    "monthRag": "amber",
-    "plan": 15,
-    "reverse": true
-   }
-  },
-  "overallRAGs": {
-   "bowler": {
-    "rag": "amber",
-    "label": "Bowler KPIs",
-    "reason": "Timecard Aug 89% vs 92% plan"
-   },
-   "safety": {
-    "rag": "green",
-    "label": "Safety",
-    "reason": "0 incidents this week — All safety KPIs on plan"
-   },
-   "actionPlans": {
-    "rag": "red",
-    "label": "Action Plans",
-    "reason": "6 delayed / 50 in progress"
-   },
-   "capex": {
-    "rag": "amber",
-    "label": "CapEx",
-    "reason": "74 active projects"
-   }
-  }
- },
- "safetyLog": [
-  {
-   "date": "Sep 19, 2026",
-   "shortDesc": "🔍 EHS Audit — Wk of 9/28",
-   "desc": "ADVISORY — Business Level EHS audit, week of Sep 28. General awareness, no action required."
-  },
-  {
-   "date": "Jul 29, 2026",
-   "shortDesc": "⚠️ PSE — dropped chain fall, 7HA.03 rigging (closed)",
-   "desc": "7HA.03 exhaust frame rigging, July 29, 2026 — wire rope snagged and failed during rigging clearance, dropping a 10T chain fall to the turbine deck. No injuries. Investigation closed; corrective actions implemented (rigging clearance verification, secondary exclusion zone)."
-  },
-  {
-   "date": "Jul 24, 2026",
-   "shortDesc": "🛑 Stop Work — damaged sling caught before rotor lift",
-   "desc": "7HA.03 Project Crew — Damaged sling discovered while unloading the rotor beam from the hook to the lifting beam. Sling immediately tagged out of service; no equivalent-rated sling available onsite, so a replacement was rented locally in Houston. Lift completed on schedule with no further delay."
-  },
-  {
-   "date": "Jul 21, 2026",
-   "shortDesc": "🛑 Recordable — fall, Birr stairwell",
-   "desc": "Birr Learning Center, July 21, 2026 — employee fell on the stairs and sustained a torn Achilles tendon. Work-related, lost work time, recordable. Reminder: report incidents to EHS immediately — this one wasn't reported until nearly three weeks after it occurred."
-  },
-  {
-   "date": "Jul 5, 2026",
-   "shortDesc": "🛑 Stop Work — barricade correction, 7FH2 rotor",
-   "desc": "Submitted by Ben Smith — LV 26-1 class was performing live electrical testing on the 7FH2 rotor without barricades. Work was stopped and the team coached on proper barricade placement to protect the testing area before work resumed."
-  },
-  {
-   "date": "Apr 3, 2026",
-   "shortDesc": "Lube oil spill — contained",
-   "desc": "Lube oil spill during maintenance exercise — contained, cleaned, no injury"
-  },
-  {
-   "date": "Mar 14, 2026",
-   "shortDesc": "Slip — wet floor near lab",
-   "desc": "Slip on wet floor near lab entrance — no injury, area secured"
-  }
- ],
- "slide2": {
-  "plls": [
-   {
-    "name": "Sherif Khalifa",
-    "totalClasses": 6,
-    "totalStudents": 82,
-    "internalStudents": 76,
-    "oeStudents": 6,
-    "oeClasses": 2,
-    "courses": [
-     {
-      "name": "Entry Level Gas Turbine 26-1",
-      "capacity": 24,
-      "enrolled": 17,
-      "enrollPct": 71,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Gas Turbine - Entry Level - Accelerated 26-1",
-      "capacity": 18,
-      "enrolled": 21,
-      "enrollPct": 117,
-      "overEnrolled": true,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Entry Level Gas Turbine 26-2",
-      "capacity": 24,
-      "enrolled": 24,
-      "enrollPct": 100,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Entry Level GT MkVIe 26-2",
-      "capacity": 17,
-      "enrolled": 14,
-      "enrollPct": 82,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     }
-    ],
-    "oeCourses": [
-     {
-      "title": "26-1155 - TPC - Talin - 2026 - Gas Turbine -  Maintenance - G1",
-      "students": 3,
-      "country": "United States"
-     },
-     {
-      "title": "26-1154 - TPC - Talin - 2026 - Gas Turbine - Operation - G1",
-      "students": 3,
-      "country": "United States"
-     }
-    ],
-    "lookAhead30": {
-     "label": "Next 30 Days",
-     "totalClasses": 8,
-     "totalStudents": 99,
-     "intClasses": 1,
-     "oeClasses": 7
+  "slide1": {
+    "weekOf": "Sep 28 – Oct 2, 2026",
+    "weeklyTotal": 374,
+    "internalStudents": 204,
+    "oeStudents": 170,
+    "internalCourses": 12,
+    "oeCourses": 15,
+    "locationBreakdown": {
+      "HLC": 251,
+      "BLC": 15,
+      "KLC": 0,
+      "Other": 108
+    },
+    "safetyRag": "red",
+    "minorIncidents": 1,
+    "ragReason": "1 first aid this week — I&I rate 0.95 vs 0 plan (Jul recordable)",
+    "safetyKPIs": {
+      "liveStop": {
+        "value": 100,
+        "rag": "green"
+      },
+      "readAcross": {
+        "value": 90,
+        "rag": "green"
+      }
+    },
+    "kpis": {
+      "ptsi": {
+        "label": "Post-Training Skill Improvement",
+        "ytdValue": 83,
+        "ytdRag": "green",
+        "monthLabel": "YTD",
+        "monthValue": 83,
+        "monthRag": "green",
+        "plan": 70,
+        "reverse": false
+      },
+      "timecard": {
+        "label": "Timecard On-Time Delivery",
+        "ytdValue": 72,
+        "ytdRag": "red",
+        "monthLabel": "Aug",
+        "monthValue": 89,
+        "monthRag": "amber",
+        "plan": 92,
+        "reverse": false
+      },
+      "instUtil": {
+        "label": "Fully Loaded & Qualified Instructors (FLIQ)",
+        "ytdValue": 29,
+        "ytdRag": "amber",
+        "monthLabel": "Aug",
+        "monthValue": 21,
+        "monthRag": "amber",
+        "plan": 15,
+        "reverse": true
+      }
+    },
+    "overallRAGs": {
+      "bowler": {
+        "rag": "amber",
+        "label": "Bowler KPIs",
+        "reason": "Timecard Aug 89% vs 92% plan"
+      },
+      "safety": {
+        "rag": "red",
+        "label": "Safety",
+        "reason": "1 first aid this week — I&I rate 0.95 vs 0 plan (Jul recordable)"
+      },
+      "actionPlans": {
+        "rag": "red",
+        "label": "Action Plans",
+        "reason": "6 delayed / 52 in progress"
+      },
+      "capex": {
+        "rag": "amber",
+        "label": "CapEx",
+        "reason": "74 active projects"
+      }
     }
-   },
-   {
-    "name": "Pablo Schibli",
-    "totalClasses": 8,
-    "totalStudents": 130,
-    "internalStudents": 67,
-    "oeStudents": 63,
-    "oeClasses": 5,
-    "courses": [
-     {
-      "name": "Entry Level Steam Turbine 25-2",
-      "capacity": 18,
-      "enrolled": 22,
-      "enrollPct": 122,
-      "overEnrolled": true,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Entry Level Steam Turbine 26-1",
-      "capacity": 24,
-      "enrolled": 22,
-      "enrollPct": 92,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Entry Level Steam Turbine 26-2",
-      "capacity": 24,
-      "enrolled": 23,
-      "enrollPct": 96,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     }
-    ],
-    "oeCourses": [
-     {
-      "title": "26-1009 - TPC - Datan - 8&9 Local Training - Steam Turbine - Maintenance - G1",
-      "students": 12,
-      "country": "Taiwan"
-     },
-     {
-      "title": "26-999 - Calik / TURKMENENERGO - - - KIYANLY - Heat Recovery Steam Generator (HRSG) -  Operation & Maintenance (GE Engineered) - GG2",
-      "students": 15,
-      "country": "Switzerland"
-     },
-     {
-      "title": "26-174 - TPC - Hsinta - - - Combined Cycle Fundamentals / extended - G1",
-      "students": 12,
-      "country": "Taiwan"
-     },
-     {
-      "title": "26-156 - TVA - Kingston - - - Steam Turbine -  Operation  - G2",
-      "students": 12,
-      "country": "United States"
-     },
-     {
-      "title": "26-16 - ENEVA - UTE Azulao - II - Steam Turbine -  Operation",
-      "students": 12,
-      "country": "Brazil"
-     }
-    ],
-    "lookAhead30": {
-     "label": "Next 30 Days",
-     "totalClasses": 13,
-     "totalStudents": 175,
-     "intClasses": 1,
-     "oeClasses": 12
+  },
+  "safetyLog": [
+    {
+      "date": "Sep 23, 2026",
+      "shortDesc": "🩹 First Aid — knuckle scrape, drill & tap training",
+      "desc": "Houston Learning Center, Sep 23, 2026 (day shift) — craft employee scraped left middle knuckle on the chuck gear while changing and tightening a drill bit during drill and tap training; gloves not worn. Employee stopped work and reported immediately. First aid administered (bandage)."
+    },
+    {
+      "date": "Sep 19, 2026",
+      "shortDesc": "🔍 EHS Audit — Sep 28–Oct 2",
+      "desc": "ADVISORY — Business Level EHS audit this week, Sep 28 – Oct 2. General awareness, no action required."
+    },
+    {
+      "date": "Jul 29, 2026",
+      "shortDesc": "⚠️ PSE — dropped chain fall, 7HA.03 rigging (closed)",
+      "desc": "7HA.03 exhaust frame rigging, July 29, 2026 — wire rope snagged and failed during rigging clearance, dropping a 10T chain fall to the turbine deck. No injuries. Investigation closed; corrective actions implemented (rigging clearance verification, secondary exclusion zone)."
+    },
+    {
+      "date": "Jul 24, 2026",
+      "shortDesc": "🛑 Stop Work — damaged sling caught before rotor lift",
+      "desc": "7HA.03 Project Crew — Damaged sling discovered while unloading the rotor beam from the hook to the lifting beam. Sling immediately tagged out of service; no equivalent-rated sling available onsite, so a replacement was rented locally in Houston. Lift completed on schedule with no further delay."
+    },
+    {
+      "date": "Jul 21, 2026",
+      "shortDesc": "🛑 Recordable — fall, Birr stairwell",
+      "desc": "Birr Learning Center, July 21, 2026 — employee fell on the stairs and sustained a torn Achilles tendon. Work-related, lost work time, recordable. Reminder: report incidents to EHS immediately — this one wasn't reported until nearly three weeks after it occurred."
+    },
+    {
+      "date": "Jul 5, 2026",
+      "shortDesc": "🛑 Stop Work — barricade correction, 7FH2 rotor",
+      "desc": "Submitted by Ben Smith — LV 26-1 class was performing live electrical testing on the 7FH2 rotor without barricades. Work was stopped and the team coached on proper barricade placement to protect the testing area before work resumed."
+    },
+    {
+      "date": "Apr 3, 2026",
+      "shortDesc": "Lube oil spill — contained",
+      "desc": "Lube oil spill during maintenance exercise — contained, cleaned, no injury"
+    },
+    {
+      "date": "Mar 14, 2026",
+      "shortDesc": "Slip — wet floor near lab",
+      "desc": "Slip on wet floor near lab entrance — no injury, area secured"
     }
-   },
-   {
-    "name": "Ben Smith",
-    "totalClasses": 5,
-    "totalStudents": 56,
-    "internalStudents": 20,
-    "oeStudents": 36,
-    "oeClasses": 3,
-    "courses": [
-     {
-      "name": "Entry Level Electrical Excitation 25-3",
-      "capacity": 12,
-      "enrolled": 9,
-      "enrollPct": 75,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Entry Level Electrical Excitation 26-2",
-      "capacity": 12,
-      "enrolled": 11,
-      "enrollPct": 92,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     }
-    ],
-    "oeCourses": [
-     {
-      "title": "26-1025 - ACWA POWER INTERNATIONAL - Taiba-1 - IPP Project_1.8GW_7E.03 SC - Electrical - Intelligent Electronic Device (IED) IED's Protection & Control",
-      "students": 12,
-      "country": "Saudi Arabia"
-     },
-     {
-      "title": "26-257 - TPC - Datan - 8&9 Local Training - Excitation - Generator Excitation, Protection and Static Starter Introduction - G4",
-      "students": 12,
-      "country": "Taiwan"
-     },
-     {
-      "title": "26-137 - TPC - Hsinta - - - Excitation -Electrical - Operation & Maintenance (GE Integrated Systems) - G2",
-      "students": 12,
-      "country": "United States"
-     }
-    ],
-    "lookAhead30": {
-     "label": "Next 30 Days",
-     "totalClasses": 14,
-     "totalStudents": 168,
-     "intClasses": 1,
-     "oeClasses": 13
-    }
-   },
-   {
-    "name": "Mohammed Nizami",
-    "totalClasses": 5,
-    "totalStudents": 53,
-    "internalStudents": 5,
-    "oeStudents": 48,
-    "oeClasses": 4,
-    "courses": [
-     {
-      "name": "Foundation Fieldbus Advanced 26-5",
-      "capacity": 6,
-      "enrolled": 5,
-      "enrollPct": 83,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     }
-    ],
-    "oeCourses": [
-     {
-      "title": "26-1097 - GP SCS - - - Migration Alspa to MarkVIe - Development Legacy ALSTOM Control System to Mark Vie Ugrade",
-      "students": 12,
-      "country": "Switzerland"
-     },
-     {
-      "title": "26-221 - GSF - Andres CCPP - - - Control System - Mark VIe Maintenance (Extended)",
-      "students": 12,
-      "country": "Dominican Republic"
-     },
-     {
-      "title": "26-116 - TPC - Taichung - 2026 - Control System - Mark VIe Distributed Control System Operation - G2",
-      "students": 12,
-      "country": "United States"
-     },
-     {
-      "title": "26-69 - LG&E - Mill Creek - 5 - Control System - Mark VIe Maintenance (Extended) - G1",
-      "students": 12,
-      "country": "United States"
-     }
-    ],
-    "lookAhead30": {
-     "label": "Next 30 Days",
-     "totalClasses": 12,
-     "totalStudents": 133,
-     "intClasses": 0,
-     "oeClasses": 12
-    }
-   },
-   {
-    "name": "Harry Hanson",
-    "totalClasses": 3,
-    "totalStudents": 49,
-    "internalStudents": 49,
-    "oeStudents": 0,
-    "oeClasses": 0,
-    "courses": [
-     {
-      "name": "Entry Level Generator Repairs Accelerated 26-2",
-      "capacity": 24,
-      "enrolled": 17,
-      "enrollPct": 71,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Craft Entry Level GT Accelerated 26-7",
-      "capacity": 20,
-      "enrolled": 25,
-      "enrollPct": 125,
-      "overEnrolled": true,
-      "locCat": "HLC"
-     },
-     {
-      "name": "Craft HA Combustion Training 26-6",
-      "capacity": 8,
-      "enrolled": 7,
-      "enrollPct": 88,
-      "overEnrolled": false,
-      "locCat": "HLC"
-     }
-    ],
-    "oeCourses": [],
-    "lookAhead30": {
-     "label": "Next 30 Days",
-     "totalClasses": 1,
-     "totalStudents": 26,
-     "intClasses": 1,
-     "oeClasses": 0
-    }
-   },
-   {
-    "name": "Greg Walker",
-    "totalClasses": 5,
-    "totalStudents": 41,
-    "internalStudents": 0,
-    "oeStudents": 41,
-    "oeClasses": 5,
-    "courses": [],
-    "oeCourses": [
-     {
-      "title": "26-554 - OEC - Gas Turbine - LM6000 Level 2 Hot Maintenance",
-      "students": 8,
-      "country": "United States"
-     },
-     {
-      "title": "26-550 - OEC - Gas Turbine - LM6000 Level 2 Cold Maintenance",
-      "students": 8,
-      "country": "United States"
-     },
-     {
-      "title": "26-1168 - Rauma Marine Constructions Oy - Rauma - - - Gas Turbine - LM2500 Level 1 Maintenance",
-      "students": 5,
-      "country": "United States"
-     },
-     {
-      "title": "26-1029 - Hindustan Aeronautics Ltd. - - - Indian Navy - Gas Turbine - LM2500 Borescope Inspection - G4",
-      "students": 8,
-      "country": "United States"
-     },
-     {
-      "title": "26-968 - CFE - MGVP Cozumel - LM2500 - Gas Turbine -  Aero Package Operation & Maintenance (OJT)",
-      "students": 12,
-      "country": "Mexico"
-     }
-    ],
-    "lookAhead30": {
-     "label": "Next 30 Days",
-     "totalClasses": 14,
-     "totalStudents": 130,
-     "intClasses": 0,
-     "oeClasses": 14
-    }
-   },
-   {
-    "name": "Linda Nelson",
-    "totalClasses": 0,
-    "totalStudents": 0,
-    "internalStudents": 0,
-    "oeStudents": 0,
-    "oeClasses": 0,
-    "courses": [],
-    "oeCourses": [],
-    "lookAhead30": {
-     "label": "Next 30 Days",
-     "totalClasses": 0,
-     "totalStudents": 0,
-     "intClasses": 0,
-     "oeClasses": 0
-    }
-   },
-   {
-    "name": "__WAG__"
-   }
-  ]
- },
- "slide3": {
-  "totalCountries": 22,
-  "totalStudents": 265,
-  "learningCenters": [
-   {
-    "name": "HLC — Houston",
-    "lat": 29.7604,
-    "lon": -95.3698,
-    "students": 265
-   },
-   {
-    "name": "BLC — Birr",
-    "lat": 47.36,
-    "lon": 8.04,
-    "students": 0
-   },
-   {
-    "name": "KLC — Kuwait",
-    "lat": 29.3117,
-    "lon": 47.4818,
-    "students": 0
-   }
   ],
-  "pins": [
-   {
-    "country": "United States",
-    "students": 210,
-    "lat": 38.0,
-    "lon": -97.0
-   },
-   {
-    "country": "Mexico",
-    "students": 16,
-    "lat": 23.6,
-    "lon": -102.6
-   },
-   {
-    "country": "Saudi Arabia",
-    "students": 5,
-    "lat": 24.0,
-    "lon": 45.0
-   },
-   {
-    "country": "Algeria",
-    "students": 5,
-    "lat": 28.0,
-    "lon": 3.0
-   },
-   {
-    "country": "Canada",
-    "students": 4,
-    "lat": 56.1,
-    "lon": -106.3
-   },
-   {
-    "country": "Spain",
-    "students": 3,
-    "lat": 40.5,
-    "lon": -3.7
-   },
-   {
-    "country": "South Africa",
-    "students": 3,
-    "lat": -30.6,
-    "lon": 22.9
-   },
-   {
-    "country": "Jordan",
-    "students": 2,
-    "lat": 31.2,
-    "lon": 36.5
-   },
-   {
-    "country": "France",
-    "students": 2,
-    "lat": 46.2,
-    "lon": 2.2
-   },
-   {
-    "country": "China",
-    "students": 2,
-    "lat": 35.9,
-    "lon": 104.2
-   },
-   {
-    "country": "Poland",
-    "students": 2,
-    "lat": 51.9,
-    "lon": 19.1
-   },
-   {
-    "country": "Switzerland",
-    "students": 1,
-    "lat": 46.8,
-    "lon": 8.2
-   },
-   {
-    "country": "India",
-    "students": 1,
-    "lat": 20.6,
-    "lon": 79.0
-   },
-   {
-    "country": "Indonesia",
-    "students": 1,
-    "lat": -0.8,
-    "lon": 113.9
-   },
-   {
-    "country": "Brazil",
-    "students": 1,
-    "lat": -14.2,
-    "lon": -51.9
-   },
-   {
-    "country": "United Kingdom",
-    "students": 1,
-    "lat": 55.4,
-    "lon": -3.4
-   },
-   {
-    "country": "Kuwait",
-    "students": 1,
-    "lat": 29.3,
-    "lon": 47.5
-   },
-   {
-    "country": "Malaysia",
-    "students": 1,
-    "lat": 4.2,
-    "lon": 108.0
-   },
-   {
-    "country": "Pakistan",
-    "students": 1,
-    "lat": 30.4,
-    "lon": 69.3
-   },
-   {
-    "country": "Philippines",
-    "students": 1,
-    "lat": 12.9,
-    "lon": 121.8
-   },
-   {
-    "country": "Morocco",
-    "students": 1,
-    "lat": 31.8,
-    "lon": -7.1
-   },
-   {
-    "country": "Peru",
-    "students": 1,
-    "lat": -9.2,
-    "lon": -75.0
-   }
+  "slide2": {
+    "plls": [
+      {
+        "name": "Sherif Khalifa",
+        "totalClasses": 6,
+        "totalStudents": 94,
+        "internalStudents": 79,
+        "oeStudents": 15,
+        "oeClasses": 2,
+        "courses": [
+          {
+            "name": "Gas Turbine - Entry Level - Accelerated 26-1",
+            "capacity": 18,
+            "enrolled": 21,
+            "enrollPct": 117,
+            "overEnrolled": true,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Entry Level Gas Turbine 26-2",
+            "capacity": 24,
+            "enrolled": 24,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Entry Level GT MkVIe 26-2",
+            "capacity": 17,
+            "enrolled": 14,
+            "enrollPct": 82,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Entry Level Gas Turbine 26-3",
+            "capacity": 24,
+            "enrolled": 20,
+            "enrollPct": 83,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          }
+        ],
+        "oeCourses": [
+          {
+            "title": "26-1155 - TPC - Talin - 2026 - Gas Turbine -  Maintenance - G1",
+            "students": 3,
+            "country": "United States"
+          },
+          {
+            "title": "26-157 - TVA - Kingston - - - Gas Turbine -  Maintenance  - G2",
+            "students": 12,
+            "country": "United States"
+          }
+        ],
+        "lookAhead30": {
+          "label": "Next 30 Days",
+          "totalClasses": 12,
+          "totalStudents": 155,
+          "intClasses": 1,
+          "oeClasses": 11
+        }
+      },
+      {
+        "name": "Pablo Schibli",
+        "totalClasses": 6,
+        "totalStudents": 96,
+        "internalStudents": 45,
+        "oeStudents": 51,
+        "oeClasses": 4,
+        "courses": [
+          {
+            "name": "Entry Level Steam Turbine 25-2",
+            "capacity": 18,
+            "enrolled": 22,
+            "enrollPct": 122,
+            "overEnrolled": true,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Entry Level Steam Turbine 26-2",
+            "capacity": 24,
+            "enrolled": 23,
+            "enrollPct": 96,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          }
+        ],
+        "oeCourses": [
+          {
+            "title": "26-1009 - TPC - Datan - 8&9 Local Training - Steam Turbine - Maintenance - G1",
+            "students": 12,
+            "country": "Taiwan"
+          },
+          {
+            "title": "26-1000 - Calik / TURKMENENERGO - - - KIYANLY - Steam Turbine -  Operation - GG2",
+            "students": 15,
+            "country": "Switzerland"
+          },
+          {
+            "title": "26-174 - TPC - Hsinta - - - Combined Cycle Fundamentals / extended - G1",
+            "students": 12,
+            "country": "Taiwan"
+          },
+          {
+            "title": "26-16 - ENEVA - UTE Azulao - II - Steam Turbine -  Operation",
+            "students": 12,
+            "country": "Brazil"
+          }
+        ],
+        "lookAhead30": {
+          "label": "Next 30 Days",
+          "totalClasses": 12,
+          "totalStudents": 152,
+          "intClasses": 2,
+          "oeClasses": 10
+        }
+      },
+      {
+        "name": "Ben Smith",
+        "totalClasses": 7,
+        "totalStudents": 84,
+        "internalStudents": 36,
+        "oeStudents": 48,
+        "oeClasses": 4,
+        "courses": [
+          {
+            "name": "Entry Level Electrical Excitation 25-3",
+            "capacity": 12,
+            "enrolled": 9,
+            "enrollPct": 75,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Entry Level Electrical Excitation 26-2",
+            "capacity": 12,
+            "enrolled": 11,
+            "enrollPct": 92,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Generator Specialist Training 26-2",
+            "capacity": 16,
+            "enrolled": 16,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          }
+        ],
+        "oeCourses": [
+          {
+            "title": "26-697 - OEC - Excitation -  EX2100e Generator Excitation Maintenance",
+            "students": 12,
+            "country": "United States"
+          },
+          {
+            "title": "26-1025 - ACWA POWER INTERNATIONAL - Taiba-1 - IPP Project_1.8GW_7E.03 SC - Electrical - Intelligent Electronic Device (IED) IED's Protection & Control",
+            "students": 12,
+            "country": "Saudi Arabia"
+          },
+          {
+            "title": "26-137 - TPC - Hsinta - - - Excitation -Electrical - Operation & Maintenance (GE Integrated Systems) - G2",
+            "students": 12,
+            "country": "United States"
+          },
+          {
+            "title": "26-117 - TPC - Taichung - 2026 - Excitation -Electrical - Operation & Maintenance (GE Integrated Systems) - G2",
+            "students": 12,
+            "country": "United States"
+          }
+        ],
+        "lookAhead30": {
+          "label": "Next 30 Days",
+          "totalClasses": 15,
+          "totalStudents": 180,
+          "intClasses": 1,
+          "oeClasses": 14
+        }
+      },
+      {
+        "name": "Mohammed Nizami",
+        "totalClasses": 3,
+        "totalStudents": 36,
+        "internalStudents": 0,
+        "oeStudents": 36,
+        "oeClasses": 3,
+        "courses": [],
+        "oeCourses": [
+          {
+            "title": "26-1128 - GRE - Lakefield - - - Control System - Mark VIe Migration from Mark V (HMI on 1st day)",
+            "students": 12,
+            "country": "United States"
+          },
+          {
+            "title": "26-221 - GSF - Andres CCPP - - - Control System - Mark VIe Maintenance (Extended)",
+            "students": 12,
+            "country": "Dominican Republic"
+          },
+          {
+            "title": "26-69 - LG&E - Mill Creek - 5 - Control System - Mark VIe Maintenance (Extended) - G1",
+            "students": 12,
+            "country": "United States"
+          }
+        ],
+        "lookAhead30": {
+          "label": "Next 30 Days",
+          "totalClasses": 14,
+          "totalStudents": 156,
+          "intClasses": 0,
+          "oeClasses": 14
+        }
+      },
+      {
+        "name": "Harry Hanson",
+        "totalClasses": 2,
+        "totalStudents": 42,
+        "internalStudents": 42,
+        "oeStudents": 0,
+        "oeClasses": 0,
+        "courses": [
+          {
+            "name": "Entry Level Generator Repairs Accelerated 26-2",
+            "capacity": 24,
+            "enrolled": 17,
+            "enrollPct": 71,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Craft Entry Level GT Accelerated 26-7",
+            "capacity": 20,
+            "enrolled": 25,
+            "enrollPct": 125,
+            "overEnrolled": true,
+            "locCat": "HLC"
+          }
+        ],
+        "oeCourses": [],
+        "lookAhead30": {
+          "label": "Next 30 Days",
+          "totalClasses": 2,
+          "totalStudents": 31,
+          "intClasses": 2,
+          "oeClasses": 0
+        }
+      },
+      {
+        "name": "Greg Walker",
+        "totalClasses": 2,
+        "totalStudents": 20,
+        "internalStudents": 0,
+        "oeStudents": 20,
+        "oeClasses": 2,
+        "courses": [],
+        "oeCourses": [
+          {
+            "title": "26-554 - OEC - Gas Turbine - LM6000 Level 2 Hot Maintenance",
+            "students": 8,
+            "country": "United States"
+          },
+          {
+            "title": "26-968 - CFE - MGVP Cozumel - LM2500 - Gas Turbine -  Aero Package Operation & Maintenance (OJT)",
+            "students": 12,
+            "country": "Mexico"
+          }
+        ],
+        "lookAhead30": {
+          "label": "Next 30 Days",
+          "totalClasses": 14,
+          "totalStudents": 143,
+          "intClasses": 0,
+          "oeClasses": 14
+        }
+      },
+      {
+        "name": "Linda Nelson",
+        "totalClasses": 1,
+        "totalStudents": 2,
+        "internalStudents": 2,
+        "oeStudents": 0,
+        "oeClasses": 0,
+        "courses": [
+          {
+            "name": "CTE - Mechanic Assistant Fundamentals 26-1",
+            "capacity": 20,
+            "enrolled": 2,
+            "enrollPct": 10,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          }
+        ],
+        "oeCourses": [],
+        "lookAhead30": {
+          "label": "Next 30 Days",
+          "totalClasses": 0,
+          "totalStudents": 0,
+          "intClasses": 0,
+          "oeClasses": 0
+        }
+      },
+      {
+        "name": "__WAG__"
+      }
+    ]
+  },
+  "slide3": {
+    "totalCountries": 19,
+    "totalStudents": 204,
+    "learningCenters": [
+      {
+        "name": "HLC — Houston",
+        "lat": 29.7604,
+        "lon": -95.3698,
+        "students": 204
+      },
+      {
+        "name": "BLC — Birr",
+        "lat": 47.36,
+        "lon": 8.04,
+        "students": 0
+      },
+      {
+        "name": "KLC — Kuwait",
+        "lat": 29.3117,
+        "lon": 47.4818,
+        "students": 0
+      }
+    ],
+    "pins": [
+      {
+        "country": "United States",
+        "students": 151,
+        "lat": 38.0,
+        "lon": -97.0
+      },
+      {
+        "country": "Mexico",
+        "students": 14,
+        "lat": 23.6,
+        "lon": -102.6
+      },
+      {
+        "country": "Algeria",
+        "students": 6,
+        "lat": 28.0,
+        "lon": 3.0
+      },
+      {
+        "country": "Saudi Arabia",
+        "students": 5,
+        "lat": 24.0,
+        "lon": 45.0
+      },
+      {
+        "country": "Canada",
+        "students": 4,
+        "lat": 56.1,
+        "lon": -106.3
+      },
+      {
+        "country": "Poland",
+        "students": 4,
+        "lat": 51.9,
+        "lon": 19.1
+      },
+      {
+        "country": "Spain",
+        "students": 4,
+        "lat": 40.5,
+        "lon": -3.7
+      },
+      {
+        "country": "South Africa",
+        "students": 3,
+        "lat": -30.6,
+        "lon": 22.9
+      },
+      {
+        "country": "Jordan",
+        "students": 2,
+        "lat": 31.2,
+        "lon": 36.5
+      },
+      {
+        "country": "China",
+        "students": 2,
+        "lat": 35.9,
+        "lon": 104.2
+      },
+      {
+        "country": "Malaysia",
+        "students": 1,
+        "lat": 4.2,
+        "lon": 108.0
+      },
+      {
+        "country": "Pakistan",
+        "students": 1,
+        "lat": 30.4,
+        "lon": 69.3
+      },
+      {
+        "country": "France",
+        "students": 1,
+        "lat": 46.2,
+        "lon": 2.2
+      },
+      {
+        "country": "Philippines",
+        "students": 1,
+        "lat": 12.9,
+        "lon": 121.8
+      },
+      {
+        "country": "Morocco",
+        "students": 1,
+        "lat": 31.8,
+        "lon": -7.1
+      },
+      {
+        "country": "Indonesia",
+        "students": 1,
+        "lat": -0.8,
+        "lon": 113.9
+      },
+      {
+        "country": "Egypt",
+        "students": 1,
+        "lat": 26.8,
+        "lon": 30.8
+      },
+      {
+        "country": "Greece",
+        "students": 1,
+        "lat": 39.1,
+        "lon": 21.8
+      },
+      {
+        "country": "Peru",
+        "students": 1,
+        "lat": -9.2,
+        "lon": -75.0
+      }
+    ]
+  },
+  "slide4": {
+    "weekStudents": 170,
+    "weekClasses": 15,
+    "weekDelivery": [
+      {
+        "country": "United States",
+        "lat": 38.0,
+        "lon": -97.0,
+        "count": 83
+      },
+      {
+        "country": "Taiwan",
+        "lat": 23.7,
+        "lon": 121.0,
+        "count": 24
+      },
+      {
+        "country": "Switzerland",
+        "lat": 46.8,
+        "lon": 8.2,
+        "count": 15
+      },
+      {
+        "country": "Saudi Arabia",
+        "lat": 24.0,
+        "lon": 45.0,
+        "count": 12
+      },
+      {
+        "country": "Mexico",
+        "lat": 23.6,
+        "lon": -102.6,
+        "count": 12
+      },
+      {
+        "country": "Dominican Republic",
+        "lat": 18.7,
+        "lon": -70.2,
+        "count": 12
+      },
+      {
+        "country": "Brazil",
+        "lat": -14.2,
+        "lon": -51.9,
+        "count": 12
+      }
+    ]
+  },
+  "actionPlans": {
+    "deliveryTotal": 80,
+    "inProgress": 52,
+    "delayed": 6,
+    "notStarted": 22,
+    "inProgressItems": [
+      {
+        "title": "Move MM Outline function to Xyleme & Smartsheet",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Outage Manager New Hire Curriculum",
+        "currentStatus": "On Track"
+      },
+      {
+        "title": "Improve Controls Rooms Setup & Hardware",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Generator Protection Panel (GPP) Training with Relay testing",
+        "currentStatus": "On Track"
+      },
+      {
+        "title": "Update I-CRFT30401 - FC.066 Bolting Mentor Training",
+        "currentStatus": "At Risk"
+      },
+      {
+        "title": "Digital HLC Seating Assignment Tool",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Aero Woodward Controller Training",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "HLC Crane Support Processes",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Chain Fall Compliance",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "Instructor Feedback Survey for Course Logistics/Support",
+        "currentStatus": "On Track"
+      },
+      {
+        "title": "Improve GT ELT-A Program",
+        "currentStatus": "In Progress"
+      },
+      {
+        "title": "New Pacing Process Implementation",
+        "currentStatus": "Delayed"
+      }
+    ]
+  },
+  "capex": {
+    "totalBudget": 6066650,
+    "totalSpend": 4684292,
+    "activeProjects": 74,
+    "highPriorityCount": 18,
+    "byCategory": {
+      "Other": {
+        "cost": 11230584,
+        "count": 66
+      },
+      "Modernization": {
+        "cost": 485000,
+        "count": 5
+      },
+      "Safety": {
+        "cost": 40000,
+        "count": 2
+      },
+      "Capability": {
+        "cost": 16000,
+        "count": 1
+      }
+    },
+    "inProgressItems": [
+      {
+        "project": "HA Tooling",
+        "cost": 700000.0,
+        "category": "Other",
+        "priority": "High"
+      },
+      {
+        "project": "ITS Mockup",
+        "cost": 578800.0,
+        "category": "Other",
+        "priority": ""
+      },
+      {
+        "project": "Building 2 New Roof",
+        "cost": 575000.0,
+        "category": "Other",
+        "priority": "High"
+      },
+      {
+        "project": "New Switchgear bldg. 2",
+        "cost": 350000.0,
+        "category": "Other",
+        "priority": "High"
+      },
+      {
+        "project": "FFB hardware for additional carts",
+        "cost": 300000.0,
+        "category": "Other",
+        "priority": "High"
+      },
+      {
+        "project": "ALA Outage Kit",
+        "cost": 211826.0,
+        "category": "Other",
+        "priority": ""
+      },
+      {
+        "project": "Counterweight and storage stand",
+        "cost": 169368.0,
+        "category": "Other",
+        "priority": ""
+      },
+      {
+        "project": "Tools for Bucket Tech Class",
+        "cost": 165000.0,
+        "category": "Other",
+        "priority": "High"
+      },
+      {
+        "project": "Replace HMIs",
+        "cost": 150000.0,
+        "category": "Modernization",
+        "priority": "High"
+      },
+      {
+        "project": "Aero MKVIe Modernization",
+        "cost": 100000.0,
+        "category": "Modernization",
+        "priority": "High"
+      },
+      {
+        "project": "Hurricane Tie Down",
+        "cost": 100000.0,
+        "category": "Other",
+        "priority": "High"
+      },
+      {
+        "project": "PLL Outage Kit",
+        "cost": 87123.0,
+        "category": "Other",
+        "priority": ""
+      }
+    ]
+  },
+  "xyleme": {
+    "modulesComplete": 17,
+    "modulesTotal": 405,
+    "exams": {
+      "notReceived": 188,
+      "notStarted": 9,
+      "inProgress": 1,
+      "underReview": 18,
+      "approved": 5,
+      "published": 81,
+      "total": 383
+    },
+    "recentlyPublished": [
+      {
+        "name": "Lesson 3: Instruction Manuals and Reference Documents",
+        "pl": "Gas",
+        "date": "2026-07-22"
+      },
+      {
+        "name": "Lesson 2: Gas Turbine Construction",
+        "pl": "Gas",
+        "date": "2026-07-02"
+      },
+      {
+        "name": "Lesson 9: Inlet Guide Vane System",
+        "pl": "Aero, Gas",
+        "date": "2026-04-24"
+      },
+      {
+        "name": "Lesson 8: Trip Oil System",
+        "pl": "Aero, Controls, Gas, Steam",
+        "date": "2026-04-03"
+      },
+      {
+        "name": "Lesson 7: Hydraulic and Lift Oil Systems",
+        "pl": "Aero, Controls, Gas, Steam",
+        "date": "2025-12-01"
+      },
+      {
+        "name": "Lesson 6: Lubricating Oil System",
+        "pl": "Aero, Controls, Gas, Generator, Steam",
+        "date": "2025-11-24"
+      },
+      {
+        "name": "Lesson 1: Gas Turbine Fundamentals",
+        "pl": "Gas",
+        "date": "2025-11-07"
+      },
+      {
+        "name": "Module 1: Generator Operation & Excitation Fundamentals",
+        "pl": "Excitation",
+        "date": ""
+      },
+      {
+        "name": "Module 2:EX2100e Regulator Hardware & Operation",
+        "pl": "Excitation",
+        "date": ""
+      },
+      {
+        "name": "Module 3: EX2100e Static Hardware & Operation",
+        "pl": "Excitation",
+        "date": ""
+      }
+    ]
+  },
+  "hiring": [
+    {
+      "jobTitle": "Customer Instructor",
+      "productLine": "Steam Turbine",
+      "country": "Remote",
+      "step": "interviews",
+      "posted": 1,
+      "filled": 0,
+      "reqNumber": "26-2710",
+      "link": "https://www.fieldcore.com/careers/jobs/?p=job/ojjFAfwB&nl=1",
+      "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGkAAABpAQAAAAAR+TCXAAABu0lEQVR4nJWUwWrbQBCG/40E65PlHg2brCFPkJsCBemY58gL1G4vPlmrnHyp1Rdo+xw5VYbA+pYnKEhZgY6N7IsElqbX1GkYMrfhX4aZb/5ZQXgR6Rn+idO0FKK6Q3W3m6XCf6WepB61GHdqDARUcI+Rxmq/85tFReI/6qu0TBK1ksUb6kmqDR4O67fUl+GoPQY5ROsycoap3ItRnSzd1xiNmHFtaCIc7LnLkdCRbSPNVdAqYXVmPa4NzKU1jzZZYt9xnOEMFKQboOaSHRCBLVYhBNUfcpbz9Km79O6vJx0+xYr1xkVUAMWt/J01LLqqEX0yAsX6bMcN6E/Jes83l8VWiF/sumkIPQPK8uMYxNBAsbBugB6gNyw60Aa0AVbhEaHmOFe3smxydcirleQv5ec9IIsfj/pLyqLrP8uP+w60PL+IHliLJguMo9p0FfF+7lNrg1gBzrA9+/UfAci+yUeI+KUQORN5jXWDZNGVQvTP2y64nn0LWXQetZ7O69RivuUGhDMhDdLbAAj5GwTKyVX/FHrNmt8gALHW2bqfSO5S4KilISwQORNxrvN7AfddzpKb6dBxlcV7fv6/RErI0A8AwLIAAAAASUVORK5CYII="
+    },
+    {
+      "jobTitle": "Gas & Steam Turbine Controls Instructor",
+      "productLine": "Controls",
+      "country": "Remote",
+      "step": "interviews",
+      "posted": 1,
+      "filled": 0,
+      "reqNumber": "26-2604",
+      "link": "http://app.jobvite.com/m?3vG8xnwI",
+      "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF0AAABdAQAAAADvClduAAABVElEQVR4nI1UMU7DQBAc+yKFBieUlgK2xAvorjt3PIQPJFRUxEeP4w/wl0vlfALpwllKa3dnyb6lQ0SChe1WO9qdndm7iPAVQ4xvcZbAAk6brJKA/B0WC/JpUFMJCmBg0MVpebAP5rhkYUD6IWf1j5XzpIaoeBgceaeNqyQFboUpusDlE4Ao5roREXVzKhWRZ7q19ZADswT5ruC4BWXXykJmHcutHG6vtOib6YbjZjfNuPBCG8dxwxj5rDeulBkriHi9b9+KFYAX1oVIvzvKcZg46+F0s1o0VErB6paGu9Mj2mekW043qlTWk9Nm5M4Sdmtcb7LeC25TUKnGtRRBsp7CJlIErNbAhoMRkSshgrIJJ+8xiqZOAYPo/rhe6htRKssNjaGLaVFY7HNidIsBYOuvd42o/nhZbb0HFZazHo78mMypk+OW1Q1wO09Bsi5E//uRPgGTVqs9XYCF/gAAAABJRU5ErkJggg=="
+    },
+    {
+      "jobTitle": "Instructor",
+      "productLine": "Generator",
+      "country": "Remote",
+      "step": "interviews",
+      "posted": 1,
+      "filled": 0,
+      "reqNumber": "26-2607",
+      "link": "https://www.fieldcore.com/careers/jobs/?p=job%2FodTuAfwU",
+      "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGkAAABpAQAAAAAR+TCXAAABw0lEQVR4nJWUQWrbUBCGZ/QE8sZVsjS8IENP4J0KAmnnc7QXqO2VV5LVbrpJ5FwgvUa9qgwCCbrICQxS9cDLSPFGIpIm29RpmfTtfuZnmPf9wyDBixdq8Mc7lwVivxypL9k0RP1V9UwKasSmdcbrxKScM0PoFRdGvsgcwr9UX8tljWGT/Kt6JmkuI895izmIwdypRZYjseYeR8L0youZqnHKmS2ivgIHMiegjjOrEOU2K+pGhTwNaab6J7dEU2Ks2M6Psw7ginb767VkO4/n6q61NHAg4+KGHMAikr4rKoM2rNnofFtUIDEVjFmzolpcfmutOBl73Mx6/zA/nCr1oAH+dLl9FqtWbGCyseFzwKKD79Gh+HDU7uE2ZOPuf7fTbXY12B2xnIGilOqUKkMClBwNgLa4XuvQJr7BJlhUxnttP7lxnduG/aAIljk2CsP8o+dwM5c3brewrcHoMObi1uBxr8Dow1onnrMMCDBO0RRDy3HWiyl0Yy95+vFrCywNQc1R7PJTBIuMPwWhB/69vJsdNONNR2YLuDQdH/hFAuhXNg2t+hpzpwBKarp3blkZ1gAs5x5Hx1U7uayTE3Ho8H8u/zOKM8kG64TRhQAAAABJRU5ErkJggg=="
+    },
+    {
+      "jobTitle": "Instructor",
+      "productLine": "Excitation",
+      "country": "Remote",
+      "step": "ongoing",
+      "posted": 1,
+      "filled": 0,
+      "reqNumber": "26-2722",
+      "link": "https://www.fieldcore.com/careers/jobs/?p=job%2FoJgGAfwZ&__jvst=Job+Board&__jvsd=Email&nl=1",
+      "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIEAAACBAQAAAADP2+T9AAACc0lEQVR4nJ1WMW7bQBCc4xE4pbBolQZOIAHnA+pYCKCquPQb4g9EUho3kUi5F60P6A/poo4GDFCdX2DghBOQ0qQqEiC5qRMLwSZbLnYwt7uzgxOE3yNx8GecyRyEaOe1mPWG8d5NhHuu5n1GUiXXL42XPa9C45HhoZBMDnNgVQeLekzifM3ZTHp/XSgreuYvNe8yMt29erNhF7l81DIDECwzO983gpioVvRAk9ybYDs6liJgoUBENs38MpPryCeimIWyMZpZpWeV8XIZg4dyr4iEuJVez3/7gOmP4DOLq0GoBWEBKnMj2C9Myaa5X2ayi2SZ81COLkVwCp8vlq/zvUZ95M3QUm5muU2zRlRAZHlcWNXXlxi+TdwvN810r3lbvlpHbTuhQe4PduoSzEs5kpCD8lCEwL4tdw2vL4MI01AWkd8pGSvJ7EvsKEmxrc0prLuax+Xob567Hek7ddzCfVS8yTs/nRFoctwkmD5RmY25V/mCu5e2vRlvyE0mTK62G+nNTsahKXsGYPaFTX6E0qd90A+DPpiKarxMJmREBS/3i5A3edBaURHaWOlFpKF4OoQBjFfpJdkksyn5vC37nZIx5KynL+6Hhx7Xo76WY+yN2LVJqr0dz7Fh48gAdq1soYCIOQ3bwS/zRlTNkhqEXN9YRwZKFsp2EaCYvoFTPe6HbVy3g8xg9A/euw51H3oRyo65ZecghIZ6nirzkOGRqUNXUn0odx+PCBYK0+9MzSOZyPjFlvnPy/rVqXlbdgFg9an1oAtgdst0NgDo1/CyXHhIb3hcsFRRByogicxCMdXbit7xoRr61DpPvjPi6VD819/mF9tCM0RbjSyBAAAAAElFTkSuQmCC"
+    },
+    {
+      "jobTitle": "Gas Turbine Instructor",
+      "productLine": "Gas Turbine",
+      "country": "Remote",
+      "step": "interviews",
+      "posted": 1,
+      "filled": 0,
+      "reqNumber": "26-2478",
+      "link": "https://www.fieldcore.com/careers/jobs/?p=job%2FoceeAfwY&__jvst=Job+Board&__jvsd=Email&nl=1",
+      "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIEAAACBAQAAAADP2+T9AAACbUlEQVR4nJ2WsW7bQAyG/9MJOC227DHAuTKQJ8gmAwHkLWPfoVunRumSyZLatZGTF8gLdOroTZ6krU8Q4FwJ8BgpXSRAEju3MQq2NxIkSP7kfXeC8PtJLPx5TlgOQgzRagidRVzYibBP+byyoKSWaoUoN4LKLZUxKxeS9SGF+dQtN90lidM+Jy33vlerUjjmLz6vLPLjbnDDxRjY/KgoA62xQXlT9IKYUYNwMMVxBjxeVI1Y8jQkojKF12QyDTwiYmmIMkYftn3UGjeXMXhR1hlRdY9z4QTPa1z7zAr7qY+wlSOoyY1gVmgdk1y++a5/Zvbk9rwueBrauhH48X5/t3+6KTS6iqd85eY9lJwn+qE5uBF3yi+dfV8sntf2h6v+utC8qLM06CchzXNvvlMz8G6KVZFQTT7UPlAMza7nKW8EIWzLOvBGJWMlmfeLBEWufuzMi9+NHS+XrTd7+0uDd9+qr7Cniqm8tPagNR4SXO+pyS6ZG4VANjmulbclfl9y3Ovtykt90zgG4PVlHWaqgjIvxXLqL6fg9YVeZDIhI1q4uVf7vArRQ8naL2OlN4GG4vEQBkBEHlGZZOWWPJ4aXqw0CjSOntwuDg6XUUlznMGI3ZBstbszTM7XQVkHZarKWgEBU40yhpe0vWj7iHr4TG4AgSFHPbvHaG3jO5vz3WLEEHfDPDO4+Af2xoGZQm98OXKnbABKA71RvWhlqrjEptaErQZ0RHIM+G+lvHPzJj/OuierY1IUAD5nqwq6BsK3TLIBwGRVuVkuXGyveLlQUksjvBqSyGwUc3sH4VQP7ZNHg7X3rAveHor/+tv8Asu2M6/xagO2AAAAAElFTkSuQmCC"
+    },
+    {
+      "jobTitle": "Training Coordinator",
+      "productLine": "Operations",
+      "country": "Houston",
+      "step": "posted",
+      "posted": 1,
+      "filled": 0,
+      "reqNumber": "R5051559",
+      "link": "https://wd5.myworkday.com/gevernova/d/inst/1$9925/9925$233822.htmld",
+      "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHUAAAB1AQAAAABYf5MRAAAB80lEQVR4nJWVPY7bMBCFn0QDchNzWwPM0kAOEKSjK7nbnGNPICFNKsvqtkgkn2DT5CBKpXJPEIAO3ZtMRQOUZtvNH8hMN+CHwfDN4zAjvIxrjl/j9xwa0HtlbEG9B1SUN+TDCqL2jDzNUT5Hu2MfBqyedLs73fzl/M/8ZBXj9br71/nLWADAq6V+azc/3ifwOZqB3ajNPfQjpI3zU7YEYF5vz0CWR3kQkemJbKEbIvJxPWeFVcnmUjQD9nH9NSdAUTvoZpQuXj9UIEeiJuzLwOM82dK0BBTSKkqorwFyg17BzAhVgh84naHetOM2L8/xeUFXinWFaIi5JH+GjGRLGipUinUJfKU099R7Y0uRUp+PovG6KqmnBH1y3L/TbsluMZ12m8f4fQ0RuA98NF1h2gT/9N70hArMKhn3Wz5d7qbLEl9IHJ9S9A8VjAXrB+nGFP2pJ0ZEbtT1yOL953Dbdb1d0McN8P3zLsX/gg/Uel0pNAl+PkBzL7JRtqRTeCLWAVUhbSkPCe9xpcIegQ9sRkI/C+lwZrT4BBzLryK6n/NTlk2H6/rSTPaKn/F9xcgLFOfjVaCY4vsW5qBMV8rWY4+E+eYA1ubh2+UuQAk+pPDoa3YL1j7oeP8w5GlWgQ+yK3WdtH+MG0QF6by00f6z//wfnwHulgteTtq7KQAAAABJRU5ErkJggg=="
+    },
+    {
+      "jobTitle": "NAM FE TDM",
+      "productLine": "Internal Training",
+      "country": "Houston",
+      "step": "posted",
+      "posted": 1,
+      "filled": 0,
+      "reqNumber": null,
+      "link": null,
+      "qr": null
+    }
   ]
- },
- "slide4": {
-  "weekStudents": 194,
-  "weekClasses": 19,
-  "weekDelivery": [
-   {
-    "country": "United States",
-    "lat": 38.0,
-    "lon": -97.0,
-    "count": 83
-   },
-   {
-    "country": "Taiwan",
-    "lat": 23.7,
-    "lon": 121.0,
-    "count": 36
-   },
-   {
-    "country": "Switzerland",
-    "lat": 46.8,
-    "lon": 8.2,
-    "count": 27
-   },
-   {
-    "country": "Saudi Arabia",
-    "lat": 24.0,
-    "lon": 45.0,
-    "count": 12
-   },
-   {
-    "country": "Mexico",
-    "lat": 23.6,
-    "lon": -102.6,
-    "count": 12
-   },
-   {
-    "country": "Dominican Republic",
-    "lat": 18.7,
-    "lon": -70.2,
-    "count": 12
-   },
-   {
-    "country": "Brazil",
-    "lat": -14.2,
-    "lon": -51.9,
-    "count": 12
-   }
-  ]
- },
- "actionPlans": {
-  "deliveryTotal": 80,
-  "inProgress": 50,
-  "delayed": 6,
-  "notStarted": 24,
-  "inProgressItems": [
-   {
-    "title": "Move MM Outline function to Xyleme & Smartsheet",
-    "currentStatus": "In Progress"
-   },
-   {
-    "title": "Aero Maintenance Practices Training",
-    "currentStatus": "At Risk"
-   },
-   {
-    "title": "Outage Manager New Hire Curriculum",
-    "currentStatus": "On Track"
-   },
-   {
-    "title": "Instructor Feedback Survey for Course Logistics/Support",
-    "currentStatus": "On Track"
-   },
-   {
-    "title": "Improve Controls Rooms Setup & Hardware",
-    "currentStatus": "In Progress"
-   },
-   {
-    "title": "Generator Protection Panel (GPP) Training with Relay testing",
-    "currentStatus": "On Track"
-   },
-   {
-    "title": "Update I-CRFT30401 - FC.066 Bolting Mentor Training",
-    "currentStatus": "At Risk"
-   },
-   {
-    "title": "Aero Woodward Controller Training",
-    "currentStatus": "In Progress"
-   },
-   {
-    "title": "HLC Crane Support Processes",
-    "currentStatus": "In Progress"
-   },
-   {
-    "title": "Chain Fall Compliance",
-    "currentStatus": "In Progress"
-   },
-   {
-    "title": "Improve GT ELT-A Program",
-    "currentStatus": "In Progress"
-   },
-   {
-    "title": "New Pacing Process Implementation",
-    "currentStatus": "Delayed"
-   }
-  ]
- },
- "capex": {
-  "totalBudget": 6066650,
-  "totalSpend": 4684292,
-  "activeProjects": 74,
-  "highPriorityCount": 18,
-  "byCategory": {
-   "Other": {
-    "cost": 11230584,
-    "count": 66
-   },
-   "Modernization": {
-    "cost": 485000,
-    "count": 5
-   },
-   "Safety": {
-    "cost": 40000,
-    "count": 2
-   },
-   "Capability": {
-    "cost": 16000,
-    "count": 1
-   }
-  },
-  "inProgressItems": [
-   {
-    "project": "HA Tooling",
-    "cost": 700000.0,
-    "category": "Other",
-    "priority": "High"
-   },
-   {
-    "project": "ITS Mockup",
-    "cost": 578800.0,
-    "category": "Other",
-    "priority": ""
-   },
-   {
-    "project": "Building 2 New Roof",
-    "cost": 575000.0,
-    "category": "Other",
-    "priority": "High"
-   },
-   {
-    "project": "New Switchgear bldg. 2",
-    "cost": 350000.0,
-    "category": "Other",
-    "priority": "High"
-   },
-   {
-    "project": "FFB hardware for additional carts",
-    "cost": 300000.0,
-    "category": "Other",
-    "priority": "High"
-   },
-   {
-    "project": "ALA Outage Kit",
-    "cost": 211826.0,
-    "category": "Other",
-    "priority": ""
-   },
-   {
-    "project": "Counterweight and storage stand",
-    "cost": 169368.0,
-    "category": "Other",
-    "priority": ""
-   },
-   {
-    "project": "Tools for Bucket Tech Class",
-    "cost": 165000.0,
-    "category": "Other",
-    "priority": "High"
-   },
-   {
-    "project": "Replace HMIs",
-    "cost": 150000.0,
-    "category": "Modernization",
-    "priority": "High"
-   },
-   {
-    "project": "Aero MKVIe Modernization",
-    "cost": 100000.0,
-    "category": "Modernization",
-    "priority": "High"
-   },
-   {
-    "project": "Hurricane Tie Down",
-    "cost": 100000.0,
-    "category": "Other",
-    "priority": "High"
-   },
-   {
-    "project": "PLL Outage Kit",
-    "cost": 87123.0,
-    "category": "Other",
-    "priority": ""
-   }
-  ]
- },
- "xyleme": {
-  "modulesComplete": 17,
-  "modulesTotal": 405,
-  "exams": {
-   "notReceived": 188,
-   "notStarted": 9,
-   "inProgress": 1,
-   "underReview": 18,
-   "approved": 5,
-   "published": 81,
-   "total": 383
-  },
-  "recentlyPublished": [
-   {
-    "name": "Lesson 3: Instruction Manuals and Reference Documents",
-    "pl": "Gas",
-    "date": "2026-07-22"
-   },
-   {
-    "name": "Lesson 2: Gas Turbine Construction",
-    "pl": "Gas",
-    "date": "2026-07-02"
-   },
-   {
-    "name": "Lesson 9: Inlet Guide Vane System",
-    "pl": "Aero, Gas",
-    "date": "2026-04-24"
-   },
-   {
-    "name": "Lesson 8: Trip Oil System",
-    "pl": "Aero, Controls, Gas, Steam",
-    "date": "2026-04-03"
-   },
-   {
-    "name": "Lesson 7: Hydraulic and Lift Oil Systems",
-    "pl": "Aero, Controls, Gas, Steam",
-    "date": "2025-12-01"
-   },
-   {
-    "name": "Lesson 6: Lubricating Oil System",
-    "pl": "Aero, Controls, Gas, Generator, Steam",
-    "date": "2025-11-24"
-   },
-   {
-    "name": "Lesson 1: Gas Turbine Fundamentals",
-    "pl": "Gas",
-    "date": "2025-11-07"
-   },
-   {
-    "name": "Module 1: Generator Operation & Excitation Fundamentals",
-    "pl": "Excitation",
-    "date": ""
-   },
-   {
-    "name": "Module 2:EX2100e Regulator Hardware & Operation",
-    "pl": "Excitation",
-    "date": ""
-   },
-   {
-    "name": "Module 3: EX2100e Static Hardware & Operation",
-    "pl": "Excitation",
-    "date": ""
-   }
-  ]
- },
- "hiring": [
-  {
-   "jobTitle": "Customer Instructor",
-   "productLine": "Steam Turbine",
-   "country": "Remote",
-   "step": "interviews",
-   "posted": 1,
-   "filled": 0,
-   "reqNumber": "26-2710",
-   "link": "https://www.fieldcore.com/careers/jobs/?p=job/ojjFAfwB&nl=1",
-   "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGkAAABpAQAAAAAR+TCXAAABu0lEQVR4nJWUwWrbQBCG/40E65PlHg2brCFPkJsCBemY58gL1G4vPlmrnHyp1Rdo+xw5VYbA+pYnKEhZgY6N7IsElqbX1GkYMrfhX4aZb/5ZQXgR6Rn+idO0FKK6Q3W3m6XCf6WepB61GHdqDARUcI+Rxmq/85tFReI/6qu0TBK1ksUb6kmqDR4O67fUl+GoPQY5ROsycoap3ItRnSzd1xiNmHFtaCIc7LnLkdCRbSPNVdAqYXVmPa4NzKU1jzZZYt9xnOEMFKQboOaSHRCBLVYhBNUfcpbz9Km79O6vJx0+xYr1xkVUAMWt/J01LLqqEX0yAsX6bMcN6E/Jes83l8VWiF/sumkIPQPK8uMYxNBAsbBugB6gNyw60Aa0AVbhEaHmOFe3smxydcirleQv5ec9IIsfj/pLyqLrP8uP+w60PL+IHliLJguMo9p0FfF+7lNrg1gBzrA9+/UfAci+yUeI+KUQORN5jXWDZNGVQvTP2y64nn0LWXQetZ7O69RivuUGhDMhDdLbAAj5GwTKyVX/FHrNmt8gALHW2bqfSO5S4KilISwQORNxrvN7AfddzpKb6dBxlcV7fv6/RErI0A8AwLIAAAAASUVORK5CYII="
-  },
-  {
-   "jobTitle": "Gas & Steam Turbine Controls Instructor",
-   "productLine": "Controls",
-   "country": "Remote",
-   "step": "interviews",
-   "posted": 1,
-   "filled": 0,
-   "reqNumber": "26-2604",
-   "link": "http://app.jobvite.com/m?3vG8xnwI",
-   "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF0AAABdAQAAAADvClduAAABVElEQVR4nI1UMU7DQBAc+yKFBieUlgK2xAvorjt3PIQPJFRUxEeP4w/wl0vlfALpwllKa3dnyb6lQ0SChe1WO9qdndm7iPAVQ4xvcZbAAk6brJKA/B0WC/JpUFMJCmBg0MVpebAP5rhkYUD6IWf1j5XzpIaoeBgceaeNqyQFboUpusDlE4Ao5roREXVzKhWRZ7q19ZADswT5ruC4BWXXykJmHcutHG6vtOib6YbjZjfNuPBCG8dxwxj5rDeulBkriHi9b9+KFYAX1oVIvzvKcZg46+F0s1o0VErB6paGu9Mj2mekW043qlTWk9Nm5M4Sdmtcb7LeC25TUKnGtRRBsp7CJlIErNbAhoMRkSshgrIJJ+8xiqZOAYPo/rhe6htRKssNjaGLaVFY7HNidIsBYOuvd42o/nhZbb0HFZazHo78mMypk+OW1Q1wO09Bsi5E//uRPgGTVqs9XYCF/gAAAABJRU5ErkJggg=="
-  },
-  {
-   "jobTitle": "Instructor",
-   "productLine": "Generator",
-   "country": "Remote",
-   "step": "interviews",
-   "posted": 1,
-   "filled": 0,
-   "reqNumber": "26-2607",
-   "link": "https://www.fieldcore.com/careers/jobs/?p=job%2FodTuAfwU",
-   "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGkAAABpAQAAAAAR+TCXAAABw0lEQVR4nJWUQWrbUBCGZ/QE8sZVsjS8IENP4J0KAmnnc7QXqO2VV5LVbrpJ5FwgvUa9qgwCCbrICQxS9cDLSPFGIpIm29RpmfTtfuZnmPf9wyDBixdq8Mc7lwVivxypL9k0RP1V9UwKasSmdcbrxKScM0PoFRdGvsgcwr9UX8tljWGT/Kt6JmkuI895izmIwdypRZYjseYeR8L0youZqnHKmS2ivgIHMiegjjOrEOU2K+pGhTwNaab6J7dEU2Ks2M6Psw7ginb767VkO4/n6q61NHAg4+KGHMAikr4rKoM2rNnofFtUIDEVjFmzolpcfmutOBl73Mx6/zA/nCr1oAH+dLl9FqtWbGCyseFzwKKD79Gh+HDU7uE2ZOPuf7fTbXY12B2xnIGilOqUKkMClBwNgLa4XuvQJr7BJlhUxnttP7lxnduG/aAIljk2CsP8o+dwM5c3brewrcHoMObi1uBxr8Dow1onnrMMCDBO0RRDy3HWiyl0Yy95+vFrCywNQc1R7PJTBIuMPwWhB/69vJsdNONNR2YLuDQdH/hFAuhXNg2t+hpzpwBKarp3blkZ1gAs5x5Hx1U7uayTE3Ho8H8u/zOKM8kG64TRhQAAAABJRU5ErkJggg=="
-  },
-  {
-   "jobTitle": "Instructor",
-   "productLine": "Excitation",
-   "country": "Remote",
-   "step": "ongoing",
-   "posted": 1,
-   "filled": 0,
-   "reqNumber": "26-2722",
-   "link": "https://www.fieldcore.com/careers/jobs/?p=job%2FoJgGAfwZ&__jvst=Job+Board&__jvsd=Email&nl=1",
-   "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIEAAACBAQAAAADP2+T9AAACc0lEQVR4nJ1WMW7bQBCc4xE4pbBolQZOIAHnA+pYCKCquPQb4g9EUho3kUi5F60P6A/poo4GDFCdX2DghBOQ0qQqEiC5qRMLwSZbLnYwt7uzgxOE3yNx8GecyRyEaOe1mPWG8d5NhHuu5n1GUiXXL42XPa9C45HhoZBMDnNgVQeLekzifM3ZTHp/XSgreuYvNe8yMt29erNhF7l81DIDECwzO983gpioVvRAk9ybYDs6liJgoUBENs38MpPryCeimIWyMZpZpWeV8XIZg4dyr4iEuJVez3/7gOmP4DOLq0GoBWEBKnMj2C9Myaa5X2ayi2SZ81COLkVwCp8vlq/zvUZ95M3QUm5muU2zRlRAZHlcWNXXlxi+TdwvN810r3lbvlpHbTuhQe4PduoSzEs5kpCD8lCEwL4tdw2vL4MI01AWkd8pGSvJ7EvsKEmxrc0prLuax+Xob567Hek7ddzCfVS8yTs/nRFoctwkmD5RmY25V/mCu5e2vRlvyE0mTK62G+nNTsahKXsGYPaFTX6E0qd90A+DPpiKarxMJmREBS/3i5A3edBaURHaWOlFpKF4OoQBjFfpJdkksyn5vC37nZIx5KynL+6Hhx7Xo76WY+yN2LVJqr0dz7Fh48gAdq1soYCIOQ3bwS/zRlTNkhqEXN9YRwZKFsp2EaCYvoFTPe6HbVy3g8xg9A/euw51H3oRyo65ZecghIZ6nirzkOGRqUNXUn0odx+PCBYK0+9MzSOZyPjFlvnPy/rVqXlbdgFg9an1oAtgdst0NgDo1/CyXHhIb3hcsFRRByogicxCMdXbit7xoRr61DpPvjPi6VD819/mF9tCM0RbjSyBAAAAAElFTkSuQmCC"
-  },
-  {
-   "jobTitle": "Gas Turbine Instructor",
-   "productLine": "Gas Turbine",
-   "country": "Remote",
-   "step": "interviews",
-   "posted": 1,
-   "filled": 0,
-   "reqNumber": "26-2478",
-   "link": "https://www.fieldcore.com/careers/jobs/?p=job%2FoceeAfwY&__jvst=Job+Board&__jvsd=Email&nl=1",
-   "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIEAAACBAQAAAADP2+T9AAACbUlEQVR4nJ2WsW7bQAyG/9MJOC227DHAuTKQJ8gmAwHkLWPfoVunRumSyZLatZGTF8gLdOroTZ6krU8Q4FwJ8BgpXSRAEju3MQq2NxIkSP7kfXeC8PtJLPx5TlgOQgzRagidRVzYibBP+byyoKSWaoUoN4LKLZUxKxeS9SGF+dQtN90lidM+Jy33vlerUjjmLz6vLPLjbnDDxRjY/KgoA62xQXlT9IKYUYNwMMVxBjxeVI1Y8jQkojKF12QyDTwiYmmIMkYftn3UGjeXMXhR1hlRdY9z4QTPa1z7zAr7qY+wlSOoyY1gVmgdk1y++a5/Zvbk9rwueBrauhH48X5/t3+6KTS6iqd85eY9lJwn+qE5uBF3yi+dfV8sntf2h6v+utC8qLM06CchzXNvvlMz8G6KVZFQTT7UPlAMza7nKW8EIWzLOvBGJWMlmfeLBEWufuzMi9+NHS+XrTd7+0uDd9+qr7Cniqm8tPagNR4SXO+pyS6ZG4VANjmulbclfl9y3Ovtykt90zgG4PVlHWaqgjIvxXLqL6fg9YVeZDIhI1q4uVf7vArRQ8naL2OlN4GG4vEQBkBEHlGZZOWWPJ4aXqw0CjSOntwuDg6XUUlznMGI3ZBstbszTM7XQVkHZarKWgEBU40yhpe0vWj7iHr4TG4AgSFHPbvHaG3jO5vz3WLEEHfDPDO4+Af2xoGZQm98OXKnbABKA71RvWhlqrjEptaErQZ0RHIM+G+lvHPzJj/OuierY1IUAD5nqwq6BsK3TLIBwGRVuVkuXGyveLlQUksjvBqSyGwUc3sH4VQP7ZNHg7X3rAveHor/+tv8Asu2M6/xagO2AAAAAElFTkSuQmCC"
-  },
-  {
-   "jobTitle": "Training Coordinator",
-   "productLine": "Operations",
-   "country": "Houston",
-   "step": "posted",
-   "posted": 1,
-   "filled": 0,
-   "reqNumber": "R5051559",
-   "link": "https://wd5.myworkday.com/gevernova/d/inst/1$9925/9925$233822.htmld",
-   "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHUAAAB1AQAAAABYf5MRAAAB80lEQVR4nJWVPY7bMBCFn0QDchNzWwPM0kAOEKSjK7nbnGNPICFNKsvqtkgkn2DT5CBKpXJPEIAO3ZtMRQOUZtvNH8hMN+CHwfDN4zAjvIxrjl/j9xwa0HtlbEG9B1SUN+TDCqL2jDzNUT5Hu2MfBqyedLs73fzl/M/8ZBXj9br71/nLWADAq6V+azc/3ifwOZqB3ajNPfQjpI3zU7YEYF5vz0CWR3kQkemJbKEbIvJxPWeFVcnmUjQD9nH9NSdAUTvoZpQuXj9UIEeiJuzLwOM82dK0BBTSKkqorwFyg17BzAhVgh84naHetOM2L8/xeUFXinWFaIi5JH+GjGRLGipUinUJfKU099R7Y0uRUp+PovG6KqmnBH1y3L/TbsluMZ12m8f4fQ0RuA98NF1h2gT/9N70hArMKhn3Wz5d7qbLEl9IHJ9S9A8VjAXrB+nGFP2pJ0ZEbtT1yOL953Dbdb1d0McN8P3zLsX/gg/Uel0pNAl+PkBzL7JRtqRTeCLWAVUhbSkPCe9xpcIegQ9sRkI/C+lwZrT4BBzLryK6n/NTlk2H6/rSTPaKn/F9xcgLFOfjVaCY4vsW5qBMV8rWY4+E+eYA1ubh2+UuQAk+pPDoa3YL1j7oeP8w5GlWgQ+yK3WdtH+MG0QF6by00f6z//wfnwHulgteTtq7KQAAAABJRU5ErkJggg=="
-  },
-  {
-   "jobTitle": "NAM FE TDM",
-   "productLine": "Internal Training",
-   "country": "Houston",
-   "step": "posted",
-   "posted": 1,
-   "filled": 0,
-   "reqNumber": null,
-   "link": null,
-   "qr": null
-  }
- ]
 }
