@@ -11,7 +11,7 @@
 <style>
 @font-face{font-family:'Sons Condensed';src:url("assets/fonts/SonsCondensed-Semibold.ttf") format("truetype");font-weight:600;font-style:normal;font-display:swap}
 @font-face{font-family:'Sons Condensed';src:url("assets/fonts/SonsCondensed-Extrabold.ttf") format("truetype");font-weight:800;font-style:normal;font-display:swap}
-:root{--ev:#005E60;--day:#FFFFFF;--night:#212121;--acc:#3FD2FF;--acc-ink:#0A7EA4;--evl:#E6F2F2;--evm:#007A7C;--grn:#2D7A45;--red:#C0392B;--amb:#E67E22;--gry:#6B7280;--bdr:#D1D5DB;--fh:'Sons Condensed',Inter,'Segoe UI',Arial,sans-serif;--fb:Inter,'Segoe UI',Arial,sans-serif}
+:root{--ev:#005E60;--day:#FFFFFF;--night:#212121;--acc:#3FD2FF;--acc-ink:#0A7EA4;--evl:#E6F2F2;--evm:#007A7C;--grn:#2D7A45;--red:#C0392B;--amb:#E67E22;--alert:#EC642B;--gry:#6B7280;--bdr:#D1D5DB;--fh:'Sons Condensed',Inter,'Segoe UI',Arial,sans-serif;--fb:Inter,'Segoe UI',Arial,sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:var(--night);font-family:var(--fb)}
 .slide{position:absolute;top:0;left:0;width:100vw;height:100vh;display:none;overflow:hidden;flex-direction:column}
@@ -147,6 +147,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .cr{display:flex;align-items:center;gap:4px;min-height:15px;flex-shrink:0}
 .ew{width:36px;flex-shrink:0;height:8px;background:#E5E7EB;border-radius:3px;overflow:hidden}
 .eb{height:100%;border-radius:3px}.eb.over{background:var(--acc)}.eb.full{background:var(--grn)}.eb.mid{background:var(--amb)}.eb.low{background:var(--red)}.eb.oe{width:100%;background:var(--evm);opacity:.7}
+.cap-tag{flex-shrink:0;font-size:8px;font-weight:800;line-height:11px;padding:0 4px;border-radius:2px;letter-spacing:.05em;color:var(--night)}
+.cap-tag.cap-at{background:var(--amb)}.cap-tag.cap-over{background:var(--alert)}
 .oe-r .cn{color:var(--gry)}
 .cn{font-size:9px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cm{font-size:8px;color:var(--gry);flex-shrink:0;white-space:nowrap}
@@ -571,6 +573,12 @@ function getBarClass(pct,over){
   return'low';
 }
 
+function capState(enrolled,capacity){
+  if(!capacity)return'';
+  if(enrolled===capacity)return'at';
+  return enrolled>capacity?'over':'';
+}
+
 function renderSlide2(D){
   const s2=D.slide2;
   let cards='';
@@ -579,7 +587,9 @@ function renderSlide2(D){
     for(const c of (pll.courses||[])){
       const bc=getBarClass(c.enrollPct,c.overEnrolled);
       const w=Math.min(c.enrollPct,115);
-      courseRows+=`<div class="cr"><div class="ew"><div class="eb ${bc}" style="width:${w}%"></div></div><div class="cn">${c.name}</div><div class="cm">${c.enrolled}/${c.capacity}-${c.locCat}</div></div>`;
+      const cs=capState(c.enrolled,c.capacity);
+      const tag=cs?`<span class="cap-tag cap-${cs}">${cs==='at'?'FULL':'OVER'}</span>`:'';
+      courseRows+=`<div class="cr"><div class="ew"><div class="eb ${bc}" style="width:${w}%"></div></div><div class="cn">${c.name}</div>${tag}<div class="cm">${c.enrolled}/${c.capacity}-${c.locCat}</div></div>`;
     }
     for(const oe of (pll.oeCourses||[])){
       courseRows+=`<div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">${oe.title}</div><div class="cm">${oe.students}-${oe.country}</div></div>`;
