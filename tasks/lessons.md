@@ -15,3 +15,13 @@ orange onto the bar made a 100% bar look identical to a 60% bar and left the
 the DOM check alone would have passed. Lesson: put a new state on its own
 element (the FULL/OVER tag), not on a channel the display already uses, and
 look at a real render before calling a highlight done.
+
+## data/ piles up on preview, not main, and the old matcher took the first file it saw
+The build workflow runs `git checkout origin/main -- data/` on preview. That adds
+new uploads but never removes files Jim deleted from main, so preview's data/
+accumulated every weekly upload while main stayed clean. `find_file` returned the
+first `iterdir()` hit (arbitrary order), so from Aug 3 to Sep 27 nearly every
+promoted board used at least one stale customer file. Nothing in the summary
+showed it. Lesson: a "latest" selection must be explicit and shown in the build
+summary; and when a brief says where a problem lives, check the branch the
+workflow actually reads (preview), not just the one people edit (main).

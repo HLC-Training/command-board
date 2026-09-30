@@ -72,13 +72,22 @@ A local build still works when needed:
 | Training Master Hiring Sheet | Slide 2 Open Positions card (`hiring` array + build-time QR data-URIs) |
 
 **Manual xlsx uploads to data/** — confirm all 3 before building.
-File names include date stamps that change weekly — match by pattern:
+**Source file selection (2026-09-30).** `data/` keeps old uploads, so each
+pattern usually matches several files. build.py parses the date stamp in
+each matching filename and uses the newest. The build FAILS, listing every
+candidate, if any matching filename has no parseable date or if two share
+the newest date. It never falls back to file modification time, which is
+meaningless after a git checkout. The build summary opens with a SOURCES
+block naming the chosen file per pattern, its date, and its age, and prints
+⚠️ STALE SOURCE when a file is older than `SOURCE_MAX_AGE_DAYS` (10 days
+for the two customer files, 35 for the Bowler Chart). Read the SOURCES
+block before promoting.
 
 | File | Pattern to match |
 |------|-----------------|
 | CM Customer Demand List | contains `CMCustomerDemandList` or `CM Customer` |
 | Open Enrollment Class List | contains `ClassList` |
-| 2026 Bowler Chart | contains `Bowler Chart` |
+| 2026 Bowler Chart | contains `Bowler Chart` (filename is undated; allowed only as the sole candidate — SOURCES shows `undated`, no STALE check) |
 
 Ignore any placeholder `.txt` file (`placeholder.txt`, `placehilder.txt`, …) — not a source file.
 Weekly uploads often carry `(N)` suffixes — the patterns above still match.
