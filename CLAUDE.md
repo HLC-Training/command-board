@@ -72,6 +72,7 @@ A local build still works when needed:
 | Training Master Hiring Sheet | Slide 2 Open Positions card (`hiring` array + build-time QR data-URIs) |
 
 **Manual xlsx uploads to data/** — confirm all 3 before building.
+
 **Source file selection (2026-09-30).** `data/` keeps old uploads, so each
 pattern usually matches several files. build.py parses the date stamp in
 each matching filename and uses the newest. The build FAILS, listing every
