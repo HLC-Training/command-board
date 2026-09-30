@@ -288,6 +288,21 @@ status filter before assuming the build is wrong.
 
 ---
 
+## Seat Fill Capacity Highlight
+
+Seat fill on each class is highlighted by capacity state: amber with a FULL
+marker when enrolled equals capacity, GE Vernova Alert orange (#EC642B) with
+an OVER marker when enrolled exceeds capacity. Capacity is the current max
+from the source data, which may be a raised cap. A class with no capacity
+value gets no highlight and is counted as unknown in the build summary's
+CAPACITY block. The state is computed every build and is never preserved
+from a prior board-data.json.
+
+Phase 2 (action item 73b6812d, not built) will flag classes running above
+their original/ideal capacity once Jim supplies that table.
+
+---
+
 ## board-data.json Field Reference
 
 Buckets are determined by SOURCE FILE: Internal ← Enrollment Database,
