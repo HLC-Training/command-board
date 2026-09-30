@@ -2106,6 +2106,54 @@ def validate(board):
 
 
 # ══════════════════════════════════════════════════════════════════════════
+# CAPACITY SUMMARY (build-summary only — never written to board-data.json)
+# ══════════════════════════════════════════════════════════════════════════
+
+def capacity_state(enrolled, capacity):
+    """under | at | over | unknown. Mirror of the rule in index.html."""
+    if not capacity:
+        return "unknown"
+    if enrolled == capacity:
+        return "at"
+    return "over" if enrolled > capacity else "under"
+
+
+def print_capacity_block(merged):
+    """CAPACITY block: at/over counts per PLL, over classes by name, unknowns.
+    Internal classes only — OE/SS sources carry no capacity column."""
+    at_n, over_n, unknown_n = {}, {}, 0
+    over_classes, unknown_classes = [], []
+    for key in PLL_ORDER:
+        at_n[key] = over_n[key] = 0
+        for c in merged[key]:
+            if c["is_oe"]:
+                continue
+            state = capacity_state(c["enrolled"], c["capacity"])
+            if state == "at":
+                at_n[key] += 1
+            elif state == "over":
+                over_n[key] += 1
+                over_classes.append(
+                    f"{PLL_NAMES[key]}: '{c['name']}' "
+                    f"{c['enrolled']}/{c['capacity']}")
+            elif state == "unknown":
+                unknown_n += 1
+                unknown_classes.append(f"{PLL_NAMES[key]}: '{c['name']}'")
+    print("  CAPACITY  (internal classes; OE/SS N/A — no capacity in source):")
+    for key in PLL_ORDER:
+        print(f"    {PLL_NAMES[key]:<24} at capacity {at_n[key]:>2}   "
+              f"over capacity {over_n[key]:>2}")
+    if over_classes:
+        print("    Over capacity (enrolled/capacity):")
+        for line in over_classes:
+            print(f"      → {line}")
+    print(f"    Unknown (no capacity value): {unknown_n}")
+    for line in unknown_classes:
+        print(f"      → {line}")
+    print()
+
+
+# ══════════════════════════════════════════════════════════════════════════
 # MAIN BUILD
 # ══════════════════════════════════════════════════════════════════════════
 
@@ -2347,6 +2395,7 @@ def build(week_override=None):
         print(f"    {PLL_NAMES[key]:<24} {n_cls:>2} class(es)  {n_stu:>3} students"
               f"   (INT {n_int} / OE+SS {n_cust})")
     print()
+    print_capacity_block(merged)
     print(f"  Safety RAG:    {safety_rag.upper():<8} — {safety_reason}")
     print(f"  Bowler RAG:    {bowler_overall.upper()}")
     print(f"  Action Plans:  {ap['rag'].upper():<8} — {ap['deliveryTotal']} active "
