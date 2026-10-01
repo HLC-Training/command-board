@@ -31,7 +31,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin preview
-          git merge origin/preview -m "Promote preview to main — $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          if ! git merge origin/preview -m "Promote preview to main — $(date -u +%Y-%m-%dT%H:%M:%SZ)"; then
+            conflicted=$(git diff --name-only --diff-filter=U)
+            if [ "$conflicted" = "board-data.json" ]; then
+              echo "Merge conflict on board-data.json only; taking preview's copy"
+              git checkout origin/preview -- board-data.json
+              git commit --no-edit
+            else
+              echo "::error::Promote merge conflict outside board-data.json: $conflicted"
+              git merge --abort
+              exit 1
+            fi
+          fi
           git checkout origin/preview -- board-data.json
           if ! git diff --cached --quiet; then
             git commit -m "Promote: force board-data.json from preview"
