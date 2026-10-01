@@ -26,6 +26,7 @@ Read it fully before taking any action.
    (the Monday, YYYY-MM-DD) → builds board-data.json on `preview`
 3. Jim reviews: Settings → Pages → branch `preview` → check live URL
 4. Jim triggers **Promote Preview to Main** → board goes live
+The promote force-copies board-data.json from preview after the merge and fails unless main's blob matches preview's; index.html is never forced (decision 2026-10-01-promote-forces-board-data-from-preview). Source: .github/workflows/promote-to-main.yml.
 5. Jim switches Pages branch back to `main`
 
 Resolve every UNMATCHED flag in the build summary (workflow run log)
