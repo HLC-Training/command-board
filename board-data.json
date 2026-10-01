@@ -17,9 +17,9 @@
       "KLC": 0,
       "Other": 72
     },
-    "safetyRag": "green",
+    "safetyRag": "red",
     "minorIncidents": 0,
-    "ragReason": "0 incidents this week — All safety KPIs on plan",
+    "ragReason": "0 incidents this week — I&I rate 0.95 vs 0 plan (Jul recordable)",
     "safetyKPIs": {
       "liveStop": {
         "value": 100,
@@ -69,9 +69,9 @@
         "reason": "Timecard Aug 89% vs 92% plan"
       },
       "safety": {
-        "rag": "green",
+        "rag": "red",
         "label": "Safety",
-        "reason": "0 incidents this week — All safety KPIs on plan"
+        "reason": "0 incidents this week — I&I rate 0.95 vs 0 plan (Jul recordable)"
       },
       "actionPlans": {
         "rag": "red",
@@ -90,11 +90,6 @@
       "date": "Sep 23, 2026",
       "shortDesc": "🩹 First Aid — knuckle scrape, drill & tap training",
       "desc": "Houston Learning Center, Sep 23, 2026 (day shift) — craft employee scraped left middle knuckle on the chuck gear while changing and tightening a drill bit during drill and tap training; gloves not worn. Employee stopped work and reported immediately. First aid administered (bandage)."
-    },
-    {
-      "date": "Sep 19, 2026",
-      "shortDesc": "🔍 EHS Audit — Sep 28–Oct 2",
-      "desc": "ADVISORY — Business Level EHS audit this week, Sep 28 – Oct 2. General awareness, no action required."
     },
     {
       "date": "Jul 29, 2026",
