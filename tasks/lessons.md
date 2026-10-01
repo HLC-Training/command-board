@@ -25,3 +25,10 @@ promoted board used at least one stale customer file. Nothing in the summary
 showed it. Lesson: a "latest" selection must be explicit and shown in the build
 summary; and when a brief says where a problem lives, check the branch the
 workflow actually reads (preview), not just the one people edit (main).
+
+## 2026-10-01 — index.html changes go to main, even mid-feature
+build-board.yml stages main's index.html onto preview every build. A UI change
+committed only to preview (the 9/30 capacity tags) is reverted by the next
+build with no error. Land index.html changes on main; land build.py changes on
+preview. Check `git diff origin/main origin/preview -- index.html` before any
+build. It should be empty.
