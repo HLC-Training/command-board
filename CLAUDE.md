@@ -73,13 +73,23 @@ A local build still works when needed:
 | Training Master Hiring Sheet | Slide 2 Open Positions card (`hiring` array + build-time QR data-URIs) |
 
 **Manual xlsx uploads to data/** — confirm all 3 before building.
-File names include date stamps that change weekly — match by pattern:
+
+**Source file selection (2026-09-30).** `data/` keeps old uploads, so each
+pattern usually matches several files. build.py parses the date stamp in
+each matching filename and uses the newest. The build FAILS, listing every
+candidate, if any matching filename has no parseable date or if two share
+the newest date. It never falls back to file modification time, which is
+meaningless after a git checkout. The build summary opens with a SOURCES
+block naming the chosen file per pattern, its date, and its age, and prints
+⚠️ STALE SOURCE when a file is older than `SOURCE_MAX_AGE_DAYS` (10 days
+for the two customer files, 35 for the Bowler Chart). Read the SOURCES
+block before promoting.
 
 | File | Pattern to match |
 |------|-----------------|
 | CM Customer Demand List | contains `CMCustomerDemandList` or `CM Customer` |
 | Open Enrollment Class List | contains `ClassList` |
-| 2026 Bowler Chart | contains `Bowler Chart` |
+| 2026 Bowler Chart | contains `Bowler Chart` (filename is undated; allowed only as the sole candidate — SOURCES shows `undated`, no STALE check) |
 
 Ignore any placeholder `.txt` file (`placeholder.txt`, `placehilder.txt`, …) — not a source file.
 Weekly uploads often carry `(N)` suffixes — the patterns above still match.
@@ -286,6 +296,21 @@ Never use start-date-only logic. Multi-week classes already in progress must be 
 counted 33 Withdrawal + 3 Did Not Finish rows; the correct total per these
 rules was 387. If a target number doesn't match build.py output, check the
 status filter before assuming the build is wrong.
+
+---
+
+## Seat Fill Capacity Highlight
+
+Seat fill on each class is highlighted by capacity state: amber with a FULL
+marker when enrolled equals capacity, GE Vernova Alert orange (#EC642B) with
+an OVER marker when enrolled exceeds capacity. Capacity is the current max
+from the source data, which may be a raised cap. A class with no capacity
+value gets no highlight and is counted as unknown in the build summary's
+CAPACITY block. The state is computed every build and is never preserved
+from a prior board-data.json.
+
+Phase 2 (action item 73b6812d, not built) will flag classes running above
+their original/ideal capacity once Jim supplies that table.
 
 ---
 

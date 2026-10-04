@@ -389,21 +389,6 @@ def load_existing_board(path="board-data.json"):
         return None
 
 
-def find_file(patterns):
-    """Find a file in data/ matching any pattern (case-insensitive substring)."""
-    data_dir = Path("data")
-    if not data_dir.exists():
-        return None
-    for f in data_dir.iterdir():
-        if f.suffix.lower() != ".xlsx":
-            continue
-        name_lower = f.name.lower()
-        for pat in patterns:
-            if pat.lower() in name_lower:
-                return f
-    return None
-
-
 def load_sheet(path, sheet_index=0):
     """Load xlsx sheet → (headers list, data rows list-of-tuples)."""
     wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
@@ -722,16 +707,108 @@ SOURCE_FILES = {
 }
 
 
-def discover_files():
-    """Find the 3 manual source files. Returns (found dict, missing list)."""
-    found, missing = {}, []
+# Newest-by-filename-date selection. data/ can hold several uploads per
+# pattern; the date stamp in the filename (M_D_YYYY) is the only selection
+# key. File mtime is never used (meaningless after a git checkout).
+SOURCE_MAX_AGE_DAYS = {"demand": 10, "classlist": 10, "bowler": 35}
+# Filename carries no date; allowed ONLY as the sole candidate for the pattern.
+SOURCE_UNDATED_SINGLE_OK = {"bowler"}
+SOURCE_DATE_RE = re.compile(r"(?<!\d)(\d{1,2})_(\d{1,2})_(20\d{2})(?!\d)")
+
+
+def parse_filename_date(name):
+    """Return the single M_D_YYYY date in a filename, or None."""
+    found = set()
+    for m in SOURCE_DATE_RE.finditer(name):
+        mo, d, y = (int(g) for g in m.groups())
+        try:
+            found.add(date(y, mo, d))
+        except ValueError:
+            return None
+    return found.pop() if len(found) == 1 else None
+
+
+def select_source_file(key, patterns, data_dir=None):
+    """
+    Pick the newest matching .xlsx in data_dir by filename date.
+    Returns (path, file_date_or_None, candidate_count), or None if nothing
+    matches. Exits non-zero, listing every candidate, when a date is
+    unparseable (unless it is the sole candidate of an undated-OK pattern)
+    or two candidates share the newest date.
+    """
+    data_dir = Path(data_dir) if data_dir else Path("data")
+    if not data_dir.exists():
+        return None
+    cands = []
+    for f in sorted(data_dir.iterdir(), key=lambda p: p.name):
+        if f.suffix.lower() != ".xlsx":
+            continue
+        low = f.name.lower()
+        if any(pat.lower() in low for pat in patterns):
+            cands.append((f, parse_filename_date(f.name)))
+    if not cands:
+        return None
+
+    def listing():
+        return "\n".join(
+            f"      {f.name}  ->  {d.isoformat() if d else 'NO PARSEABLE DATE'}"
+            for f, d in cands)
+
+    if len(cands) == 1:
+        f, d = cands[0]
+        if d is None and key not in SOURCE_UNDATED_SINGLE_OK:
+            print(f"\n⛔  SOURCE FILE ERROR [{key}]: no parseable date in filename.\n"
+                  f"{listing()}\n    Rename with an M_D_YYYY date stamp.\n")
+            sys.exit(1)
+        return f, d, 1
+    if any(d is None for _, d in cands):
+        print(f"\n⛔  SOURCE FILE ERROR [{key}]: {len(cands)} candidates, "
+              f"at least one has no parseable date.\n{listing()}\n"
+              f"    Rename with an M_D_YYYY date stamp or remove the older file(s).\n")
+        sys.exit(1)
+    newest = max(d for _, d in cands)
+    top = [f for f, d in cands if d == newest]
+    if len(top) > 1:
+        print(f"\n⛔  SOURCE FILE ERROR [{key}]: {len(top)} candidates share the "
+              f"newest date {newest.isoformat()}.\n{listing()}\n"
+              f"    Remove the duplicate(s) so exactly one file has the newest date.\n")
+        sys.exit(1)
+    return top[0], newest, len(cands)
+
+
+def discover_files(week_start, data_dir=None):
+    """
+    Find the 3 manual source files.
+    Returns (found dict key->Path, missing list, sources dict key->info).
+    """
+    found, missing, sources = {}, [], {}
     for key, patterns in SOURCE_FILES.items():
-        f = find_file(patterns)
-        if f:
-            found[key] = f
-        else:
+        sel = select_source_file(key, patterns, data_dir)
+        if not sel:
             missing.append(key)
-    return found, missing
+            continue
+        f, d, n = sel
+        found[key] = f
+        max_age = SOURCE_MAX_AGE_DAYS[key]
+        age = (week_start - d).days if d else None
+        sources[key] = {"name": f.name, "date": d, "age_days": age,
+                        "candidates": n, "max_age": max_age,
+                        "stale": age is not None and age > max_age}
+    return found, missing, sources
+
+
+def format_sources_block(sources):
+    lines = ["  SOURCES  (newest by filename date):"]
+    for key, info in sources.items():
+        d = info["date"].isoformat() if info["date"] else "undated"
+        age = f"{info['age_days']}d" if info["age_days"] is not None else "n/a"
+        lines.append(f"    {key:<10} {info['name']}")
+        lines.append(f"    {'':<10} date {d} | age {age} vs week_of | "
+                     f"{info['candidates']} candidate(s)")
+        if info["stale"]:
+            lines.append(f"    {'':<10} ⚠️ STALE SOURCE: {info['age_days']} days old "
+                         f"(limit {info['max_age']})")
+    return "\n".join(lines)
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -2106,6 +2183,54 @@ def validate(board):
 
 
 # ══════════════════════════════════════════════════════════════════════════
+# CAPACITY SUMMARY (build-summary only — never written to board-data.json)
+# ══════════════════════════════════════════════════════════════════════════
+
+def capacity_state(enrolled, capacity):
+    """under | at | over | unknown. Mirror of the rule in index.html."""
+    if not capacity:
+        return "unknown"
+    if enrolled == capacity:
+        return "at"
+    return "over" if enrolled > capacity else "under"
+
+
+def print_capacity_block(merged):
+    """CAPACITY block: at/over counts per PLL, over classes by name, unknowns.
+    Internal classes only — OE/SS sources carry no capacity column."""
+    at_n, over_n, unknown_n = {}, {}, 0
+    over_classes, unknown_classes = [], []
+    for key in PLL_ORDER:
+        at_n[key] = over_n[key] = 0
+        for c in merged[key]:
+            if c["is_oe"]:
+                continue
+            state = capacity_state(c["enrolled"], c["capacity"])
+            if state == "at":
+                at_n[key] += 1
+            elif state == "over":
+                over_n[key] += 1
+                over_classes.append(
+                    f"{PLL_NAMES[key]}: '{c['name']}' "
+                    f"{c['enrolled']}/{c['capacity']}")
+            elif state == "unknown":
+                unknown_n += 1
+                unknown_classes.append(f"{PLL_NAMES[key]}: '{c['name']}'")
+    print("  CAPACITY  (internal classes; OE/SS N/A — no capacity in source):")
+    for key in PLL_ORDER:
+        print(f"    {PLL_NAMES[key]:<24} at capacity {at_n[key]:>2}   "
+              f"over capacity {over_n[key]:>2}")
+    if over_classes:
+        print("    Over capacity (enrolled/capacity):")
+        for line in over_classes:
+            print(f"      → {line}")
+    print(f"    Unknown (no capacity value): {unknown_n}")
+    for line in unknown_classes:
+        print(f"      → {line}")
+    print()
+
+
+# ══════════════════════════════════════════════════════════════════════════
 # MAIN BUILD
 # ══════════════════════════════════════════════════════════════════════════
 
@@ -2121,9 +2246,12 @@ def build(week_override=None):
 
     # ── File discovery (3 manual uploads) ────────────────────────────────
     print("Checking manual source files (data/)…")
-    files, missing = discover_files()
+    files, missing, sources = discover_files(week_start)
     for key, path in files.items():
         print(f"  ✅  {key:<12}  {path.name}")
+        if sources[key]["stale"]:
+            print(f"  ⚠️ STALE SOURCE  {key}: {sources[key]['age_days']} days old "
+                  f"(limit {sources[key]['max_age']})")
     for key in missing:
         print(f"  ❌  {key:<12}  NOT FOUND")
 
@@ -2329,6 +2457,8 @@ def build(week_override=None):
     print(f"\n{bar}")
     print("  BUILD SUMMARY — review before committing")
     print(bar)
+    print(format_sources_block(sources))
+    print()
     print(f"  Week:          {week_label}")
     print(f"  Total students:{weekly_total:>5}   "
           f"(Internal {internal_students} / OE {oe_students} / SS {ss_students})")
@@ -2347,6 +2477,7 @@ def build(week_override=None):
         print(f"    {PLL_NAMES[key]:<24} {n_cls:>2} class(es)  {n_stu:>3} students"
               f"   (INT {n_int} / OE+SS {n_cust})")
     print()
+    print_capacity_block(merged)
     print(f"  Safety RAG:    {safety_rag.upper():<8} — {safety_reason}")
     print(f"  Bowler RAG:    {bowler_overall.upper()}")
     print(f"  Action Plans:  {ap['rag'].upper():<8} — {ap['deliveryTotal']} active "
