@@ -797,6 +797,134 @@
         "pl": "Excitation",
         "date": ""
       }
+    ],
+    "charts": [
+      {
+        "key": "pipeline",
+        "title": "Course Pipeline | Status Overview",
+        "total": 352,
+        "slices": [
+          {
+            "label": "Published & Approved",
+            "count": 49,
+            "color": "#1061C3"
+          },
+          {
+            "label": "Published without SME Approval",
+            "count": 7,
+            "color": "#EA352E"
+          },
+          {
+            "label": "Published Requiring Updates",
+            "count": 3,
+            "color": "#FF8D00"
+          },
+          {
+            "label": "In Review by SME(s)",
+            "count": 7,
+            "color": "#D1D5DB"
+          },
+          {
+            "label": "WIP",
+            "count": 8,
+            "color": "#14B8A6"
+          },
+          {
+            "label": "In Backlog",
+            "count": 41,
+            "color": "#9CA3AF"
+          },
+          {
+            "label": "Material not Received",
+            "count": 237,
+            "color": "#EC642B"
+          }
+        ]
+      },
+      {
+        "key": "exams",
+        "title": "All Exams by Status",
+        "total": 326,
+        "slices": [
+          {
+            "label": "In Progress",
+            "count": 1,
+            "color": "#F5C147"
+          },
+          {
+            "label": "Internal Review Completed",
+            "count": 5,
+            "color": "#A78BFA"
+          },
+          {
+            "label": "Not Received",
+            "count": 188,
+            "color": "#EA352E"
+          },
+          {
+            "label": "Not Started",
+            "count": 8,
+            "color": "#EC642B"
+          },
+          {
+            "label": "Published",
+            "count": 85,
+            "color": "#14B8A6"
+          },
+          {
+            "label": "Rework Needed",
+            "count": 24,
+            "color": "#FFED00"
+          },
+          {
+            "label": "Sent for Internal Review",
+            "count": 6,
+            "color": "#5FB3F9"
+          },
+          {
+            "label": "Sent for SME Review",
+            "count": 9,
+            "color": "#F87E7D"
+          }
+        ]
+      },
+      {
+        "key": "modernization",
+        "title": "Training Modernization by Status",
+        "total": 91,
+        "slices": [
+          {
+            "label": "Completed",
+            "count": 20,
+            "color": "#14B8A6"
+          },
+          {
+            "label": "In Analysis",
+            "count": 3,
+            "color": "#C8FF08"
+          },
+          {
+            "label": "In Development",
+            "count": 2,
+            "color": "#FF8D00"
+          },
+          {
+            "label": "In Review",
+            "count": 2,
+            "color": "#40B14B"
+          },
+          {
+            "label": "Not Received",
+            "count": 57,
+            "color": "#EA352E"
+          },
+          {
+            "label": "Not Started",
+            "count": 7,
+            "color": "#FFB366"
+          }
+        ]
+      }
     ]
   },
   "hiring": [
