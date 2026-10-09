@@ -593,12 +593,55 @@ def route_pll(class_name):
     if "craft" in name:
         return "harry", False
 
+    # Mark VIe classes are controls (Mohammed) even when the name also says
+    # GT — e.g. "Entry Level GT MkVIe" (per Jim, 2026-10-09). Must precede
+    # INTERNAL_RULES, where Sherif's " gt " keyword would win first.
+    for kw in ("mkvi", "mk vi", "mark vi"):
+        if kw in name:
+            return "mohammed", False
+
     for pll_key, keywords in INTERNAL_RULES:
         for kw in keywords:
             if kw in name:
                 return pll_key, False
 
     return None, True  # unmatched — flag to Jim
+
+
+# ── ELT ideal capacity (staff meeting 2026-10-08, confirmed by Jim 2026-10-09) ─
+# The Enrollment Database capacity is a room/seat number, not the ideal class
+# size. For entry-level (ELT) classes the slide-2 FULL/OVER tag is measured
+# against these ideals instead. Keyed by the PLL the class routes to.
+# ALT and all other classes keep the Enrollment Database capacity.
+ELT_IDEAL_CAPACITY = {
+    "sherif":   18,   # GT
+    "pablo":    18,   # ST
+    "mohammed": 16,   # Controls (incl. Entry Level GT MkVIe)
+    "ben":      12,   # Excitation and Generator (Generator Specialist)
+    "harry":    20,   # Craft entry level only
+}
+# Entry-level classes that keep their database capacity (per Jim).
+ELT_IDEAL_EXCLUDE = ("generator repairs",)
+
+
+def ideal_capacity(class_name, pll_key):
+    """
+    Return the ideal capacity for an entry-level class, or None when the
+    class is not an ELT covered by the table (caller keeps the DB capacity).
+
+    ELT = 'entry level' in the name, or 'generator specialist' (Ben's Gen
+    ELT). Harry's ideal applies to craft entry-level classes only. CTE
+    classes route to Linda and are never covered. Aero has no ELT.
+    """
+    name = class_name.lower()
+    if any(kw in name for kw in ELT_IDEAL_EXCLUDE):
+        return None
+    is_elt = "entry level" in name or "generator specialist" in name
+    if not is_elt:
+        return None
+    if pll_key == "harry" and "craft" not in name:
+        return None
+    return ELT_IDEAL_CAPACITY.get(pll_key)
 
 
 def route_customer(technology, class_name=""):
@@ -935,9 +978,19 @@ def process_enrollment(headers, rows, week_start, week_end):
             )
             continue
 
+        # ELT classes are measured against the ideal class size, not the
+        # database seat count (see ELT_IDEAL_CAPACITY).
+        db_capacity = capacity
+        ideal = ideal_capacity(course, pll_key)
+        if ideal:
+            capacity = ideal
+            enroll_pct = round(enrolled / capacity * 100)
+
         pll_classes[pll_key].append({
             "name":        course,
             "capacity":    capacity,
+            "dbCapacity":  db_capacity,
+            "idealCapacity": bool(ideal),
             "enrolled":    enrolled,
             "enrollPct":   enroll_pct,
             "overEnrolled": enrolled > capacity if capacity else False,
@@ -1796,6 +1849,162 @@ EXAM_STATUS_BUCKETS = {
 }
 
 
+# Three half-donut charts recreated from the D&D Projects Dashboard
+# (https://app.smartsheet.com/dashboards/hq5gCFfpv7XFMR5qWgP48F67PGRvjv6XFrFwWQc1,
+# per Jim 2026-10-09). Each chart reads the same Smartsheet REPORT the
+# dashboard widget reads, so the board matches the dashboard's numbers.
+#   kind "summary" — a sheet-summary report: one row, one column per slice.
+#   kind "status"  — a row report: rows counted by the Status column; blank
+#                    statuses are skipped (that is what the dashboard does:
+#                    411 report rows → 91 counted modules).
+# Slice order and colors are copied from the dashboard widgets, with these
+# changes for legibility on the dark navy board: black → light gray, dark
+# teal #005e60 → bright teal, dark gray #696969 → mid gray, and two
+# duplicate colors split (exams "Internal Review Completed" was the same red
+# as "Not Received" → purple; modernization "Not Started" was the same
+# orange as "In Development" → light orange).
+XYLEME_CHARTS = [
+    {
+        "key": "pipeline",
+        "title": "Course Pipeline | Status Overview",
+        "report_id": 2780951858859908,
+        "kind": "summary",
+        "slices": [
+            ("Published & Approved",           "#1061C3"),
+            ("Published without SME Approval", "#EA352E"),
+            ("Published Requiring Updates",    "#FF8D00"),
+            ("In Review by SME(s)",            "#D1D5DB"),
+            ("WIP",                            "#14B8A6"),
+            ("In Backlog",                     "#9CA3AF"),
+            ("Material not Received",          "#EC642B"),
+        ],
+    },
+    {
+        "key": "exams",
+        "title": "All Exams by Status",
+        "report_id": 3170853169614724,
+        "kind": "status",
+        "slices": [
+            ("In Progress",               "#F5C147"),
+            ("Internal Review Completed", "#A78BFA"),
+            ("Not Received",              "#EA352E"),
+            ("Not Started",               "#EC642B"),
+            ("Published",                 "#14B8A6"),
+            ("Rework Needed",             "#FFED00"),
+            ("Sent for Internal Review",  "#5FB3F9"),
+            ("Sent for SME Review",       "#F87E7D"),
+        ],
+    },
+    {
+        "key": "modernization",
+        "title": "Training Modernization by Status",
+        "report_id": 848419122794372,
+        "kind": "status",
+        "slices": [
+            ("Completed",      "#14B8A6"),
+            ("In Analysis",    "#C8FF08"),
+            ("In Development", "#FF8D00"),
+            ("In Review",      "#40B14B"),
+            ("Not Received",   "#EA352E"),
+            ("Not Started",    "#FFB366"),
+        ],
+    },
+]
+XYLEME_EXTRA_SLICE_COLOR = "#6B7280"   # a status the dashboard didn't have
+
+
+def fetch_report_table(ss, report_id, label):
+    """
+    Fetch a Smartsheet report → (column titles, rows as tuples).
+    Pages explicitly and stops the build on an incomplete read, the same
+    contract as fetch_sheet_table.
+    """
+    print(f"  Fetching {label} (report) from Smartsheet…")
+    page_size = 500
+    page = 1
+    rep = ss.Reports.get_report(report_id, page_size=page_size, page=page)
+    cols = sorted(rep.columns, key=lambda c: c.index)
+    titles = [c.title for c in cols]
+    pos = {c.virtual_id: i for i, c in enumerate(cols)}
+    total = rep.total_row_count
+    api_rows = list(rep.rows)
+    while len(api_rows) < total:
+        page += 1
+        more = list(ss.Reports.get_report(report_id, page_size=page_size,
+                                          page=page).rows)
+        if not more:
+            break
+        api_rows.extend(more)
+    if len(api_rows) != total:
+        print(f"⛔  {label}: fetched {len(api_rows)} report rows but the "
+              f"report reports {total} — incomplete read. Build stopped.")
+        sys.exit(1)
+
+    rows = []
+    for r in api_rows:
+        vals = [None] * len(titles)
+        for cell in r.cells:
+            i = pos.get(cell.virtual_column_id)
+            if i is not None:
+                vals[i] = cell.value if cell.value is not None else cell.display_value
+        rows.append(tuple(vals))
+    print(f"    → {len(rows)} rows in {page} page(s) — complete")
+    return titles, rows
+
+
+def xyleme_chart_slices(chart, titles, rows):
+    """
+    Turn one report into chart slices [{label, count, color}] in the
+    dashboard's order. Pure function — testable without the API.
+    Returns (slices, extras) where extras lists statuses/columns the build
+    found that the dashboard config does not name (printed for drift).
+    """
+    order = [lb for lb, _ in chart["slices"]]
+    colors = dict(chart["slices"])
+    counts = {lb: 0 for lb in order}
+    extras = {}
+
+    if chart["kind"] == "summary":
+        row = rows[0] if rows else ()
+        for i, t in enumerate(titles):
+            if t in counts:
+                counts[t] = _to_int(row[i] if i < len(row) else 0)
+    else:
+        si = find_col(titles, "status")
+        for r in rows:
+            raw = str(r[si] if si is not None and si < len(r) and r[si] is not None
+                      else "").strip()
+            if not raw:
+                continue
+            if raw in counts:
+                counts[raw] += 1
+            else:
+                extras[raw] = extras.get(raw, 0) + 1
+
+    slices = [{"label": lb, "count": counts[lb], "color": colors[lb]}
+              for lb in order]
+    slices += [{"label": lb, "count": n, "color": XYLEME_EXTRA_SLICE_COLOR}
+               for lb, n in sorted(extras.items())]
+    return slices, extras
+
+
+def process_xyleme_charts(ss):
+    """Build the three half-donut chart payloads for the slide-1 Xyleme card."""
+    charts, drift = [], {}
+    for chart in XYLEME_CHARTS:
+        titles, rows = fetch_report_table(ss, chart["report_id"], chart["title"])
+        slices, extras = xyleme_chart_slices(chart, titles, rows)
+        if extras:
+            drift[chart["title"]] = extras
+        charts.append({
+            "key":    chart["key"],
+            "title":  chart["title"],
+            "total":  sum(s["count"] for s in slices),
+            "slices": slices,
+        })
+    return charts, drift
+
+
 def process_xyleme(ss):
     """
     Build the slide-1 Xyleme card data from two Smartsheet trackers.
@@ -2274,6 +2483,7 @@ def build(week_override=None):
                                                  "Action Plan Tracker")
     cx_headers, cx_rows, _   = fetch_sheet_table(client, "capex", "CapEx")
     xyleme = process_xyleme(client)
+    xyleme_charts, xyleme_chart_drift = process_xyleme_charts(client)
     hiring = process_hiring(client)
     print()
 
@@ -2432,6 +2642,7 @@ def build(week_override=None):
             "modulesTotal":      xyleme["modulesTotal"],
             "exams":             xyleme["exams"],
             "recentlyPublished": xyleme["recentlyPublished"],
+            "charts":            xyleme_charts,
         },
         # Slide-2 Open Positions card (replaced Week at a Glance, Sep 2026).
         # Each entry: jobTitle, productLine, country, step, posted, filled,
@@ -2492,6 +2703,12 @@ def build(week_override=None):
     if xyleme.get("_unbucketed"):
         ub = ", ".join(f"{k}={v}" for k, v in sorted(xyleme["_unbucketed"].items()))
         print(f"      ℹ️  exam statuses outside pipeline buckets (total-only): {ub}")
+    for ch in xyleme_charts:
+        parts = ", ".join(f"{sl['label']}={sl['count']}" for sl in ch["slices"])
+        print(f"  Xyleme chart:  {ch['title']} — {ch['total']} ({parts})")
+    for title, extras in xyleme_chart_drift.items():
+        ex = ", ".join(f"{k}={v}" for k, v in sorted(extras.items()))
+        print(f"      ⚠️  {title}: status not on the dashboard chart, shown in gray: {ex}")
     hs = hiring["_stats"]
     print(f"  Hiring:        {hs['post_dedupe']} open positions "
           f"({hs['with_link']} with QR link)  [live Smartsheet]")
