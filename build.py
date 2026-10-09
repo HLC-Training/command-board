@@ -1922,7 +1922,10 @@ def fetch_report_table(ss, report_id, label):
     print(f"  Fetching {label} (report) from Smartsheet…")
     page_size = 500
     page = 1
-    rep = ss.Reports.get_report(report_id, page_size=page_size, page=page)
+    # level=2 is required for sheet-summary reports (API error 5623 without
+    # it) and harmless for row reports.
+    rep = ss.Reports.get_report(report_id, page_size=page_size, page=page,
+                                level=2)
     cols = sorted(rep.columns, key=lambda c: c.index)
     titles = [c.title for c in cols]
     pos = {c.virtual_id: i for i, c in enumerate(cols)}
@@ -1931,7 +1934,7 @@ def fetch_report_table(ss, report_id, label):
     while len(api_rows) < total:
         page += 1
         more = list(ss.Reports.get_report(report_id, page_size=page_size,
-                                          page=page).rows)
+                                          page=page, level=2).rows)
         if not more:
             break
         api_rows.extend(more)
