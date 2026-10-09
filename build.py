@@ -1549,6 +1549,29 @@ def process_bowler(month_cols, kpi_rows, target_month):
     return kpis, overall, reason, flags
 
 
+def bowler_month_rate(month_cols, row, target_month):
+    """
+    Like bowler_month_value, but returns the RAW number (no ×100
+    percentage normalization) — for rates such as I&I, where 0.95 means
+    0.95, not 95%. Walks back from target_month to the latest populated
+    month. Returns (value, month_used) or (None, None).
+    """
+    if row is None:
+        return None, None
+    for m in range(target_month, 0, -1):
+        col = month_cols.get(m)
+        if col is None or col >= len(row):
+            continue
+        raw = row[col]
+        if raw is None or str(raw).strip().upper() in ("", "NA", "N/A", "TBD"):
+            continue
+        try:
+            return float(re.sub(r"[^0-9.\-]", "", str(raw))), m
+        except ValueError:
+            continue
+    return None, None
+
+
 def process_safety_kpis(month_cols, kpi_rows, target_month):
     """
     Extract liveStop / readAcross fresh from the Bowler Chart's Act rows —
@@ -1572,9 +1595,23 @@ def process_safety_kpis(month_cols, kpi_rows, target_month):
         if stale_flag:
             flags.append(stale_flag)
 
+    # I&I Rate (Bowler "I&I Rate" row) — a rate, not a percentage. Any
+    # value above plan (plan is 0) forces Safety red. Per Jim 2026-10-09:
+    # the board must stay red while the YTD I&I rate is above zero; this
+    # replaces the weekly hand patch to safetyRag.
+    ii_rows = find_kpi_rowset(kpi_rows, "i&i rate")
+    ii_value, ii_month = bowler_month_rate(month_cols, ii_rows.get("act"), target_month)
+    ii_plan, _ = bowler_month_rate(month_cols, ii_rows.get("plan"), target_month)
+    if ii_plan is None:
+        ii_plan = 0.0
+
     safety_kpis = {
         "liveStop":   {"value": live_value, "rag": safety_kpi_rag(live_value)},
         "readAcross": {"value": read_value, "rag": safety_kpi_rag(read_value)},
+        "iiRate":     {"value": ii_value, "plan": ii_plan,
+                       "month": MONTH_ABBR.get(ii_month) if ii_month else None,
+                       "rag": ("red" if ii_value is not None and ii_value > ii_plan
+                               else "green")},
     }
     return safety_kpis, flags
 
@@ -2261,7 +2298,13 @@ def calculate_safety_rag(weekly_incidents, bowler_overall, safety_kpis):
     """
     live = safety_kpis["liveStop"]
     read = safety_kpis["readAcross"]
+    ii   = safety_kpis.get("iiRate") or {}
 
+    if ii.get("rag") == "red":
+        inc = f"{weekly_incidents} incident{'s' if weekly_incidents != 1 else ''} this week"
+        when = f" ({ii['month']})" if ii.get("month") else ""
+        return "red", (f"{inc} \u2014 I&I rate {ii['value']:.2f} vs "
+                       f"{ii['plan']:g} plan{when}")
     if live["rag"] == "red":
         return "red", f"Life Saving Rules compliance {live['value']}% vs 90% plan"
     if read["rag"] == "red":
