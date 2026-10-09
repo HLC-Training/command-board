@@ -1989,7 +1989,24 @@ def xyleme_chart_slices(chart, titles, rows):
 
 
 def process_xyleme_charts(ss):
-    """Build the three half-donut chart payloads for the slide-1 Xyleme card."""
+    """
+    Build the three half-donut chart payloads for the slide-1 Xyleme card.
+
+    Non-fatal by design: the charts are display-only, and the reports live
+    on the D&D team's dashboard, so the build token may lose access without
+    warning. Any failure returns (None, {"_error": msg}) — board-data.json
+    then omits xyleme.charts and index.html falls back to the old ring +
+    exams pipeline. The build summary prints the error so it is seen.
+    """
+    try:
+        return _process_xyleme_charts(ss)
+    except (Exception, SystemExit) as exc:   # incl. incomplete-read sys.exit
+        msg = f"{type(exc).__name__}: {exc}"
+        print(f"  ⚠️  Xyleme charts skipped — {msg}")
+        return None, {"_error": msg}
+
+
+def _process_xyleme_charts(ss):
     charts, drift = [], {}
     for chart in XYLEME_CHARTS:
         titles, rows = fetch_report_table(ss, chart["report_id"], chart["title"])
@@ -2642,7 +2659,7 @@ def build(week_override=None):
             "modulesTotal":      xyleme["modulesTotal"],
             "exams":             xyleme["exams"],
             "recentlyPublished": xyleme["recentlyPublished"],
-            "charts":            xyleme_charts,
+            **({"charts": xyleme_charts} if xyleme_charts else {}),
         },
         # Slide-2 Open Positions card (replaced Week at a Glance, Sep 2026).
         # Each entry: jobTitle, productLine, country, step, posted, filled,
@@ -2703,7 +2720,10 @@ def build(week_override=None):
     if xyleme.get("_unbucketed"):
         ub = ", ".join(f"{k}={v}" for k, v in sorted(xyleme["_unbucketed"].items()))
         print(f"      ℹ️  exam statuses outside pipeline buckets (total-only): {ub}")
-    for ch in xyleme_charts:
+    if xyleme_chart_drift.get("_error"):
+        print(f"      ⚠️  Xyleme charts NOT on this board (old ring shown): "
+              f"{xyleme_chart_drift.pop('_error')}")
+    for ch in xyleme_charts or []:
         parts = ", ".join(f"{sl['label']}={sl['count']}" for sl in ch["slices"])
         print(f"  Xyleme chart:  {ch['title']} — {ch['total']} ({parts})")
     for title, extras in xyleme_chart_drift.items():
