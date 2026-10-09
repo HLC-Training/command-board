@@ -2001,8 +2001,16 @@ def process_xyleme_charts(ss):
     try:
         return _process_xyleme_charts(ss)
     except (Exception, SystemExit) as exc:   # incl. incomplete-read sys.exit
+        import traceback
         msg = f"{type(exc).__name__}: {exc}"
         print(f"  ⚠️  Xyleme charts skipped — {msg}")
+        traceback.print_exc()
+        # GitHub Actions annotation — shows on the run summary page, so the
+        # reason is visible without opening the step log.
+        where = traceback.extract_tb(exc.__traceback__)[-1] if exc.__traceback__ else None
+        loc = f" at {where.name}:{where.lineno}" if where else ""
+        safe = (msg + loc).replace("\n", " ").replace("%", "%25")[:400]
+        print(f"::warning title=Xyleme charts skipped::{safe}")
         return None, {"_error": msg}
 
 
