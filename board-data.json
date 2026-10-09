@@ -17,9 +17,9 @@
       "KLC": 0,
       "Other": 99
     },
-    "safetyRag": "green",
+    "safetyRag": "red",
     "minorIncidents": 0,
-    "ragReason": "0 incidents this week — All safety KPIs on plan",
+    "ragReason": "0 incidents this week — I&I rate 0.95 vs 0 plan (Aug)",
     "safetyKPIs": {
       "liveStop": {
         "value": 100,
@@ -28,6 +28,12 @@
       "readAcross": {
         "value": 90,
         "rag": "green"
+      },
+      "iiRate": {
+        "value": 0.95,
+        "plan": 0.0,
+        "month": "Aug",
+        "rag": "red"
       }
     },
     "kpis": {
@@ -69,9 +75,9 @@
         "reason": "Timecard Aug 89% vs 92% plan"
       },
       "safety": {
-        "rag": "green",
+        "rag": "red",
         "label": "Safety",
-        "reason": "0 incidents this week — All safety KPIs on plan"
+        "reason": "0 incidents this week — I&I rate 0.95 vs 0 plan (Aug)"
       },
       "actionPlans": {
         "rag": "red",
