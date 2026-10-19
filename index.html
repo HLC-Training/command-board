@@ -244,6 +244,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:v
 .xy-pipe-total{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.15);margin-top:2px;padding-top:3px}
 .xy-pipe-total .tl{font-size:8px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.6px}
 .xy-pipe-total .tn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--acc)}
+.xy-body.charts{grid-template-columns:1fr 1fr 1fr 1.25fr}
+.xy-hd{flex:1;display:flex;flex-direction:column;align-items:center;min-height:0}
+.xy-hd svg{width:100%;flex:1 1 auto;min-height:0;max-height:118px}
+.xy-hd-legend{width:100%;display:grid;grid-template-columns:1fr 1fr;column-gap:10px;row-gap:2px;margin-top:4px;flex-shrink:0;min-height:0;overflow:hidden}
+.xy-lg{display:flex;align-items:center;gap:4px;min-width:0;font-size:8.5px;color:#D1D5DB;line-height:1.25}
+.xy-lg i{width:8px;height:8px;border-radius:1.5px;flex-shrink:0}
+.xy-lg .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xy-lg .n{font-weight:800;color:#FFFFFF;flex-shrink:0}
 .xy-scroll{flex:1;overflow:hidden;position:relative;min-height:0}
 .xy-scroll-inner{display:flex;flex-direction:column}
 .xy-scroll-inner.anim{animation:xyScroll var(--xy-dur,40s) linear infinite}
@@ -337,6 +345,45 @@ function buildXylemeCard(xy){
   }else{
     pubHtml=pubs.map(pubRow).join('')+pubs.map(pubRow).join('');  // duplicated for seamless loop
     anim=' anim';dur=`style="--xy-dur:${pubs.length*4}s"`;
+  }
+
+  const pubPanel=`<div class="xy-panel">
+        <div class="xy-panel-title">Recently Published</div>
+        <div class="xy-scroll"><div class="xy-scroll-inner${anim}" ${dur}>${pubHtml}</div></div>
+      </div>`;
+
+  // Half-donut charts (D&D Projects Dashboard, Jim 2026-10-09). Boards built
+  // before build.py emitted `charts` fall through to the ring + pipeline.
+  if(Array.isArray(xy.charts)&&xy.charts.length){
+    const esc=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const half=ch=>{
+      const tot=ch.total||0;
+      let start=0,arcs='';
+      for(const s of ch.slices||[]){
+        if(!tot||!s.count)continue;
+        const len=s.count/tot*100;
+        arcs+=`<path d="M10 52 A40 40 0 0 1 90 52" pathLength="100" fill="none" stroke="${s.color}" stroke-width="15"
+          stroke-dasharray="${len.toFixed(3)} 100" stroke-dashoffset="${(-start).toFixed(3)}"/>`;
+        start+=len;
+      }
+      const svg=`<svg viewBox="0 0 100 56" preserveAspectRatio="xMidYMax meet">
+        <path d="M10 52 A40 40 0 0 1 90 52" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="15"/>${arcs}
+        <text x="50" y="47" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="900" fill="#FFFFFF">${tot}</text>
+        <text x="50" y="55" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="5.5" fill="rgba(255,255,255,.5)">TOTAL</text>
+      </svg>`;
+      const legend=(ch.slices||[]).map(s=>`<div class="xy-lg"><i style="background:${s.color}"></i><span class="t">${esc(s.label)}</span><span class="n">${s.count}</span></div>`).join('');
+      return`<div class="xy-panel">
+        <div class="xy-panel-title">${esc(ch.title)}</div>
+        <div class="xy-hd">${svg}<div class="xy-hd-legend">${legend}</div></div>
+      </div>`;
+    };
+    return`<div class="xy-card">
+    <div class="xy-head"><span class="xy-title">Xyleme Modernization</span><span class="xy-sub">Training content modernization — live from Smartsheet</span></div>
+    <div class="xy-body charts">
+      ${xy.charts.map(half).join('')}
+      ${pubPanel}
+    </div>
+  </div>`;
   }
 
   return`<div class="xy-card">
