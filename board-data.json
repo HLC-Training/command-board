@@ -87,7 +87,7 @@
       "capex": {
         "rag": "amber",
         "label": "CapEx",
-        "reason": "74 active projects"
+        "reason": "62 active projects"
       }
     }
   },
@@ -696,100 +696,40 @@
     ]
   },
   "capex": {
-    "totalBudget": 6066650,
-    "totalSpend": 4684292,
-    "activeProjects": 74,
-    "highPriorityCount": 18,
+    "totalBudget": 5852165,
+    "totalSpend": 0,
+    "activeProjects": 62,
+    "highPriorityCount": 28,
     "byCategory": {
       "Other": {
-        "cost": 11230584,
-        "count": 66
-      },
-      "Modernization": {
-        "cost": 485000,
-        "count": 5
-      },
-      "Safety": {
-        "cost": 40000,
-        "count": 2
+        "cost": 3230123,
+        "count": 31
       },
       "Capability": {
-        "cost": 16000,
-        "count": 1
+        "cost": 2783100,
+        "count": 21
+      },
+      "Safety": {
+        "cost": 439000,
+        "count": 7
+      },
+      "Modernization": {
+        "cost": 64800,
+        "count": 3
       }
     },
     "inProgressItems": [
       {
-        "project": "HA Tooling",
-        "cost": 700000.0,
-        "category": "Other",
-        "priority": "High"
-      },
-      {
         "project": "ITS Mockup",
         "cost": 578800.0,
         "category": "Other",
-        "priority": ""
-      },
-      {
-        "project": "Building 2 New Roof",
-        "cost": 575000.0,
-        "category": "Other",
         "priority": "High"
       },
       {
-        "project": "New Switchgear bldg. 2",
-        "cost": 350000.0,
-        "category": "Other",
+        "project": "Generator 2nd person",
+        "cost": 250000.0,
+        "category": "Safety",
         "priority": "High"
-      },
-      {
-        "project": "FFB hardware for additional carts",
-        "cost": 300000.0,
-        "category": "Other",
-        "priority": "High"
-      },
-      {
-        "project": "ALA Outage Kit",
-        "cost": 211826.0,
-        "category": "Other",
-        "priority": ""
-      },
-      {
-        "project": "Counterweight and storage stand",
-        "cost": 169368.0,
-        "category": "Other",
-        "priority": ""
-      },
-      {
-        "project": "Tools for Bucket Tech Class",
-        "cost": 165000.0,
-        "category": "Other",
-        "priority": "High"
-      },
-      {
-        "project": "Replace HMIs",
-        "cost": 150000.0,
-        "category": "Modernization",
-        "priority": "High"
-      },
-      {
-        "project": "Aero MKVIe Modernization",
-        "cost": 100000.0,
-        "category": "Modernization",
-        "priority": "High"
-      },
-      {
-        "project": "Hurricane Tie Down",
-        "cost": 100000.0,
-        "category": "Other",
-        "priority": "High"
-      },
-      {
-        "project": "PLL Outage Kit",
-        "cost": 87123.0,
-        "category": "Other",
-        "priority": ""
       }
     ]
   },
