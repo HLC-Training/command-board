@@ -1760,20 +1760,32 @@ def process_action_plans(headers, rows):
 # CAPEX PROCESSING
 # ══════════════════════════════════════════════════════════════════════════
 
-def process_capex(headers, rows):
+def capex_fiscal_year(d):
+    """
+    CapEx runs on a fiscal year of Oct 1 – Sep 30, labeled by the year it
+    ENDS in (per Jim 2026-10-19: FY2026 closed Sep 30; Oct 2026 is FY2027).
+    Keyed off the board week, not the build date.
+    """
+    return d.year + 1 if d.month >= 10 else d.year
+
+
+def process_capex(headers, rows, fiscal_year):
     """
     Compute CapEx from the live Smartsheet (no longer carried forward).
 
     Row structure (hierarchy encoded in the 'Order' column = ancestors + 1):
-      • Order 1  — year summary row ("CAPEX 2026 Overall") → budget totals
+      • Order 1  — year summary row ("CAPEX 2027 Overall") → budget totals
       • Order 2  — category subtotal rows                  → skipped
       • Order 3+ — actual line items                        → project list
 
-    Filters: Year == 2026, Status != Cancelled.
-    Budget total / spend come from the Order-1 summary row (Cost Estimate
-    vs Spend = Actual + Projected). RAG stays amber per existing board logic.
+    Filters: Year == fiscal_year (Oct–Sep, see capex_fiscal_year),
+    Status != Cancelled, Priority != Cancel.
+    The Order-1 summary row is matched by Year OR by its "CAPEX <FY> Overall"
+    title — the FY2027 summary row was created with a blank Year cell.
+    Budget total / spend come from that row (Cost Estimate vs Spend =
+    Actual + Projected). RAG stays amber per existing board logic.
     """
-    print("  Processing CapEx (live Smartsheet)…")
+    print(f"  Processing CapEx FY{fiscal_year} (live Smartsheet)…")
 
     col_year     = find_col(headers, "year")
     col_order    = find_col(headers, "order")
@@ -1793,8 +1805,9 @@ def process_capex(headers, rows):
         except (TypeError, ValueError):
             return None
 
-    CURRENT_YEAR = 2026.0
-    DONE_STATUS  = "po received - all done"
+    CURRENT_YEAR  = float(fiscal_year)
+    SUMMARY_TITLE = f"capex {fiscal_year} overall"
+    DONE_STATUS   = "po received - all done"
 
     total_budget = 0.0
     total_spend  = 0.0
@@ -1803,21 +1816,26 @@ def process_capex(headers, rows):
     high_pri     = 0
 
     for row in rows:
-        if fnum(get(row, col_year)) != CURRENT_YEAR:
-            continue
         order = fnum(get(row, col_order))
         if order is None:
             continue
+        title = " ".join(str(get(row, col_project) or "").lower().split())
+        year  = fnum(get(row, col_year))
 
         if order == 1:                      # year summary row → budget totals
-            total_budget += fnum(get(row, col_cost)) or 0
-            total_spend  += fnum(get(row, col_spend)) or 0
+            if year == CURRENT_YEAR or title == SUMMARY_TITLE:
+                total_budget += fnum(get(row, col_cost)) or 0
+                total_spend  += fnum(get(row, col_spend)) or 0
+            continue
+        if year != CURRENT_YEAR:
             continue
         if order < 3:                       # category subtotal rows
             continue
 
         status = str(get(row, col_status) or "").strip()
         if status.lower() == "cancelled":
+            continue
+        if str(get(row, col_priority) or "").strip().lower() == "cancel":
             continue
 
         project  = str(get(row, col_project) or "").strip()
@@ -2563,7 +2581,7 @@ def build(week_override=None):
     oe   = process_customer_classes(files["demand"],    "OE", week_start, week_end)  # Open Enrollment
     ss   = process_customer_classes(files["classlist"], "SS", week_start, week_end)  # Site Specific
     ap   = process_action_plans(ap_headers, ap_rows)
-    cx   = process_capex(cx_headers, cx_rows)
+    cx   = process_capex(cx_headers, cx_rows, capex_fiscal_year(week_start))
 
     # KPIs / Bowler / Safety KPIs — derived fresh from the Bowler Chart every
     # build (no longer preserved from the previous board-data.json; the
