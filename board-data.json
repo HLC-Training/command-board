@@ -274,11 +274,11 @@
       },
       {
         "name": "Mohammed Nizami",
-        "totalClasses": 6,
-        "totalStudents": 78,
+        "totalClasses": 5,
+        "totalStudents": 70,
         "internalStudents": 31,
-        "oeStudents": 47,
-        "oeClasses": 4,
+        "oeStudents": 39,
+        "oeClasses": 3,
         "courses": [
           {
             "name": "Entry Level GT MkVIe 26-2",
@@ -304,11 +304,6 @@
             "country": "United States"
           },
           {
-            "title": "26-567 - OEC - Control System - Woodward (Aero) Operation, Maintenance & Troubleshooting",
-            "students": 8,
-            "country": "United States"
-          },
-          {
             "title": "26-993 - Calik / TURKMENENERGO - - - KIYANLY - Control System - Mark VIe Maintenance (Extended) - GG1",
             "students": 15,
             "country": "Turkmenistan"
@@ -321,10 +316,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 19,
-          "totalStudents": 212,
+          "totalClasses": 18,
+          "totalStudents": 204,
           "intClasses": 6,
-          "oeClasses": 13
+          "oeClasses": 12
         }
       },
       {
@@ -363,13 +358,18 @@
       },
       {
         "name": "Greg Walker",
-        "totalClasses": 2,
-        "totalStudents": 23,
+        "totalClasses": 3,
+        "totalStudents": 31,
         "internalStudents": 0,
-        "oeStudents": 23,
-        "oeClasses": 2,
+        "oeStudents": 31,
+        "oeClasses": 3,
         "courses": [],
         "oeCourses": [
+          {
+            "title": "26-567 - OEC - Control System - Woodward (Aero) Operation, Maintenance & Troubleshooting",
+            "students": 8,
+            "country": "United States"
+          },
           {
             "title": "26-521 - OEC - Gas Turbine - LM2500+/G4 Engine Familiarization",
             "students": 15,
@@ -383,10 +383,10 @@
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 13,
-          "totalStudents": 130,
+          "totalClasses": 14,
+          "totalStudents": 138,
           "intClasses": 0,
-          "oeClasses": 13
+          "oeClasses": 14
         }
       },
       {
@@ -673,10 +673,10 @@
       "notReceived": 188,
       "notStarted": 8,
       "inProgress": 1,
-      "underReview": 18,
+      "underReview": 41,
       "approved": 3,
       "published": 87,
-      "total": 385
+      "total": 328
     },
     "recentlyPublished": [
       {
