@@ -203,6 +203,13 @@ CUSTOMER_TECH_RULES = [
     ("sherif",   ["gas turbine", "balance of plant", "bop", "general"]),
 ]
 
+# Class-name overrides checked BEFORE the Technology column in route_customer
+# and before INTERNAL_RULES in route_pll. Woodward governor/control classes
+# are Greg's (Aero) even though their Technology reads "Control System".
+CUSTOMER_NAME_OVERRIDES = [
+    ("greg", ["woodward"]),
+]
+
 # ── Bowler KPI thresholds ──────────────────────────────────────────────────
 # "plan" is the displayed target value; for reverse metrics it's also the
 # green/amber boundary. Labels match the live board-data.json exactly.
@@ -593,6 +600,11 @@ def route_pll(class_name):
     if "craft" in name:
         return "harry", False
 
+    # Woodward classes are Greg's (Aero), never Controls — per Jim 2026-10-29.
+    for pll_key, keywords in CUSTOMER_NAME_OVERRIDES:
+        if any(kw in name for kw in keywords):
+            return pll_key, False
+
     # Mark VIe classes are controls (Mohammed) even when the name also says
     # GT — e.g. "Entry Level GT MkVIe" (per Jim, 2026-10-09). Must precede
     # INTERNAL_RULES, where Sherif's " gt " keyword would win first.
@@ -651,6 +663,13 @@ def route_customer(technology, class_name=""):
     blank/unrecognized. Harry and Linda never receive customer rows.
     Returns (pll_key or None, flagged bool).
     """
+    # Class-name overrides beat the Technology column (e.g. Woodward classes
+    # carry Technology "Control System" but Greg owns them — per Jim 2026-10-29).
+    name_lc = (class_name or "").lower()
+    for pll_key, keywords in CUSTOMER_NAME_OVERRIDES:
+        if any(kw in name_lc for kw in keywords):
+            return pll_key, False
+
     tech = (technology or "").strip().lower()
     if tech:
         for pll_key, keywords in CUSTOMER_TECH_RULES:
@@ -1166,6 +1185,12 @@ def route_lookahead_internal(course_name, program, technology):
 
     if any(kw in prog for kw in ("craft", "repair", "iles")):
         return "harry", False
+
+    # Woodward → Greg, ahead of the Technology/Program rules (whose
+    # "controls" would otherwise send it to Mohammed) — per Jim 2026-10-29.
+    for pll_key, keywords in CUSTOMER_NAME_OVERRIDES:
+        if any(kw in name for kw in keywords):
+            return pll_key, False
 
     for pll_key, keywords in LOOKAHEAD_TECH_RULES:
         for kw in keywords:
@@ -1890,18 +1915,26 @@ def process_capex(headers, rows, fiscal_year):
 # ══════════════════════════════════════════════════════════════════════════
 
 # Exam pipeline display buckets ← raw Exams Transfer Tracker statuses.
-# Raw statuses not listed here (N/A, On Hold, blank) count toward the total
-# only; the build summary prints them so drift is visible.
+# The total is the SUM OF THE BUCKETS, so the pills always add up to it
+# (per Jim, 2026-10-29). N/A is excluded by rule. Any other raw status not
+# listed here (blank, or a new picklist value) is left out of the total and
+# printed in the build summary so drift is visible.
 EXAM_STATUS_BUCKETS = {
     "not received":              "notReceived",
     "not started":               "notStarted",
     "in progress":               "inProgress",
+    "rework needed":             "underReview",   # back in work → Under Review
+    "on hold":                   "underReview",   # per project rule
     "sent for sme review":       "underReview",
     "sent for internal review":  "underReview",
     "internal review completed": "approved",
     "sme review completed":      "approved",
     "published":                 "published",
 }
+
+
+# Raw statuses dropped from the exam pipeline entirely (not in the total).
+EXAM_STATUS_EXCLUDED = ("n/a", "na")
 
 
 # Three half-donut charts recreated from the D&D Projects Dashboard
@@ -2138,12 +2171,15 @@ def process_xyleme(ss):
     unbucketed = {}
     for r in exams:
         raw = str(get(r, col_estatus) or "").strip()
+        if raw.lower() in EXAM_STATUS_EXCLUDED:
+            continue                      # N/A — excluded from the pipeline
         bucket = EXAM_STATUS_BUCKETS.get(raw.lower())
         if bucket:
             counts[bucket] += 1
         else:
             unbucketed[raw or "(blank)"] = unbucketed.get(raw or "(blank)", 0) + 1
-    counts["total"] = len(exams)
+    # Total = sum of displayed buckets (never len(exams)), so the card adds up.
+    counts["total"] = sum(counts.values())
 
     return {
         "modulesComplete":   len(completed),
@@ -2791,7 +2827,7 @@ def build(week_override=None):
           f"modules complete / {xyleme['exams']['total']} exams in pipeline")
     if xyleme.get("_unbucketed"):
         ub = ", ".join(f"{k}={v}" for k, v in sorted(xyleme["_unbucketed"].items()))
-        print(f"      ℹ️  exam statuses outside pipeline buckets (total-only): {ub}")
+        print(f"      ⚠️  exam statuses NOT counted (no bucket, excluded from total): {ub}")
     if xyleme_chart_drift.get("_error"):
         print(f"      ⚠️  Xyleme charts NOT on this board (old ring shown): "
               f"{xyleme_chart_drift.pop('_error')}")
