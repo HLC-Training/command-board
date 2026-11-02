@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "updated": "2026-11-02",
+  "source_of_truth": "HLC-Training/command-board data/pll-mapping.json on main. Read by build.py (board) and by the NPS Mk II Admin page. Edit here only.",
+  "match_mode": "Case-insensitive substring. build.py lowercases the value being matched; keyword strings below are copied exactly as coded (all lowercase). Class names are padded with one leading and one trailing space before matching (so ' gt ' and ' cte ' work); Program and Technology values are stripped, not padded. Customer technology and class-name matching in customer_technology_rules is NOT padded.",
+  "plls": [
+    {"id": "sherif", "name": "Sherif Khalifa", "line": "Gas Turbine", "order": 1},
+    {"id": "pablo", "name": "Pablo Schibli", "line": "Steam Turbine / Combined Cycle", "order": 2},
+    {"id": "ben", "name": "Ben Smith", "line": "Excitation / Generator", "order": 3},
+    {"id": "mohammed", "name": "Mohammed Nizami", "line": "Controls / GIC", "order": 4},
+    {"id": "harry", "name": "Harry Hanson", "line": "Craft / Repairs / ILES", "order": 5},
+    {"id": "greg", "name": "Greg Walker", "line": "Aeroderivative", "order": 6},
+    {"id": "linda", "name": "Linda Nelson", "line": "CTE / Workforce Readiness", "order": 7}
+  ],
+  "internal_rules_note": "Weekly internal routing (build.py route_pll), first match wins; the file order IS the evaluation order. Before the first entry build.py checks vendor_led_keywords (those classes count in totals with no PLL). A {\"ref\": ...} entry evaluates that array at this position. The named_overrides ref sits between craft and mkvi because route_pll checks the Woodward override there (build.py:603-606). The seven groups from INTERNAL_RULES follow in coded order. Matched on the class name only.",
+  "internal_rules": [
+    {"match": [" cte ", "cte program", "workforce", "readiness"], "pll": "linda", "source": "build.py:595"},
+    {"match": ["craft"], "pll": "harry", "source": "build.py:600"},
+    {"ref": "named_overrides", "source": "build.py:604"},
+    {"match": ["mkvi", "mk vi", "mark vi"], "pll": "mohammed", "source": "build.py:611"},
+    {"match": ["craft", "repairs", "repair", "iles", "compressor", "stator"], "pll": "harry", "source": "build.py:162"},
+    {"match": ["gas turbine", " gt ", "gt-", "ha ", "7fa", "9fa", "7ha", "9ha", "eht", "frame 7", "frame 9", "osr", "combustion", "mechanical crossover"], "pll": "sherif", "source": "build.py:164"},
+    {"match": ["steam turbine", "hrsg", "ccpp", "wsc", "combined cycle", "steam power", " st ", "blading"], "pll": "pablo", "source": "build.py:167"},
+    {"match": ["controls", "control", "mkvi", "mk vi", "mkvie", "fieldbus", "advant", "i&c", "gic", "simulator", "site manager", "comet"], "pll": "mohammed", "source": "build.py:169"},
+    {"match": ["excitation", "generator", "winding", "rso", "surge oscillograph", "retaining ring", "end winding", "biscuit", "ex2100"], "pll": "ben", "source": "build.py:172"},
+    {"match": ["aeroderivative", "aero", "lm2500", "lm6000", "lm500", "lms100", "aet mi"], "pll": "greg", "source": "build.py:175"},
+    {"match": ["cte", "workforce", "readiness", "achieving customer"], "pll": "linda", "source": "build.py:177"}
+  ],
+  "customer_technology_rules_note": "Customer (OE / SS) routing, first match wins (build.py route_customer): named_overrides on the class name, then these rules on the Technology value, then the same rules again on the class name as a fallback (build.py:679-684). Harry and Linda never receive customer rows. Order is most-specific technology first.",
+  "customer_technology_rules": [
+    {"match": ["aeroderivative", "lm2500", "lm6000", "lm500"], "pll": "greg", "source": "build.py:197"},
+    {"match": ["excitation", "generator"], "pll": "ben", "source": "build.py:198"},
+    {"match": ["controls", "control", "gic", "simulator", "fieldbus", "mark vie", "mkvie", "i&c"], "pll": "mohammed", "source": "build.py:199"},
+    {"match": ["steam turbine", "combined cycle", "hrsg", "ccpp", "wsc", "steam power", "boiler"], "pll": "pablo", "source": "build.py:201"},
+    {"match": ["gas turbine", "balance of plant", "bop", "general"], "pll": "sherif", "source": "build.py:203"}
+  ],
+  "named_overrides": [
+    {"match": ["woodward"], "pll": "greg", "note": "Woodward governor/control classes are Greg's (Aero) even though their Technology reads \"Control System\". Woodward classes are Greg's (Aero), never Controls — per Jim 2026-10-29.", "source": "build.py:209"}
+  ],
+  "vendor_led_keywords": [
+    "achieving customer success",
+    "field engineer - onboarding",
+    "train the trainer",
+    "project management",
+    "leadership"
+  ],
+  "excluded_programs": {
+    "columns": ["Name", "Program", "Technology"],
+    "match": ["leadership", "project management"],
+    "note": "Internal 30-day look-ahead only: a row matching any keyword in any listed column is excluded from every PLL card, ahead of the Craft and CTE rules (build.py:1176).",
+    "source": "build.py:1176"
+  },
+  "lookahead_technology_rules": {
+    "columns": ["Technology", "Program"],
+    "rules": [
+      {"match": ["gas turbine"], "pll": "sherif"},
+      {"match": ["steam turbine"], "pll": "pablo"},
+      {"match": ["controls", "gic", "comet"], "pll": "mohammed"},
+      {"match": ["excitation", "generator"], "pll": "ben"},
+      {"match": ["aeroderivative", "aet"], "pll": "greg"},
+      {"match": ["cte", "workforce"], "pll": "linda"},
+      {"match": ["stator"], "pll": "harry"}
+    ],
+    "source": "build.py:125"
+  },
+  "lookahead_rules_note": "Internal 30-day look-ahead (build.py route_lookahead_internal), first match wins; file order IS evaluation order. Each entry matches any keyword in any listed column. A {\"ref\": ...} entry evaluates that key at this position. After the last entry build.py falls back to the weekly router (internal_rules); a vendor-led result there is excluded, and a no-match is flagged UNMATCHED.",
+  "lookahead_rules": [
+    {"ref": "excluded_programs", "source": "build.py:1176"},
+    {"columns": ["Name"], "match": [" cte ", "cte program", "workforce", "readiness"], "pll": "linda", "source": "build.py:1182"},
+    {"columns": ["Program", "Technology"], "match": ["cte", "workforce"], "pll": "linda", "source": "build.py:1180"},
+    {"columns": ["Program"], "match": ["craft", "repair", "iles"], "pll": "harry", "source": "build.py:1186"},
+    {"ref": "named_overrides", "columns": ["Name"], "source": "build.py:1191"},
+    {"ref": "lookahead_technology_rules", "source": "build.py:1195"}
+  ],
+  "udc_technology": {
+    "_note": "UDC Class Planning Report Technology column values, used by NPS Mk II. Customer rows route by this alone. Internal rows route by internal_program_rules first (Smartsheet Program), then fall back to this. show_in lists the dashboards that display the line. Jim 2026-11-02.",
+    "Gas Turbine": {"pll": "sherif", "line": "Gas Turbine", "show_in": ["board", "nps"]},
+    "Balance of Plant": {"pll": "sherif", "line": "Gas Turbine", "show_in": ["board", "nps"]},
+    "General": {"pll": "sherif", "line": "Gas Turbine", "show_in": ["board", "nps"]},
+    "Gen Mechanical": {"pll": "sherif", "line": "Gas Turbine", "show_in": ["board", "nps"]},
+    "GIC Mechanical": {"pll": "sherif", "line": "Gas Turbine", "show_in": ["board", "nps"]},
+    "Live Outage": {"pll": "sherif", "line": "Gas Turbine", "show_in": ["board", "nps"]},
+    "Steam Turbine": {"pll": "pablo", "line": "Steam Turbine", "show_in": ["board", "nps"]},
+    "Combined Cycle": {"pll": "pablo", "line": "Steam Turbine", "show_in": ["board", "nps"]},
+    "HRSG": {"pll": "pablo", "line": "Steam Turbine", "show_in": ["board", "nps"]},
+    "Controls": {"pll": "mohammed", "line": "Controls", "show_in": ["board", "nps"]},
+    "GIC Controls": {"pll": "mohammed", "line": "Controls", "show_in": ["board", "nps"]},
+    "Simulator": {"pll": "mohammed", "line": "Controls", "show_in": ["board", "nps"]},
+    "Excitation": {"pll": "ben", "line": "Excitation / Generator", "show_in": ["board", "nps"]},
+    "Generator": {"pll": "ben", "line": "Excitation / Generator", "show_in": ["board", "nps"]},
+    "Aeroderivative": {"pll": "greg", "line": "Aeroderivative", "show_in": ["board", "nps"]},
+    "LES": {"pll": "harry", "line": "Craft / Repairs / ILES", "show_in": ["board", "nps"]},
+    "ILES": {"pll": "harry", "line": "Craft / Repairs / ILES", "show_in": ["board", "nps"]},
+    "Fundamentals": {"pll": "harry", "line": "Craft / Repairs / ILES", "show_in": ["board", "nps"]},
+    "Non-Technical": {"pll": null, "line": "Non-Technical", "show_in": ["nps"]}
+  },
+  "location_rules": [
+    {"match": "Houston", "site": "HLC", "note": "Dual Houston and Birr resolves to HLC"},
+    {"match": "Birr", "site": "BLC"},
+    {"match": "Kuwait", "site": "KLC"},
+    {"default": "Other / Distance Learning"}
+  ]
+}

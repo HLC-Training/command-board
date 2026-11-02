@@ -32,3 +32,6 @@ committed only to preview (the 9/30 capacity tags) is reverted by the next
 build with no error. Land index.html changes on main; land build.py changes on
 preview. Check `git diff origin/main origin/preview -- index.html` before any
 build. It should be empty.
+
+## 2026-11-02 — Routing rules are data, and data gets a baseline diff
+The PLL rules lived as Python constants, so the only way a second dashboard could share them was to copy them. Moving them to data/pll-mapping.json made them shareable, but the real safeguard was capturing the routing output before the refactor and diffing after. A refactor that "reads the same" is not the same until the diff is zero. Lesson: when logic becomes data, prove identical output over real rows, not over a hand-picked fixture.

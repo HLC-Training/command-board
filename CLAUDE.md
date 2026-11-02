@@ -29,7 +29,8 @@ Read it fully before taking any action.
 5. Jim switches Pages branch back to `main`
 
 Resolve every UNMATCHED flag in the build summary (workflow run log)
-before promoting — routing fixes go in build.py, never one-off JSON edits.
+before promoting — routing fixes go in data/pll-mapping.json, never one-off board-data.json edits.
+(Decision: `knowledge/decisions/2026-11-02-pll-mapping-shared-file.md`.)
 
 **build.py is NOT synced from main during a build.** The workflow checks
 out `preview` and syncs only `data/` and `index.html` from main; the build
@@ -59,6 +60,11 @@ A local build still works when needed:
 ---
 
 ## Required Sources
+
+**Routing source:** `data/pll-mapping.json` holds every rule that assigns a
+class to a PLL. build.py reads it at startup and exits if it is missing or
+names an unknown PLL. It is shared with NPS Mk II. See
+`knowledge/decisions/2026-11-02-pll-mapping-shared-file.md`.
 
 **Live from the Smartsheet API** (SMARTSHEET_API_TOKEN; sheet IDs in build.py):
 
@@ -126,9 +132,12 @@ Apply in this exact order:
 8. Aeroderivative (incl. LM2500/LM6000/LMS100, AET MI) → **Greg Walker**
 9. Unmatched → **FLAG TO JIM — never route silently**
 
-This order is implemented in build.py (`route_pll`, `INTERNAL_RULES`,
-`VENDOR_LED_KEYWORDS`). New routing decisions go there as keywords —
-never as one-off JSON edits.
+This order is implemented in build.py (`route_pll`, `route_customer`,
+`route_lookahead_internal`), which read every rule from
+`data/pll-mapping.json` (`internal_rules` file order is the evaluation order;
+also `vendor_led_keywords`, `customer_technology_rules`, `named_overrides`,
+`excluded_programs`, `lookahead_rules`). New routing decisions go there as
+keywords — never as one-off board-data.json edits.
 
 ### Customer Training — technology only:
 
@@ -426,6 +435,12 @@ Commit: [commit hash]
 - **build.py** — routing/logic fixes are allowed but go in a SEPARATE
   commit from the weekly board-data.json commit, and must be on `preview`
   before the next build (the workflow does not sync build.py from main)
+- **data/pll-mapping.json** — until promoted it lives on `preview` with the
+  build.py that reads it; after Promote Preview to Main it is edited on main
+  (GitHub web UI, like any data upload) and the next build's sync step carries
+  it to preview. Routing changes are a SEPARATE commit from the weekly
+  board-data.json commit. See
+  `knowledge/decisions/2026-11-02-pll-mapping-shared-file.md`.
 - **main branch** — weekly data reaches it only via Promote Preview to Main
 
 ---
