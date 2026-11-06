@@ -18,8 +18,8 @@
       "Other": 165
     },
     "safetyRag": "red",
-    "minorIncidents": 0,
-    "ragReason": "0 incidents this week — I&I rate 1.00 vs 0 plan (Oct)",
+    "minorIncidents": 1,
+    "ragReason": "1 near miss this week (Nov 4 electrical spark) — I&I rate 1.00 vs 0 plan (Oct)",
     "safetyKPIs": {
       "liveStop": {
         "value": 100,
@@ -77,7 +77,7 @@
       "safety": {
         "rag": "red",
         "label": "Safety",
-        "reason": "0 incidents this week — I&I rate 1.00 vs 0 plan (Oct)"
+        "reason": "1 near miss this week (Nov 4 electrical spark) — I&I rate 1.00 vs 0 plan (Oct)"
       },
       "actionPlans": {
         "rag": "red",
@@ -92,6 +92,11 @@
     }
   },
   "safetyLog": [
+    {
+      "date": "Nov 4, 2026",
+      "shortDesc": "⚡ Near Miss — electrical spark under lab table",
+      "desc": "Houston Learning Center, Nov 4, 2026 (day shift) — small electrical spark/fire observed under a table, caused by a badly bent outlet with a damaged ground prong. Put out immediately; work stopped and cause investigated. No injury."
+    },
     {
       "date": "Sep 23, 2026",
       "shortDesc": "🩹 First Aid — knuckle scrape, drill & tap training",
