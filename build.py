@@ -117,20 +117,9 @@ EXCLUDED_STATUSES = {
 LOOKAHEAD_DAYS = 30
 LOOKAHEAD_ACTIVE_STATUSES = {"registered", "in progress"}
 
-# Internal look-ahead routing (brief 2026-08-21 §4c) — PROGRAM-FIRST, on the
-# Enrollment Database's Program + Technology COLUMNS (not the course name;
-# the name only disambiguates Leadership/PM exclusion and CTE, and feeds the
-# last-resort fallback through the weekly name router before flagging).
-# Rule 1 (Program = Craft/Repairs/ILES → Harry) is checked before these.
-LOOKAHEAD_TECH_RULES = [
-    ("sherif",   ["gas turbine"]),
-    ("pablo",    ["steam turbine"]),
-    ("mohammed", ["controls", "gic", "comet"]),
-    ("ben",      ["excitation", "generator"]),
-    ("greg",     ["aeroderivative", "aet"]),
-    ("linda",    ["cte", "workforce"]),
-    ("harry",    ["stator"]),
-]
+# Internal look-ahead routing (brief 2026-08-21 §4c) is PROGRAM-FIRST, on the
+# Enrollment Database's Program + Technology COLUMNS. Its rules live in
+# data/pll-mapping.json (lookahead_rules, lookahead_technology_rules).
 
 # Exact location strings from Enrollment Database → board category
 LOCATION_MAP = {
@@ -140,75 +129,56 @@ LOCATION_MAP = {
     "houston learning center/birr learning center":         "HLC",  # no-space variant
 }
 
-# PLL display names (key → full name)
-PLL_NAMES = {
-    "sherif":    "Sherif Khalifa",
-    "pablo":     "Pablo Schibli",
-    "ben":       "Ben Smith",
-    "mohammed":  "Mohammed Nizami",
-    "harry":     "Harry Hanson",
-    "greg":      "Greg Walker",
-    "linda":     "Linda Nelson",
-}
+# ── PLL routing rules — data/pll-mapping.json (shared with NPS Mk II) ──────
+# Every rule that assigns a class to a PLL lives in that file, not here. See
+# knowledge/decisions/2026-11-02-pll-mapping-shared-file.md. build.py reads
+# only the board keys; udc_technology and location_rules belong to Mk II.
+PLL_MAPPING_PATH = Path(__file__).resolve().parent / "data" / "pll-mapping.json"
+_BOARD_KEYS = ("plls", "internal_rules", "customer_technology_rules",
+               "named_overrides", "vendor_led_keywords", "excluded_programs",
+               "lookahead_technology_rules", "lookahead_rules")
 
-# PLL display order (must match Slide 2 layout)
-PLL_ORDER = ["sherif", "pablo", "ben", "mohammed", "harry", "greg", "linda"]
 
-# ── Internal training routing — PROGRAM-FIRST, ORDER MATTERS ──────────────
-# Each tuple: (pll_key, [keyword list])
-# Keywords are checked as substrings of the lowercased class name.
-# First match wins — do not reorder without updating CLAUDE.md.
-INTERNAL_RULES = [
-    ("harry",    ["craft", "repairs", "repair", "iles", "compressor",
-                  "stator"]),
-    ("sherif",   ["gas turbine", " gt ", "gt-", "ha ", "7fa", "9fa", "7ha", "9ha",
-                  "eht", "frame 7", "frame 9", "osr", "combustion",
-                  "mechanical crossover"]),
-    ("pablo",    ["steam turbine", "hrsg", "ccpp", "wsc", "combined cycle",
-                  "steam power", " st ", "blading"]),
-    ("mohammed", ["controls", "control", "mkvi", "mk vi", "mkvie",
-                  "fieldbus", "advant", "i&c", "gic", "simulator",
-                  "site manager", "comet"]),
-    ("ben",      ["excitation", "generator", "winding", "rso",
-                  "surge oscillograph", "retaining ring", "end winding",
-                  "biscuit", "ex2100"]),
-    ("greg",     ["aeroderivative", "aero", "lm2500", "lm6000", "lm500",
-                  "lms100", "aet mi"]),
-    ("linda",    ["cte", "workforce", "readiness", "achieving customer"]),
-]
+def load_pll_mapping(path=PLL_MAPPING_PATH):
+    """Load and validate the PLL mapping; exit non-zero with a message that
+    names the file if it is missing, unreadable, or references an unknown PLL."""
+    path = Path(path)
+    try:
+        m = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        print(f"ERROR: PLL mapping file not found: {path} (data/pll-mapping.json)")
+        sys.exit(1)
+    except (OSError, ValueError) as e:
+        print(f"ERROR: PLL mapping file unreadable: {path} ({e})")
+        sys.exit(1)
+    for key in _BOARD_KEYS:
+        if key not in m:
+            print(f"ERROR: {path.name}: missing required key '{key}'")
+            sys.exit(1)
+    ids = {p["id"] for p in m["plls"]}
+    refs = []
+    refs += [r.get("pll") for r in m["internal_rules"] if "ref" not in r]
+    refs += [r["pll"] for r in m["customer_technology_rules"]]
+    refs += [r["pll"] for r in m["named_overrides"]]
+    refs += [r["pll"] for r in m["lookahead_technology_rules"]["rules"]]
+    refs += [r.get("pll") for r in m["lookahead_rules"] if "ref" not in r]
+    unknown = sorted({str(r) for r in refs if r not in ids})
+    if unknown:
+        print(f"ERROR: {path.name}: pll id(s) not in 'plls': {unknown}")
+        sys.exit(1)
+    return m
 
-# Vendor-led / non-technical classes — count in weekly totals only, never
-# attributed to a PLL card and never flagged as unmatched (per Jim, Jul 2026).
-# Matched as substrings of the lowercased class name.
-VENDOR_LED_KEYWORDS = [
-    "achieving customer success",
-    "field engineer - onboarding",
-    "train the trainer",
-    "project management",
-    "leadership",
-]
 
-# ── Customer (OE / SS) routing — by the TECHNOLOGY column only (per CLAUDE.md) ─
-# OE = Open Enrollment (CMCustomerDemandList), SS = Site Specific (ClassList).
-# Routed on the source file's Technology field; class name is a fallback only.
-# Harry and Linda NEVER receive customer rows — intentionally omitted.
-# Order: most-specific technologies first.
-CUSTOMER_TECH_RULES = [
-    ("greg",     ["aeroderivative", "lm2500", "lm6000", "lm500"]),
-    ("ben",      ["excitation", "generator"]),
-    ("mohammed", ["controls", "control", "gic", "simulator", "fieldbus",
-                  "mark vie", "mkvie", "i&c"]),
-    ("pablo",    ["steam turbine", "combined cycle", "hrsg", "ccpp", "wsc",
-                  "steam power", "boiler"]),
-    ("sherif",   ["gas turbine", "balance of plant", "bop", "general"]),
-]
+PLL_MAPPING = load_pll_mapping()
 
-# Class-name overrides checked BEFORE the Technology column in route_customer
-# and before INTERNAL_RULES in route_pll. Woodward governor/control classes
-# are Greg's (Aero) even though their Technology reads "Control System".
-CUSTOMER_NAME_OVERRIDES = [
-    ("greg", ["woodward"]),
-]
+# PLL display names (key → full name) and Slide 2 display order
+PLL_NAMES = {p["id"]: p["name"] for p in PLL_MAPPING["plls"]}
+PLL_ORDER = [p["id"] for p in sorted(PLL_MAPPING["plls"],
+                                     key=lambda p: p["order"])]
+
+# Customer rules as (pll_key, [keywords]) pairs, in file order.
+CUSTOMER_TECH_RULES = [(r["pll"], r["match"])
+                       for r in PLL_MAPPING["customer_technology_rules"]]
 
 # ── Bowler KPI thresholds ──────────────────────────────────────────────────
 # "plan" is the displayed target value; for reverse metrics it's also the
@@ -581,41 +551,27 @@ def route_pll(class_name):
 
     NOTE: every Enrollment Database row is INTERNAL training regardless of its
     delivery location (HLC/BLC/KLC/Other) — bucket is determined by source file,
-    not location — so this always uses INTERNAL_RULES.
+    not location — so this always uses the file's internal_rules.
+
+    Every rule is data (data/pll-mapping.json): vendor_led_keywords first,
+    then internal_rules in file order. The file order carries the precedence
+    notes (CTE before craft; Woodward before Mark VIe; Mark VIe before the
+    Sherif " gt " keyword).
     """
     name = " " + class_name.lower() + " "
 
     # Vendor-led / non-technical classes: totals only, no PLL attribution.
-    for kw in VENDOR_LED_KEYWORDS:
+    for kw in PLL_MAPPING["vendor_led_keywords"]:
         if kw in name:
             return "__vendor__", False
 
-    # CTE check MUST precede the craft rule — CTE-program classes
-    # (e.g. "Craft Entry Level CTE Program") belong to Linda, not Harry.
-    for kw in (" cte ", "cte program", "workforce", "readiness"):
-        if kw in name:
-            return "linda", False
-
-    # Craft classes otherwise always route to Harry (he owns all craft training).
-    if "craft" in name:
-        return "harry", False
-
-    # Woodward classes are Greg's (Aero), never Controls — per Jim 2026-10-29.
-    for pll_key, keywords in CUSTOMER_NAME_OVERRIDES:
-        if any(kw in name for kw in keywords):
-            return pll_key, False
-
-    # Mark VIe classes are controls (Mohammed) even when the name also says
-    # GT — e.g. "Entry Level GT MkVIe" (per Jim, 2026-10-09). Must precede
-    # INTERNAL_RULES, where Sherif's " gt " keyword would win first.
-    for kw in ("mkvi", "mk vi", "mark vi"):
-        if kw in name:
-            return "mohammed", False
-
-    for pll_key, keywords in INTERNAL_RULES:
-        for kw in keywords:
-            if kw in name:
-                return pll_key, False
+    for rule in PLL_MAPPING["internal_rules"]:
+        if "ref" in rule:    # named_overrides, at this position
+            for ov in PLL_MAPPING[rule["ref"]]:
+                if any(kw in name for kw in ov["match"]):
+                    return ov["pll"], False
+        elif any(kw in name for kw in rule["match"]):
+            return rule["pll"], False
 
     return None, True  # unmatched — flag to Jim
 
@@ -666,9 +622,9 @@ def route_customer(technology, class_name=""):
     # Class-name overrides beat the Technology column (e.g. Woodward classes
     # carry Technology "Control System" but Greg owns them — per Jim 2026-10-29).
     name_lc = (class_name or "").lower()
-    for pll_key, keywords in CUSTOMER_NAME_OVERRIDES:
-        if any(kw in name_lc for kw in keywords):
-            return pll_key, False
+    for ov in PLL_MAPPING["named_overrides"]:
+        if any(kw in name_lc for kw in ov["match"]):
+            return ov["pll"], False
 
     tech = (technology or "").strip().lower()
     if tech:
@@ -1162,7 +1118,7 @@ def route_lookahead_internal(course_name, program, technology):
       • CTE / Workforce Readiness → Linda (must precede the Craft rule —
         "Craft Entry Level CTE Program" is Linda's, per CLAUDE.md)
       • Program = Craft / Repairs / ILES → Harry
-      • Technology/Program keywords (LOOKAHEAD_TECH_RULES, rules 2–8)
+      • Technology/Program keywords (lookahead_technology_rules in data/pll-mapping.json)
       • Fallback: the weekly name router (route_pll) for rows with blank
         Program/Technology — vendor-led classes map to excluded
       • Unmatched → FLAG TO JIM, never routed silently
@@ -1173,29 +1129,29 @@ def route_lookahead_internal(course_name, program, technology):
     prog = (program or "").strip().lower()
     tech = (technology or "").strip().lower()
 
-    for kw in ("leadership", "project management"):
-        if kw in name or kw in prog or kw in tech:
-            return "__excluded__", False
+    vals = {"name": name, "program": prog, "technology": tech}
 
-    if ("cte" in prog or "workforce" in prog or "cte" in tech
-            or "workforce" in tech
-            or " cte " in name or "cte program" in name
-            or "workforce" in name or "readiness" in name):
-        return "linda", False
+    def hit(keywords, columns):
+        return any(kw in vals[c.lower()] for c in columns for kw in keywords)
 
-    if any(kw in prog for kw in ("craft", "repair", "iles")):
-        return "harry", False
-
-    # Woodward → Greg, ahead of the Technology/Program rules (whose
-    # "controls" would otherwise send it to Mohammed) — per Jim 2026-10-29.
-    for pll_key, keywords in CUSTOMER_NAME_OVERRIDES:
-        if any(kw in name for kw in keywords):
-            return pll_key, False
-
-    for pll_key, keywords in LOOKAHEAD_TECH_RULES:
-        for kw in keywords:
-            if kw in tech or kw in prog:
-                return pll_key, False
+    # Rules are data (lookahead_rules in data/pll-mapping.json), in file order.
+    for step in PLL_MAPPING["lookahead_rules"]:
+        ref = step.get("ref")
+        if ref == "excluded_programs":
+            ex = PLL_MAPPING["excluded_programs"]
+            if hit(ex["match"], ex["columns"]):
+                return "__excluded__", False
+        elif ref == "named_overrides":
+            for ov in PLL_MAPPING["named_overrides"]:
+                if hit(ov["match"], step["columns"]):
+                    return ov["pll"], False
+        elif ref == "lookahead_technology_rules":
+            lt = PLL_MAPPING["lookahead_technology_rules"]
+            for rule in lt["rules"]:
+                if hit(rule["match"], lt["columns"]):
+                    return rule["pll"], False
+        elif hit(step["match"], step["columns"]):
+            return step["pll"], False
 
     pll_key, flagged = route_pll(course_name or "")
     if pll_key == "__vendor__":
