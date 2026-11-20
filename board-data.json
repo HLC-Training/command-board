@@ -1,21 +1,21 @@
 {
   "meta": {
     "specVersion": "v2.2",
-    "buildDate": "2026-11-13",
-    "weekOf": "Nov 16 – 20, 2026"
+    "buildDate": "2026-11-20",
+    "weekOf": "Nov 23 – 27, 2026"
   },
   "slide1": {
-    "weekOf": "Nov 16 – 20, 2026",
-    "weeklyTotal": 464,
-    "internalStudents": 261,
-    "oeStudents": 203,
-    "internalCourses": 17,
-    "oeCourses": 19,
+    "weekOf": "Nov 23 – 27, 2026",
+    "weeklyTotal": 380,
+    "internalStudents": 323,
+    "oeStudents": 57,
+    "internalCourses": 19,
+    "oeCourses": 6,
     "locationBreakdown": {
-      "HLC": 284,
-      "BLC": 53,
+      "HLC": 244,
+      "BLC": 29,
       "KLC": 0,
-      "Other": 127
+      "Other": 107
     },
     "safetyRag": "red",
     "minorIncidents": 0,
@@ -137,12 +137,20 @@
     "plls": [
       {
         "name": "Sherif Khalifa",
-        "totalClasses": 8,
-        "totalStudents": 128,
-        "internalStudents": 89,
-        "oeStudents": 39,
-        "oeClasses": 3,
+        "totalClasses": 7,
+        "totalStudents": 104,
+        "internalStudents": 93,
+        "oeStudents": 11,
+        "oeClasses": 1,
         "courses": [
+          {
+            "name": "GE to Alstom Generator Mechanical Crossover 26-3",
+            "capacity": 12,
+            "enrolled": 7,
+            "enrollPct": 58,
+            "overEnrolled": false,
+            "locCat": "BLC"
+          },
           {
             "name": "Entry Level Gas Turbine 26-2",
             "capacity": 18,
@@ -154,8 +162,8 @@
           {
             "name": "HA FE Tasks & Tools - Combustion Inspection / ITS Rollout & TRACC Scan Alignment 26-5",
             "capacity": 9,
-            "enrolled": 9,
-            "enrollPct": 100,
+            "enrolled": 8,
+            "enrollPct": 89,
             "overEnrolled": false,
             "locCat": "HLC"
           },
@@ -170,8 +178,8 @@
           {
             "name": "Entry Level Gas Turbine 26-4",
             "capacity": 18,
-            "enrolled": 22,
-            "enrollPct": 122,
+            "enrolled": 20,
+            "enrollPct": 111,
             "overEnrolled": true,
             "locCat": "HLC"
           },
@@ -186,36 +194,26 @@
         ],
         "oeCourses": [
           {
-            "title": "26-715 - OEC - Gas Turbine -  Operation F-Class (Advanced)",
-            "students": 12,
-            "country": "United States"
-          },
-          {
-            "title": "26-1079 - YTL - Power Seraya - 1 x 9HA.01 SS - Gas Turbine -  Maintenance",
-            "students": 12,
-            "country": "Singapore"
-          },
-          {
-            "title": "26-1002 - Calik / TURKMENENERGO - - - KIYANLY - Balance of Plant - Operation (GE Integrated Systems) - GG2",
-            "students": 15,
-            "country": "Switzerland"
+            "title": "26-1222 - Volta River Authority - Kpone - GT11N2 - Gas Turbine - Operation - G1",
+            "students": 11,
+            "country": "Ghana"
           }
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 13,
-          "totalStudents": 153,
-          "intClasses": 2,
-          "oeClasses": 11
+          "totalClasses": 7,
+          "totalStudents": 71,
+          "intClasses": 0,
+          "oeClasses": 7
         }
       },
       {
         "name": "Pablo Schibli",
-        "totalClasses": 8,
-        "totalStudents": 103,
+        "totalClasses": 6,
+        "totalStudents": 81,
         "internalStudents": 55,
-        "oeStudents": 48,
-        "oeClasses": 5,
+        "oeStudents": 26,
+        "oeClasses": 3,
         "courses": [
           {
             "name": "GE Steam Turbine to Alstom Steam Turbine (ST mechanical x-over) 26-3",
@@ -244,9 +242,9 @@
         ],
         "oeCourses": [
           {
-            "title": "27-646 - TPC - Datan - 8&9 Local Training - Steam Turbine - Maintenance",
-            "students": 12,
-            "country": "Taiwan"
+            "title": "26-1265 - Arabelle Services UK Limited - - - ST Assessment - Steam Turbine – Steam Turbine Assessment - G1",
+            "students": 8,
+            "country": "Switzerland"
           },
           {
             "title": "26-1262 - Arabelle Solutions Nordics - - - Blading - I-STM30401 Steam Turbine - Blading L-0 /L-1",
@@ -254,45 +252,27 @@
             "country": "Switzerland"
           },
           {
-            "title": "26-1261 - Arabelle Solutions Nordics - - - Blading - I-OSTM30703 OSS Steam Turbine - Steam Turbine-Assembling and Disassembl",
-            "students": 6,
-            "country": "Switzerland"
-          },
-          {
             "title": "26-174 - TPC - Hsinta - - - Combined Cycle Fundamentals / extended - G1",
             "students": 12,
             "country": "Taiwan"
-          },
-          {
-            "title": "26-103 - Venture Global LNG - VGL Calcasieu Pass 2 - Ph 1 - Heat Recovery Steam Generator (HRSG) -  Operation & Maintenance (GE Engineered)",
-            "students": 12,
-            "country": "United States"
           }
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 12,
-          "totalStudents": 116,
-          "intClasses": 1,
-          "oeClasses": 11
+          "totalClasses": 8,
+          "totalStudents": 84,
+          "intClasses": 0,
+          "oeClasses": 8
         }
       },
       {
         "name": "Ben Smith",
-        "totalClasses": 6,
-        "totalStudents": 68,
-        "internalStudents": 32,
-        "oeStudents": 36,
-        "oeClasses": 3,
+        "totalClasses": 3,
+        "totalStudents": 38,
+        "internalStudents": 26,
+        "oeStudents": 12,
+        "oeClasses": 1,
         "courses": [
-          {
-            "name": "Generator Retaining Ring Removal 26-3",
-            "capacity": 8,
-            "enrolled": 6,
-            "enrollPct": 75,
-            "overEnrolled": false,
-            "locCat": "BLC"
-          },
           {
             "name": "Generator Specialist Training 26-2",
             "capacity": 12,
@@ -315,33 +295,23 @@
             "title": "26-232 - GSF - Andres CCPP - - - Electrical - Intelligent Electronic Device (IED) IED's Protection & Control",
             "students": 12,
             "country": "Dominican Republic"
-          },
-          {
-            "title": "26-231 - GSF - Andres CCPP - - - Electrical - Electrical Control System (ECS) Training",
-            "students": 12,
-            "country": "Dominican Republic"
-          },
-          {
-            "title": "25-591 - OMAN INDIA FERTILISER SAOC - Plant Sur - - - Excitation - Generator Excitation, Protection and Static Starter Introduction",
-            "students": 12,
-            "country": "Switzerland"
           }
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 12,
-          "totalStudents": 138,
-          "intClasses": 2,
-          "oeClasses": 10
+          "totalClasses": 7,
+          "totalStudents": 79,
+          "intClasses": 1,
+          "oeClasses": 6
         }
       },
       {
         "name": "Mohammed Nizami",
-        "totalClasses": 5,
-        "totalStudents": 57,
+        "totalClasses": 2,
+        "totalStudents": 21,
         "internalStudents": 21,
-        "oeStudents": 36,
-        "oeClasses": 3,
+        "oeStudents": 0,
+        "oeClasses": 0,
         "courses": [
           {
             "name": "Entry Level GT MkVIe 26-3",
@@ -360,36 +330,20 @@
             "locCat": "Other"
           }
         ],
-        "oeCourses": [
-          {
-            "title": "26-1182 - Nippon Steel Corporation - Wakayama - - - Control System - Mark VIe Maintenance (Extended) - G1",
-            "students": 12,
-            "country": "Japan"
-          },
-          {
-            "title": "26-1101 - PUBLIC POWER CORPORATION SA - - - Megalopolis - Control System - ActivePoint HMI Operation Familiarization",
-            "students": 12,
-            "country": "Greece"
-          },
-          {
-            "title": "26-1100 - PUBLIC POWER CORPORATION SA - - - Megalopolis - Control System - OpFlex Enhanced Transient Stability with AutoTune MX & Variable Load Path Operation",
-            "students": 12,
-            "country": "Greece"
-          }
-        ],
+        "oeCourses": [],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 16,
-          "totalStudents": 175,
+          "totalClasses": 14,
+          "totalStudents": 150,
           "intClasses": 4,
-          "oeClasses": 12
+          "oeClasses": 10
         }
       },
       {
         "name": "Harry Hanson",
         "totalClasses": 3,
-        "totalStudents": 46,
-        "internalStudents": 46,
+        "totalStudents": 67,
+        "internalStudents": 67,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
@@ -402,18 +356,18 @@
             "locCat": "HLC"
           },
           {
-            "name": "Ultrasonic Flow Testing of the Generator Stator Cooling Water System 26-1",
-            "capacity": 4,
-            "enrolled": 3,
-            "enrollPct": 75,
-            "overEnrolled": false,
+            "name": "Craft GE to Alstom GT 24/26 Crossover Familiarization 26-10",
+            "capacity": 15,
+            "enrolled": 25,
+            "enrollPct": 167,
+            "overEnrolled": true,
             "locCat": "Other"
           },
           {
             "name": "Craft Entry Level GT Accelerated 26-9",
             "capacity": 20,
-            "enrolled": 27,
-            "enrollPct": 135,
+            "enrolled": 26,
+            "enrollPct": 130,
             "overEnrolled": true,
             "locCat": "HLC"
           }
@@ -421,53 +375,33 @@
         "oeCourses": [],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 11,
-          "totalStudents": 124,
-          "intClasses": 11,
+          "totalClasses": 9,
+          "totalStudents": 132,
+          "intClasses": 9,
           "oeClasses": 0
         }
       },
       {
         "name": "Greg Walker",
-        "totalClasses": 5,
-        "totalStudents": 44,
+        "totalClasses": 1,
+        "totalStudents": 8,
         "internalStudents": 0,
-        "oeStudents": 44,
-        "oeClasses": 5,
+        "oeStudents": 8,
+        "oeClasses": 1,
         "courses": [],
         "oeCourses": [
           {
-            "title": "26-559 - OEC - Gas Turbine - LM6000 Borescope Inspection",
-            "students": 8,
-            "country": "United States"
-          },
-          {
-            "title": "26-529 - OEC - Gas Turbine - LM2500+ Level 2 Cold Maintenance",
-            "students": 8,
-            "country": "United States"
-          },
-          {
-            "title": "26-1259 - TVA - Allen - - - Gas Turbine - LM2500 Package Maintenance",
-            "students": 12,
-            "country": "United States"
-          },
-          {
-            "title": "26-1092 - TAIS Turkish Navi - MIL - - - MILGEM - Gas Turbine - LM2500 Level 1 Maintenance - G1",
-            "students": 8,
-            "country": "United States"
-          },
-          {
-            "title": "26-1028 - Hindustan Aeronautics Ltd. - - - Indian Navy - Gas Turbine - LM2500 Level 1 Maintenance - G4",
+            "title": "26-1029 - Hindustan Aeronautics Ltd. - - - Indian Navy - Gas Turbine - LM2500 Borescope Inspection - G4",
             "students": 8,
             "country": "United States"
           }
         ],
         "lookAhead30": {
           "label": "Next 30 Days",
-          "totalClasses": 15,
-          "totalStudents": 146,
+          "totalClasses": 9,
+          "totalStudents": 94,
           "intClasses": 0,
-          "oeClasses": 15
+          "oeClasses": 9
         }
       },
       {
@@ -502,20 +436,20 @@
     ]
   },
   "slide3": {
-    "totalCountries": 21,
-    "totalStudents": 261,
+    "totalCountries": 26,
+    "totalStudents": 323,
     "learningCenters": [
       {
         "name": "HLC — Houston",
         "lat": 29.7604,
         "lon": -95.3698,
-        "students": 240
+        "students": 236
       },
       {
         "name": "BLC — Birr",
         "lat": 47.36,
         "lon": 8.04,
-        "students": 14
+        "students": 15
       },
       {
         "name": "KLC — Kuwait",
@@ -527,27 +461,51 @@
     "pins": [
       {
         "country": "United States",
-        "students": 199,
+        "students": 201,
         "lat": 38.0,
         "lon": -97.0
       },
       {
-        "country": "Mexico",
-        "students": 19,
-        "lat": 23.6,
-        "lon": -102.6
+        "country": "Malaysia",
+        "students": 33,
+        "lat": 4.2,
+        "lon": 108.0
       },
       {
-        "country": "United Kingdom",
-        "students": 8,
-        "lat": 55.4,
-        "lon": -3.4
+        "country": "Thailand",
+        "students": 25,
+        "lat": 15.9,
+        "lon": 101.0
+      },
+      {
+        "country": "Mexico",
+        "students": 18,
+        "lat": 23.6,
+        "lon": -102.6
       },
       {
         "country": "Spain",
         "students": 7,
         "lat": 40.5,
         "lon": -3.7
+      },
+      {
+        "country": "India",
+        "students": 5,
+        "lat": 20.6,
+        "lon": 79.0
+      },
+      {
+        "country": "Canada",
+        "students": 3,
+        "lat": 56.1,
+        "lon": -106.3
+      },
+      {
+        "country": "China",
+        "students": 3,
+        "lat": 35.9,
+        "lon": 104.2
       },
       {
         "country": "Saudi Arabia",
@@ -562,22 +520,10 @@
         "lon": 3.0
       },
       {
-        "country": "Egypt",
-        "students": 3,
-        "lat": 26.8,
-        "lon": 30.8
-      },
-      {
-        "country": "Canada",
+        "country": "South Korea",
         "students": 2,
-        "lat": 56.1,
-        "lon": -106.3
-      },
-      {
-        "country": "Singapore",
-        "students": 2,
-        "lat": 1.35,
-        "lon": 103.8
+        "lat": 35.9,
+        "lon": 127.8
       },
       {
         "country": "Poland",
@@ -586,34 +532,34 @@
         "lon": 19.1
       },
       {
+        "country": "Egypt",
+        "students": 2,
+        "lat": 26.8,
+        "lon": 30.8
+      },
+      {
         "country": "Ghana",
         "students": 2,
         "lat": 7.9,
         "lon": -1.0
       },
       {
-        "country": "Croatia",
+        "country": "United Kingdom",
         "students": 2,
-        "lat": 45.1,
-        "lon": 15.2
+        "lat": 55.4,
+        "lon": -3.4
+      },
+      {
+        "country": "Bangladesh",
+        "students": 2,
+        "lat": 23.7,
+        "lon": 90.4
       },
       {
         "country": "France",
         "students": 1,
         "lat": 46.2,
         "lon": 2.2
-      },
-      {
-        "country": "China",
-        "students": 1,
-        "lat": 35.9,
-        "lon": 104.2
-      },
-      {
-        "country": "Thailand",
-        "students": 1,
-        "lat": 15.9,
-        "lon": 101.0
       },
       {
         "country": "Australia",
@@ -634,12 +580,6 @@
         "lon": 21.8
       },
       {
-        "country": "South Korea",
-        "students": 1,
-        "lat": 35.9,
-        "lon": 127.8
-      },
-      {
         "country": "Italy",
         "students": 1,
         "lat": 41.9,
@@ -650,54 +590,66 @@
         "students": 1,
         "lat": -9.2,
         "lon": -75.0
+      },
+      {
+        "country": "Croatia",
+        "students": 1,
+        "lat": 45.1,
+        "lon": 15.2
+      },
+      {
+        "country": "Singapore",
+        "students": 1,
+        "lat": 1.35,
+        "lon": 103.8
+      },
+      {
+        "country": "Japan",
+        "students": 1,
+        "lat": 36.2,
+        "lon": 138.3
+      },
+      {
+        "country": "Taiwan",
+        "students": 1,
+        "lat": 23.7,
+        "lon": 121.0
       }
     ]
   },
   "slide4": {
-    "weekStudents": 203,
-    "weekClasses": 19,
+    "weekStudents": 57,
+    "weekClasses": 6,
     "weekDelivery": [
-      {
-        "country": "United States",
-        "lat": 38.0,
-        "lon": -97.0,
-        "count": 68
-      },
       {
         "country": "Switzerland",
         "lat": 46.8,
         "lon": 8.2,
-        "count": 39
-      },
-      {
-        "country": "Taiwan",
-        "lat": 23.7,
-        "lon": 121.0,
-        "count": 24
-      },
-      {
-        "country": "Greece",
-        "lat": 39.1,
-        "lon": 21.8,
-        "count": 24
+        "count": 14
       },
       {
         "country": "Dominican Republic",
         "lat": 18.7,
         "lon": -70.2,
-        "count": 24
-      },
-      {
-        "country": "Japan",
-        "lat": 36.2,
-        "lon": 138.3,
         "count": 12
       },
       {
-        "country": "Singapore",
-        "lat": 1.35,
-        "lon": 103.8,
+        "country": "Taiwan",
+        "lat": 23.7,
+        "lon": 121.0,
         "count": 12
+      },
+      {
+        "country": "Ghana",
+        "lat": 7.9,
+        "lon": -1.0,
+        "count": 11
+      },
+      {
+        "country": "United States",
+        "lat": 38.0,
+        "lon": -97.0,
+        "count": 8
       }
     ]
   },
@@ -804,8 +756,8 @@
       "inProgress": 0,
       "underReview": 36,
       "approved": 6,
-      "published": 91,
-      "total": 327
+      "published": 93,
+      "total": 329
     },
     "recentlyPublished": [
       {
@@ -867,7 +819,7 @@
         "slices": [
           {
             "label": "Published & Approved",
-            "count": 59,
+            "count": 60,
             "color": "#1061C3"
           },
           {
@@ -887,17 +839,17 @@
           },
           {
             "label": "WIP",
-            "count": 9,
+            "count": 8,
             "color": "#14B8A6"
           },
           {
             "label": "In Backlog",
-            "count": 40,
+            "count": 43,
             "color": "#9CA3AF"
           },
           {
             "label": "Material not Received",
-            "count": 229,
+            "count": 226,
             "color": "#EC642B"
           }
         ]
@@ -905,7 +857,7 @@
       {
         "key": "exams",
         "title": "All Exams by Status",
-        "total": 327,
+        "total": 329,
         "slices": [
           {
             "label": "In Progress",
@@ -929,7 +881,7 @@
           },
           {
             "label": "Published",
-            "count": 91,
+            "count": 93,
             "color": "#14B8A6"
           },
           {
